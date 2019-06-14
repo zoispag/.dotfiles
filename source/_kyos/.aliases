@@ -1,0 +1,19 @@
+alias dssh='ssh -p 2222'
+alias dscp='scp -P 2222'
+
+# paths
+alias kyos='cd ~/kyos'
+alias kd='cd ~/kyos/kyosonline/development'
+alias kc='cd ~/kyos/kyosonline/code'
+
+# docker-compose
+alias kddown='kd && docker-compose down && cd -'
+alias kdup='kd && docker-compose up -d && cd -'
+alias kdps='kd && docker-compose ps && cd -'
+alias cronstop='kd && docker-compose stop cron && cd -'
+alias cronstart='kd && docker-compose start cron && cd -'
+
+# container execs
+alias dmysql='docker exec -it mysql-db mysql -u root -proot kyosonline'
+alias dcron='docker exec -it cron /bin/bash'
+alias dphp='docker exec -it php-server /bin/bash'

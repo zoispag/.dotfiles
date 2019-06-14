@@ -1,0 +1,45 @@
+# Traversal
+alias dl="cd ~/Downloads"
+alias dot="cd ~/.dotfiles"
+alias pj="cd ~/Projects"
+
+# List declared aliases, exports, functions, paths
+alias aliases="alias | sed 's/=.*//'"
+alias exports="export | sed 's/=.*//'"
+alias functions="declare -f | grep '^[a-z].* ()' | sed 's/{$//'"
+alias paths='echo -e ${PATH//:/\\n}'
+
+# Network
+alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
+alias ipl="ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'"
+alias speedtest="wget -O /dev/null http://speed.transip.nl/1gb.bin"
+alias hosts='sudo vi /etc/hosts'
+
+# macOS
+alias afk="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend"
+alias btr="battery-status"
+alias kraken='open -na GitKraken --args -p "$(git rev-parse --show-toplevel)"'
+
+# Docker
+alias drmf='docker rm --force'
+alias dpsa='docker ps -a'
+alias ctop='docker run --rm -ti -v /var/run/docker.sock:/var/run/docker.sock --name ctop quay.io/vektorlab/ctop:latest'
+
+# docker-compose
+alias dps='docker-compose ps'
+alias dup='docker-compose up -d'
+alias ddown='docker-compose down'
+alias dstart='docker-compose start'
+alias dstop='docker-compose stop'
+alias drr='ddown && dup'
+alias dbuild='docker-compose build'
+alias drb='ddown && dbuild && dup'
+
+# typos 🙈
+alias dokcer='docker'
+alias docker-composer='docker-compose'
+
+# Laravel Dusk
+alias dusk='php artisan dusk --debug'
+alias ddf='php artisan dusk --debug --filter'
+alias ddg='php artisan dusk --debug --group='
