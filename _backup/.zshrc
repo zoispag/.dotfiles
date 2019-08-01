@@ -34,6 +34,11 @@ source $ZSH/oh-my-zsh.sh
 # ssh
 # export SSH_KEY_PATH="~/.ssh/rsa_id"
 
+#prompt_context() {
+#  prompt_segment black `whoami`
+#}
+DEFAULT_USER=`whoami`
+
 # Source my .dotfiles
 for file in `find ~/.dotfiles/source -name ".*"`; do
     source "$file"
