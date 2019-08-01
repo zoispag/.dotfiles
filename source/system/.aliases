@@ -43,3 +43,7 @@ alias docker-composer='docker-compose'
 alias dusk='php artisan dusk --debug'
 alias ddf='php artisan dusk --debug --filter'
 alias ddg='php artisan dusk --debug --group='
+
+# Cypress
+alias cy:open='npm run cy:open'
+alias cy:run='npm run cy:run'
