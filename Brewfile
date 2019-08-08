@@ -54,12 +54,14 @@ brew "tree"
 brew "watch"
 # Internet file retriever
 brew "wget"
-# A tool for exploring each layer in a docker image
-brew "wagoodman/dive/dive"
+# UNIX shell (command interpreter)
 brew "zsh"
 # Additional completion definitions for zsh
 brew "zsh-completions"
+# A terminal based graphical activity monitor inspired by gtop and vtop
+brew "cjbassi/gotop/gotop"
 # A tool for exploring each layer in a docker image
+brew "wagoodman/dive/dive"
 
 cask "1password"
 cask "alfred"
@@ -95,7 +97,11 @@ mas "All-in-One Messenger", id: 1456462087
 mas "Bear", id: 1091189122
 # NASA backgounds
 mas "Downlink", id: 1454269192
+mas "Gifski", id: 1351639930
+mas "Keynote", id: 409183694
 mas "Microsoft Remote Desktop", id: 1295203466
-mas "myTuner Radio", id: 881415018
+mas "myTuner Radio",
+mas "Numbers", id: 409203825
+mas "Pages", id: 409201541 id: 881415018
 mas "PiPifier", id: 1160374471
 mas "The Unarchiver", id: 425424353
