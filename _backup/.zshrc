@@ -43,3 +43,6 @@ DEFAULT_USER=`whoami`
 for file in `find ~/.dotfiles/source -name ".*"`; do
     source "$file"
 done
+
+export NVM_DIR="/Users/zoispag/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
