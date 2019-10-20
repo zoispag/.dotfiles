@@ -101,3 +101,7 @@ function fx() {
 
   eval "curl http://rate.sx/${crypto}?qF"
 }
+
+function joke() {
+  curl https://icanhazdadjoke.com
+}
