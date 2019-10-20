@@ -87,3 +87,17 @@ function weather() {
 
   eval "curl http://wttr.in/${city}"
 }
+
+function rates() {
+  eval "curl http://eur.rate.sx"
+}
+
+function fx() {
+  crypto="$1"
+
+  if [ -z "$crypto" ]; then
+    crypto="BTC"
+  fi
+
+  eval "curl http://rate.sx/${crypto}?qF"
+}
