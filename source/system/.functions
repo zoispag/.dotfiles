@@ -77,14 +77,12 @@ extract () {
 }
 
 function weather() {
-  # Change IFS, in order to quickly join all arguments with %20 as glue and set it back
-  old="$IFS"
-  IFS='%20'
-  city="'$*'"
-  IFS=$old
-
-  if [ -z "$city" ]; then
-     city="Alphen%20aan%20den%20Rijn"
+  if [ $# -eq 0 ]; then
+    # Call self with "Alphen aan den Rijn" as an argument
+    $0 "Alphen aan den Rijn"
+  else
+    # Change IFS, in order to quickly join all arguments with %20 as glue and set it back
+    old="$IFS"; IFS='%20'; city="'$*'"; IFS=$old
   fi
 
   eval "curl http://wttr.in/${city}"
