@@ -75,3 +75,17 @@ extract () {
     echo "'$1' is not a valid file"
   fi
 }
+
+function weather() {
+  # Change IFS, in order to quickly join all arguments with %20 as glue and set it back
+  old="$IFS"
+  IFS='%20'
+  city="'$*'"
+  IFS=$old
+
+  if [ -z "$city" ]; then
+     city="Alphen%20aan%20den%20Rijn"
+  fi
+
+  eval "curl http://wttr.in/${city}"
+}
