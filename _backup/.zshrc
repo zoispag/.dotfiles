@@ -44,5 +44,7 @@ for file in `find ~/.dotfiles/source -name ".*"`; do
     source "$file"
 done
 
+# Load nvm when needed. Otherwise it makes shell boot slow
 export NVM_DIR="/Users/zoispag/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+# This loads nvm
+# [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
