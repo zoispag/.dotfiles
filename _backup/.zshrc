@@ -44,6 +44,10 @@ for file in `find ~/.dotfiles/source -name ".*"`; do
     source "$file"
 done
 
+# Fix locale error in brew.
+# See https://discourse.brew.sh/t/failed-to-set-locale-category-lc-numeric-to-en-ru/5092/20
+export LC_ALL=en_US.UTF-8
+
 # Load nvm when needed. Otherwise it makes shell boot slow
 export NVM_DIR="/Users/zoispag/.nvm"
 # This loads nvm
