@@ -113,6 +113,6 @@ mas "Mail for Gmail", id: 1216244845
 mas "Microsoft Remote Desktop", id: 1295203466
 mas "myTuner Radio", id: 881415018
 mas "Numbers", id: 409203825
-mas "Pages", id: 409201541 id: 881415018
+mas "Pages", id: 409201541
 mas "PiPifier", id: 1160374471
 mas "The Unarchiver", id: 425424353
