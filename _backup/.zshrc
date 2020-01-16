@@ -4,7 +4,10 @@ export PATH=$HOME/bin:/usr/local/bin:$PATH:~/scripts
 # Path to your oh-my-zsh installation.
 export ZSH=~/.oh-my-zsh
 
-ZSH_THEME="agnoster"
+# ZSH_THEME="agnoster"
+# See https://github.com/romkatv/powerlevel10k
+# Install via git clone --depth=1 https://github.com/romkatv/powerlevel10k.git $ZSH_CUSTOM/themes/powerlevel10k
+ZSH_THEME=powerlevel10k/powerlevel10k
 
 # Uncomment the following line to use hyphen-insensitive completion. Case
 # sensitive completion must be off. _ and - will be interchangeable.
