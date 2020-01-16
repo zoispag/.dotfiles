@@ -101,7 +101,7 @@ cask "transmit"
 cask "viscosity"
 cask "visual-studio-code"
 cask "zoomus"
-cask "dteoh/sqa/slowquitapps"
+cask "slowquitapps"
 
 mas "All-in-One Messenger", id: 1456462087
 mas "Bear", id: 1091189122
