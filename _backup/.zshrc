@@ -1,5 +1,5 @@
 # If you come from bash you might have to change your $PATH.
-export PATH=$HOME/bin:/usr/local/bin:$PATH:~/scripts
+export PATH=/usr/local/opt/php@7.4/bin:$HOME/bin:/usr/local/bin:$PATH:~/scripts
 
 # Path to your oh-my-zsh installation.
 export ZSH=~/.oh-my-zsh

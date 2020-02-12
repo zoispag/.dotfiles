@@ -52,6 +52,8 @@ brew "nmap"
 brew "node", link: false
 # Swiss-army knife of markup format conversion
 brew "pandoc"
+# PHP 7.4
+brew "php@7.4"
 # Password generator
 brew "pwgen"
 # User interface to the TELNET protocol (built from macOS Sierra sources)
