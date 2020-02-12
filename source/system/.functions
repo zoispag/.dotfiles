@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+# Open GitKraken using the current repo directory in the cli. 
+kraken () {
+	/Applications/GitKraken.app/Contents/MacOS/GitKraken -p "$(git rev-parse --show-toplevel)" &>/dev/null &
+}
+
 # Create a new directory and enter it
 function mkd() {
   mkdir -p "$@" && cd "$_";
