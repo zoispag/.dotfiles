@@ -22,6 +22,7 @@ alias kraken='open -na GitKraken --args -p "$(git rev-parse --show-toplevel)"'
 
 # Docker
 alias drmf='docker rm --force'
+alias drmi='docker rmi'
 alias dpsa='docker ps -a'
 alias ctop='docker run --rm -ti -v /var/run/docker.sock:/var/run/docker.sock --name ctop quay.io/vektorlab/ctop:latest'
 
