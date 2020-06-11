@@ -47,6 +47,13 @@ function pyserve() {
   python -c $'import SimpleHTTPServer;\nmap = SimpleHTTPServer.SimpleHTTPRequestHandler.extensions_map;\nmap[""] = "text/plain";\nfor key, value in map.items():\n\tmap[key] = value + ";charset=UTF-8";\nSimpleHTTPServer.test();' "$port";
 }
 
+function py3serve() {
+  local port="${1:-8000}";
+  sleep 1 && open "http://localhost:${port}/" &
+  
+  python3 -m http.server $port
+}
+
 # Start a Node.js server from a directory, optionally specifying the port
 function npmserve() {
   local port="${1:-3000}";
