@@ -33,7 +33,7 @@ alias ddown='docker-compose down'
 alias dstart='docker-compose start'
 alias dstop='docker-compose stop'
 alias drr='ddown && dup'
-alias dbuild='docker-compose build'
+alias dbuild='COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker-compose build'
 alias drb='ddown && dbuild && dup'
 
 # Docker tools
