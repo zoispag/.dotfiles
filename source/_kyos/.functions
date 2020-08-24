@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+# Run update_config ansible playbook
+updateConfig() {
+  local client=$1
+  local release=$2
+
+  cd ~/Projects/kyos/itsupport/ansible
+  ansible-playbook playbook/update_config.yml --extra-vars="client=$client release=$release"
+  cd -
+}
