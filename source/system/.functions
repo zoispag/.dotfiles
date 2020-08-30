@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# Open GitKraken using the current repo directory in the cli. 
-kraken () {
+# Open GitKraken using the current repo directory in the cli.
+function kraken () {
 	/Applications/GitKraken.app/Contents/MacOS/GitKraken -p "$(git rev-parse --show-toplevel)" &>/dev/null &
 }
 
@@ -50,7 +50,7 @@ function pyserve() {
 function py3serve() {
   local port="${1:-8000}";
   sleep 1 && open "http://localhost:${port}/" &
-  
+
   python3 -m http.server $port
 }
 
