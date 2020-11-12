@@ -9,3 +9,21 @@ updateConfig() {
   ansible-playbook playbook/update_config.yml --extra-vars="client=$client release=$release"
   cd -
 }
+
+# Disable hooks
+disableGitHooks() {
+	cd ~/kyos/kyosonline/.git/hooks
+	for file in $(ls | grep -v .sample);
+		do mv "$file" "${file}.bak";
+	done
+	cd -
+}
+
+# Enable hooks
+enableGitHooks() {
+	cd ~/kyos/kyosonline/.git/hooks
+	for file in $(ls | grep .bak);
+	  do mv "$file" "$(echo "$file" | sed 's/.bak//')";
+	done
+	cd -
+}
