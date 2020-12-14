@@ -48,6 +48,8 @@ brew "harfbuzz"
 brew "ffmpeg"
 # Fully featured Firefox Send client
 brew "ffsend"
+# Libraries to talk to Microsoft SQL Server and Sybase databases
+brew "freetds"
 # GitHub command-line tool
 brew "gh"
 # Interpreter for PostScript and PDF
@@ -85,9 +87,9 @@ brew "nginx"
 # Port scanning utility for large networks
 brew "nmap"
 # Platform built on V8 to build network applications
-brew "node"
+brew "node", link: false
 # Platform built on V8 to build network applications
-brew "node@14", link: true
+brew "node@14"
 # Development kit for the Java programming language
 brew "openjdk"
 # 7-Zip (high compression file archiver) implementation
@@ -141,6 +143,7 @@ cask "1password"
 cask "adguard"
 cask "alfred"
 cask "background-music"
+cask "bartender"
 cask "cyberduck"
 cask "daisydisk"
 cask "deepl"
@@ -151,6 +154,7 @@ cask "google-chrome"
 cask "iina"
 cask "iterm2"
 cask "java"
+cask "messenger"
 cask "microsoft-auto-update"
 cask "microsoft-office"
 cask "mono-mdk"
@@ -172,9 +176,9 @@ cask "transmission"
 cask "transmit"
 cask "viscosity"
 cask "visual-studio-code"
-cask "zoomus"
+cask "whatsapp"
+cask "zoom"
 
-mas "All-in-One Messenger", id: 1456462087
 mas "Bear", id: 1091189122
 mas "Keynote", id: 409183694
 mas "Microsoft Remote Desktop", id: 1295203466
