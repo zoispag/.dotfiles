@@ -21,7 +21,11 @@ COMPLETION_WAITING_DOTS="true"
 # DISABLE_UNTRACKED_FILES_DIRTY="true"
 
 plugins=(
-  git docker composer
+  git
+	docker
+	composer
+	artisan
+	zsh-syntax-highlighting
 )
 
 source $ZSH/oh-my-zsh.sh
