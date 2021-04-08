@@ -45,10 +45,13 @@ alias dokcer='docker'
 alias dokcer-compose='docker-compose'
 alias docker-composer='docker-compose'
 
+# Laravel
+alias a='php artisan'
+
 # Laravel Dusk
-alias dusk='php artisan dusk --debug'
-alias ddf='php artisan dusk --debug --filter'
-alias ddg='php artisan dusk --debug --group='
+alias dusk='a dusk --debug'
+alias ddf='a dusk --debug --filter'
+alias ddg='a dusk --debug --group='
 
 # Cypress
 alias cy:open='npm run cy:open'
