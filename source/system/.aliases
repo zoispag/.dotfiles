@@ -23,6 +23,9 @@ alias afk="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resource
 alias btr="battery-status"
 alias kraken='open -na GitKraken --args -p "$(git rev-parse --show-toplevel)"'
 
+# AWS
+alias awsadmin='export AWS_PROFILE=admin'
+
 # Docker
 alias drmf='docker rm --force'
 alias drmi='docker rmi'
@@ -40,13 +43,13 @@ alias dbuild='COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker-compose build'
 alias drb='ddown && dbuild && dup'
 alias dpull='docker-compose pull'
 
-# Docker tools
-alias trivy='docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v $HOME/Library/Caches:/root/.cache/ aquasec/trivy --ignore-unfixed --light --no-progress'
-
 # typos 🙈
 alias dokcer='docker'
 alias dokcer-compose='docker-compose'
 alias docker-composer='docker-compose'
+
+# Docker tools
+alias trivy='docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v $HOME/Library/Caches:/root/.cache/ aquasec/trivy --ignore-unfixed --light --no-progress'
 
 # Laravel
 alias a='php artisan'
