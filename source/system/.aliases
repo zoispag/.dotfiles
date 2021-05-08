@@ -5,6 +5,7 @@ alias pj="cd ~/Projects"
 
 # Dotfiles in VSCode
 alias codedot="code ~/.dotfiles"
+alias dotcode="code ~/.dotfiles"
 
 # List declared aliases, exports, functions, paths
 alias aliases="alias | sed 's/=.*//'"
