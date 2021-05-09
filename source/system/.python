@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+# Source Poetry
+source $HOME/.poetry/env
+
+# Source PyEnv
+if command -v pyenv 1>/dev/null 2>&1; then
+  eval "$(pyenv init -)"
+fi

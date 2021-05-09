@@ -117,9 +117,3 @@ function fx() {
 function joke() {
   curl https://icanhazdadjoke.com
 }
-
-function activate_nvm() {
-  # Load nvm when needed. Otherwise it makes shell boot slow
-  export NVM_DIR="$HOME/.nvm"
-  [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-}

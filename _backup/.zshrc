@@ -24,7 +24,6 @@ plugins=(
   git
 	docker
 	composer
-	artisan
 	zsh-syntax-highlighting
 )
 
@@ -34,6 +33,10 @@ source $ZSH/oh-my-zsh.sh
 
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8
+
+# Fix locale error in brew.
+# See https://discourse.brew.sh/t/failed-to-set-locale-category-lc-numeric-to-en-ru/5092/20
+export LC_ALL=en_US.UTF-8
 
 # ssh
 # export SSH_KEY_PATH="~/.ssh/rsa_id"
@@ -48,17 +51,5 @@ for file in `find ~/.dotfiles/source -name ".*"`; do
     source "$file"
 done
 
-# Fix locale error in brew.
-# See https://discourse.brew.sh/t/failed-to-set-locale-category-lc-numeric-to-en-ru/5092/20
-export LC_ALL=en_US.UTF-8
-
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
-# Source Poetry
-source $HOME/.poetry/env
-
-# Source PyEnv
-if command -v pyenv 1>/dev/null 2>&1; then
-  eval "$(pyenv init -)"
-fi
