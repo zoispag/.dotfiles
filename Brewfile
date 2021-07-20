@@ -1,9 +1,11 @@
 tap "buo/cask-upgrade"
 tap "cjbassi/gotop"
+tap "dopplerhq/cli"
 tap "dteoh/sqa"
 tap "github/gh"
 tap "golangci/tap"
 tap "goreleaser/tap"
+tap "hashicorp/tap"
 tap "heroku/brew"
 tap "homebrew/bundle"
 tap "homebrew/cask"
@@ -33,6 +35,8 @@ brew "checkov"
 brew "composer"
 # Get a file from an HTTP, HTTPS or FTP server
 brew "curl"
+# Load/unload environment variables based on $PWD
+brew "direnv"
 # Docker Credential Helper for Amazon ECR
 brew "docker-credential-helper-ecr", link: false
 # Create Docker hosts locally and on cloud providers
@@ -87,6 +91,8 @@ brew "imagemagick"
 brew "jq"
 # Keep your Mac's application settings in sync
 brew "mackup"
+# CLI for Node.js style checker and lint tool for Markdown files
+brew "markdownlint-cli"
 # Mac App Store command-line interface
 brew "mas"
 # MP3 player for Linux and UNIX
@@ -145,10 +151,14 @@ brew "zsh"
 brew "zsh-completions"
 # A terminal based graphical activity monitor inspired by gtop and vtop
 brew "cjbassi/gotop/gotop"
+# The official Doppler CLI for managing your secrets
+brew "dopplerhq/cli/doppler"
 # Fast linters runner for Go.
 brew "golangci/tap/golangci-lint"
 # Deliver Go binaries as fast and easily as possible
 brew "goreleaser/tap/goreleaser"
+# Packer
+brew "hashicorp/tap/packer"
 # Everything you need to get started with Heroku
 brew "heroku/brew/heroku"
 # Run GitHub Actions locally
@@ -167,6 +177,8 @@ cask "background-music"
 cask "bartender"
 # Cryptocurrency exchange
 cask "binance"
+# Markdown editor for developers
+cask "boostnote"
 # Server and cloud storage browser
 cask "cyberduck"
 # Disk space visualizer
@@ -177,6 +189,8 @@ cask "deepl"
 cask "discord"
 # App to build and share containerized applications and microservices
 cask "docker"
+# Free VPN client for FortiClient
+cask "forticlient-vpn"
 # Git client focusing on productivity
 cask "gitkraken"
 # Web browser
@@ -192,6 +206,7 @@ cask "maccy"
 cask "messenger"
 # Provides updates to various Microsoft products
 cask "microsoft-auto-update"
+# Office suite
 cask "microsoft-office"
 # Open source implementation of Microsoft's .NET Framework
 cask "mono-mdk"
@@ -215,6 +230,8 @@ cask "spotify"
 cask "sublime-text"
 # Native GUI tool for relational databases
 cask "tableplus"
+# Messaging app with a focus on speed and security
+cask "telegram"
 # Customizable email client
 cask "thunderbird"
 # Open-source BitTorrent client
