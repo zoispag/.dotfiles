@@ -215,8 +215,6 @@ cask "insomnia"
 # Terminal emulator as alternative to Apple's Terminal app
 cask "iterm2"
 cask "java"
-# Clipboard manager
-cask "maccy"
 # Native desktop app for Messenger (formerly Facebook Messenger)
 cask "messenger"
 # Provides updates to various Microsoft products
@@ -232,6 +230,8 @@ cask "proxyman"
 # QuickLook generator for Markdown files
 cask "qlmarkdown"
 cask "quicklook-json"
+# Control your tools with a few keystrokes
+cask "raycast"
 # Tool to reverse the direction of scrolling
 cask "scroll-reverser"
 # Video chat, voice call and instant messaging application
