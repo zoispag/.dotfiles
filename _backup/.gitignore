@@ -17,5 +17,5 @@ Thumbs.db
 *.out
 
 # Application specific files
-vendor
-node_modules
+/vendor/
+/node_modules/
