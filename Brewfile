@@ -13,9 +13,12 @@ tap "homebrew/cask-fonts"
 tap "homebrew/core"
 tap "homebrew/services"
 tap "shivammathur/php"
+tap "yt-dlp/taps"
 
 # Run your GitHub Actions locally 🚀
 brew "act"
+# Resource monitor. C++ version and continuation of bashtop and bpytop
+brew "btop"
 # GNU database manager
 brew "gdbm"
 # Library for command-line editing
@@ -44,6 +47,8 @@ brew "docker-credential-helper-ecr", link: false
 brew "docker-machine"
 # Command-line tool for DigitalOcean
 brew "doctl"
+# Disk Usage/Free Utility - a better 'df' alternative
+brew "duf"
 # Spellchecker wrapping library
 brew "enchant"
 # Download assets from a commit, branch, or tag of GitHub repositories
@@ -72,6 +77,8 @@ brew "gh"
 brew "libidn"
 # C library implementing the SSH2 protocol
 brew "libssh2"
+# Command-line JSON processing tool
+brew "fx"
 # Interpreter for PostScript and PDF
 brew "ghostscript"
 # Distributed revision control system
@@ -88,6 +95,8 @@ brew "gradle"
 brew "grex"
 # Smarter Dockerfile linter to validate best practices
 brew "hadolint"
+# Kubernetes package manager
+brew "helm"
 # Apache HTTP server
 brew "httpd"
 # User-friendly cURL replacement (command-line HTTP client)
@@ -110,10 +119,10 @@ brew "mackup"
 brew "markdownlint-cli"
 # Mac App Store command-line interface
 brew "mas"
+# Run a Kubernetes cluster locally
+brew "minikube"
 # MP3 player for Linux and UNIX
 brew "mpg123"
-# Download YouTube videos from the command-line
-brew "youtube-dl"
 # Media player based on MPlayer and mplayer2
 brew "mpv"
 # Fast, highly customisable system info script
@@ -123,10 +132,6 @@ brew "nginx"
 # Port scanning utility for large networks
 brew "nmap"
 # Platform built on V8 to build network applications
-brew "node"
-# Platform built on V8 to build network applications
-brew "node@14"
-# 7-Zip (high compression file archiver) implementation
 brew "p7zip"
 # Swiss-army knife of markup format conversion
 brew "pandoc"
@@ -152,16 +157,20 @@ brew "starship"
 brew "telnet"
 # Tool to build, change, and version infrastructure
 brew "terraform"
+# Static analysis security scanner for your terraform code
+brew "tfsec"
 # Simplified and community-driven man pages
 brew "tldr"
 # Display directories as trees (with optional color/HTML output)
 brew "tree"
+# Meta-level vim package manager
+brew "volta"
 # Executes a program periodically, showing output fullscreen
 brew "watch"
 # Internet file retriever
 brew "wget"
-# Dumb downloader that scrapes the web
-brew "you-get"
+# Download YouTube videos from the command-line
+brew "yt-dlp"
 # General-purpose lossless data-compression library
 brew "zlib"
 # UNIX shell (command interpreter)
@@ -185,8 +194,6 @@ brew "heroku/brew/heroku"
 cask "1password"
 # Stand alone ad blocker
 cask "adguard"
-# Application launcher and productivity software
-cask "alfred"
 cask "background-music"
 # Menu bar icon organizer
 cask "bartender"
@@ -200,6 +207,8 @@ cask "daisydisk"
 cask "discord"
 # App to build and share containerized applications and microservices
 cask "docker"
+# GIT client
+cask "fork"
 # Menlo-based Nerd Font
 cask "font-meslo-lg-nerd-font"
 # Free VPN client for FortiClient
@@ -210,8 +219,6 @@ cask "gitkraken"
 cask "google-chrome"
 # Free and open-source media player
 cask "iina"
-# HTTP and GraphQL Client
-cask "insomnia"
 # Terminal emulator as alternative to Apple's Terminal app
 cask "iterm2"
 cask "java"
@@ -221,8 +228,12 @@ cask "messenger"
 cask "microsoft-auto-update"
 # Office suite
 cask "microsoft-office"
+# Online collaborative whiteboard platform
+cask "miro"
 # Open source implementation of Microsoft's .NET Framework
 cask "mono-mdk"
+# VPN client for secure internet access and private browsing
+cask "nordvpn"
 # Collaboration platform for API development
 cask "postman"
 # Modern and intuitive HTTP Debugging Proxy app
@@ -239,6 +250,8 @@ cask "skype"
 # Team communication and collaboration software
 cask "slack"
 cask "slowquitapps"
+# Open-source media center
+cask "stremio"
 # Text editor for code, markup and prose
 cask "sublime-text"
 # Native GUI tool for relational databases
@@ -252,8 +265,6 @@ cask "transmission"
 # File transfer application
 cask "transmit"
 # VPN client for secure internet access and private browsing
-cask "viscosity"
-# Open-source code editor
 cask "visual-studio-code"
 # Desktop client for WhatsApp
 cask "whatsapp"
@@ -269,5 +280,6 @@ mas "myTuner Radio", id: 881415018
 mas "NordLayer", id: 1488888843
 mas "Numbers", id: 409203825
 mas "Pages", id: 409201541
+mas "Prime Video", id: 545519333
 mas "Speedtest", id: 1153157709
 mas "The Unarchiver", id: 425424353

@@ -14,18 +14,20 @@ brew update
 brew tap homebrew/bundle
 brew bundle
 
-DOTFILES=`pwd`
+DOTFILES=$(pwd)
 
 # +----- Terminal -----+
 # Set ZSH as default shell
 chsh -s $(which zsh)
 
-# Install Oh-my-zsh
-if [ ! -d ~/.oh-my-zsh ]; then
-  sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
-fi
 # Delete default ~/.zshrc and link with backup
-rm ~/.zshrc && ln -s $DOTFILES/_backup/.zshrc ~ && source ~/.zshrc
+rm ~/.zshrc && ln -s "$DOTFILES"/_backup/.zshrc ~ && source ~/.zshrc
+
+# Delete default starship config and link with backup
+rm ~/.config/starship.toml && ln -s "$DOTFILES"/_backup/starship.toml ~ && source ~/.config/starship.toml
+
+# Install node
+volta install node
 
 # Install global Composer packages
 /usr/local/bin/composer global require laravel/installer
@@ -37,13 +39,13 @@ fi
 
 # Symlink the Mackup config file to the home directory
 if [ ! -L ~/.mackup.cfg ]; then
-  ln -s $DOTFILES/.mackup.cfg ~/.mackup.cfg
+  ln -s "$DOTFILES"/.mackup.cfg ~/.mackup.cfg
 fi
 mackup restore
 
 # Symlink the global .gitingore and register it to global git config
 if [ ! -L ~/.gitignore ]; then
-  ln -s $DOTFILES/_backup/.gitignore ~
+  ln -s "$DOTFILES"/_backup/.gitignore ~
 fi
 git config --global core.excludesfile ~/.gitignore
 
@@ -55,6 +57,6 @@ fi
 # add binaries in /usr/local/bin
 for file in $(find bin -type f); do
     if [[ ! -L /usr/local/${file} ]]; then
-        ln -s `pwd`/$file /usr/local/bin
+        ln -s "$(pwd)/$file" /usr/local/bin
     fi
 done

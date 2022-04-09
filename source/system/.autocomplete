@@ -1,3 +1,6 @@
 # Autocomplete for docker
 fpath=(~/.zsh/completion $fpath)
 
+# autoload -U +X compinit && compinit
+# source <(kubectl completion zsh)
+# source <(minikube completion zsh)

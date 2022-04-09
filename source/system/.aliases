@@ -1,3 +1,8 @@
+# oh-my-zsh inspired
+alias ..="cd ../"
+alias ...="cd ../.."
+alias ll="ls -l"     # long list
+
 # Traversal
 alias dl="cd ~/Downloads"
 alias dot="cd ~/.dotfiles"
@@ -48,6 +53,7 @@ alias dpull='docker-compose pull'
 alias dokcer='docker'
 alias dokcer-compose='docker-compose'
 alias docker-composer='docker-compose'
+alias cd..="cd .."
 
 # Docker tools
 alias trivy='docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v $HOME/Library/Caches:/root/.cache/ aquasec/trivy --ignore-unfixed --light --no-progress'

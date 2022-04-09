@@ -1,0 +1,14 @@
+# ~/.config/starship.toml
+
+# Use custom format
+add_newline = false
+
+[aws]
+symbol = "⛅ "
+
+[terraform]
+format = "[👷 $version]($style) "
+
+[time]
+disabled = false
+format = '🕙 [\[$time\]]($style) '
