@@ -26,9 +26,6 @@ rm ~/.zshrc && ln -s "$DOTFILES"/_backup/.zshrc ~ && source ~/.zshrc
 # Delete default starship config and link with backup
 rm ~/.config/starship.toml && ln -s "$DOTFILES"/_backup/starship.toml ~ && source ~/.config/starship.toml
 
-# Install node
-volta install node
-
 # Install global Composer packages
 /usr/local/bin/composer global require laravel/installer
 
