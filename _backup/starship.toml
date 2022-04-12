@@ -6,6 +6,9 @@ add_newline = false
 [aws]
 symbol = "⛅ "
 
+[directory]
+truncation_length = 5
+
 [terraform]
 format = "[👷 $version]($style) "
 
