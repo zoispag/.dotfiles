@@ -1,3 +1,4 @@
+tap "1password/tap"
 tap "buo/cask-upgrade"
 tap "cjbassi/gotop"
 tap "dopplerhq/cli"
@@ -194,6 +195,8 @@ brew "heroku/brew/heroku"
 
 # Password manager that keeps all passwords secure behind one password
 cask "1password"
+# Command-line helper for the 1Password password manager
+cask "1password-cli"
 # Stand alone ad blocker
 cask "adguard"
 cask "background-music"
