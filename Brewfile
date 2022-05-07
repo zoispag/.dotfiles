@@ -104,6 +104,8 @@ brew "httpd"
 brew "httpie"
 # Add GitHub support to git on the command-line
 brew "hub"
+# Tool that can switch between kubectl contexts easily and create aliases
+brew "kubectx"
 # ISO/IEC 23008-12:2017 HEIF file format decoder and encoder
 brew "libheif"
 # Interpreted, interactive, object-oriented programming language
@@ -259,6 +261,8 @@ cask "slowquitapps"
 cask "stremio"
 # Text editor for code, markup and prose
 cask "sublime-text"
+# Quicklook extension for source files
+cask "syntax-highlight"
 # Native GUI tool for relational databases
 cask "tableplus"
 # Messaging app with a focus on speed and security
@@ -286,5 +290,4 @@ mas "NordLayer", id: 1488888843
 mas "Numbers", id: 409203825
 mas "Pages", id: 409201541
 mas "Prime Video", id: 545519333
-mas "Speedtest", id: 1153157709
 mas "The Unarchiver", id: 425424353
