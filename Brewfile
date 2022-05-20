@@ -1,6 +1,7 @@
 tap "1password/tap"
 tap "buo/cask-upgrade"
 tap "cjbassi/gotop"
+tap "derailed/k9s"
 tap "dopplerhq/cli"
 tap "dteoh/sqa"
 tap "github/gh"
@@ -18,6 +19,8 @@ tap "yt-dlp/taps"
 
 # Run your GitHub Actions locally 🚀
 brew "act"
+# GitOps Continuous Delivery for Kubernetes
+brew "argocd"
 # Resource monitor. C++ version and continuation of bashtop and bpytop
 brew "btop"
 # GNU database manager
@@ -104,6 +107,8 @@ brew "httpd"
 brew "httpie"
 # Add GitHub support to git on the command-line
 brew "hub"
+# Little helper to run CNCF's k3s in Docker
+brew "k3d"
 # Tool that can switch between kubectl contexts easily and create aliases
 brew "kubectx"
 # ISO/IEC 23008-12:2017 HEIF file format decoder and encoder
@@ -184,6 +189,8 @@ brew "zsh"
 brew "zsh-completions"
 # A terminal based graphical activity monitor inspired by gtop and vtop
 brew "cjbassi/gotop/gotop"
+# 🐶 Kubernetes CLI To Manage Your Clusters In Style!
+brew "derailed/k9s/k9s"
 # The official Doppler CLI for managing your secrets
 brew "dopplerhq/cli/doppler"
 # Fast linters runner for Go.
@@ -229,6 +236,8 @@ cask "iina"
 # Terminal emulator as alternative to Apple's Terminal app
 cask "iterm2"
 cask "java"
+# Kubernetes IDE
+cask "lens"
 # Native desktop app for Messenger (formerly Facebook Messenger)
 cask "messenger"
 # Provides updates to various Microsoft products

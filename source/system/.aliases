@@ -32,6 +32,11 @@ alias kraken='open -na GitKraken --args -p "$(git rev-parse --show-toplevel)"'
 # AWS
 alias awsadmin='export AWS_PROFILE=admin'
 
+# k8s
+alias k='kubectl'
+alias kns='kubens'
+alias kcx='kubectx'
+
 # Docker
 alias drmf='docker rm --force'
 alias drmi='docker rmi'
