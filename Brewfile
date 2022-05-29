@@ -37,6 +37,8 @@ brew "bzip2"
 brew "cairo"
 # Dependency Manager for PHP
 brew "composer"
+# GNU File, Shell, and Text utilities
+brew "coreutils"
 # Get a file from an HTTP, HTTPS or FTP server
 brew "curl"
 # AV1 decoder targeted to be small and fast
