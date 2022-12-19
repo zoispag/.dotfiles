@@ -36,6 +36,7 @@ alias awsadmin='export AWS_PROFILE=admin'
 alias k='kubectl'
 alias kns='kubens'
 alias kcx='kubectx'
+alias kctx='kubectx'
 
 # Docker
 alias drmf='docker rm --force'
