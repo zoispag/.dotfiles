@@ -22,5 +22,10 @@ zle -N down-line-or-beginning-search
 bindkey "^[[A" up-line-or-beginning-search # Up
 bindkey "^[[B" down-line-or-beginning-search # Down
 
+# Plugins
+source ~/.dotfiles/source/system/antigen.zsh
+antigen bundle zpm-zsh/undollar
+antigen apply
+
 # krew path
 export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
