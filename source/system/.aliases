@@ -34,6 +34,7 @@ alias awsadmin='export AWS_PROFILE=admin'
 
 # k8s
 alias k='kubectl'
+alias kubectl='kubecolor'
 alias kns='kubens'
 alias kcx='kubectx'
 alias kctx='kubectx'
