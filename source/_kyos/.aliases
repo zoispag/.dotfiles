@@ -27,6 +27,7 @@ alias dcron='docker exec -it cron /bin/bash'
 alias dphp='docker exec -it kyos-php /bin/bash'
 alias dart='docker exec -it kyos-php php artisan'
 alias dide='docker exec -it kyos-php composer ide'
+alias dmig='docker exec -it kyos-php bash /startup.sh'
 
 # xdebug related
 alias xdon='docker exec -it php-server /bin/bash -c "xdebug-switch 1" && docker stop php-server && docker start php-server'
