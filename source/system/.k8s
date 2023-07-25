@@ -1,0 +1,42 @@
+#!/bin/bash
+
+alias k='kubectl'
+alias kubectl='kubecolor'
+
+# kubectx + kubens
+alias kns='kubens'
+alias kcx='kubectx'
+alias kctx='kubectx'
+
+# kubectl get
+alias kgn='kubectl get nodes'
+alias kgp='kubectl get pods'
+alias kgd='kubectl get deploy'
+alias kgrs='kubectl get replicasets'
+alias kgss='kubectl get statefulsets'
+alias kgds='kubectl get daemonsets'
+alias kgs='kubectl get secrets'
+alias kgcm='kubectl get configmaps'
+alias kgns='kubectl get namespaces'
+alias kgsv='kubectl get svc'
+alias kgj='kubectl get jobs'
+alias kgcj='kubectl get cronjobs'
+
+# Retrieve raw secret values for the provided secret
+function kds() {
+  local secret="$1";
+  kubectl get "secret/${secret}" -ojson | jq '.data | map_values(@base64d)';
+}
+
+# Attaches an ephimeral debug pod to the specified pod. Alpine by default.
+# See https://www.youtube.com/watch?v=qKb6loAEPV0
+function kdebug() {
+  local pod="$1";
+  local image="${2:-alpine}";
+  kubectl debug "$pod" \
+    --image "$image" \
+    --stdin --tty \
+    --share-processes \
+    --copy-to "${pod}-debug";
+  kubectl delete "pod/${pod}-debug";
+}
