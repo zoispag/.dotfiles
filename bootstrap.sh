@@ -40,11 +40,13 @@ if [ ! -L ~/.mackup.cfg ]; then
 fi
 mackup restore
 
-# Symlink the global .gitingore and register it to global git config
+# Symlink the global .gitignore and gitconfig
 if [ ! -L ~/.gitignore ]; then
   ln -s "$DOTFILES"/_backup/.gitignore ~
 fi
-git config --global core.excludesfile ~/.gitignore
+if [ ! -L ~/.gitconfig ]; then
+  ln -s "$DOTFILES"/_backup/.gitconfig ~
+fi
 
 # Register SublimeText `subl .` command
 if [ ! -L /usr/local/bin/subl ]; then

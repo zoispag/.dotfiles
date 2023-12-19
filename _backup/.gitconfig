@@ -1,0 +1,63 @@
+[user]
+    email = zpagoulatos@hotmail.com
+    name = Zois Pagoulatos
+    signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDEHcI/vLXOTUFS7WCQ+PMEXrNkjM4p/STcJ89OvitGt
+[core]
+    excludesfile = /Users/zoispag/.gitignore
+    autocrlf = input
+[commit]
+    gpgsign = true
+[gpg]
+    program = ""
+    format = ssh
+[gpg "ssh"]
+    program = /Applications/1Password.app/Contents/MacOS/op-ssh-sign
+[init]
+    defaultBranch = master
+[push]
+    default = current
+[fetch]
+    prune = true
+[submodule]
+    recurse = true
+[diff]
+    colorMoved = default
+[mergetool]
+    keepBackup = false
+[alias]
+    # nice log
+    l = "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --"
+    # Deal with "There is no tracking information for the current branch."
+    # See: https://zarino.co.uk/post/git-set-upstream/
+    set-upstream = !git branch --set-upstream-to=origin/`git symbolic-ref --short HEAD`
+    versions = tag --sort=v:refname
+    dr = diff @{upstream} @
+    nah = "!f(){ git reset --hard; git clean -df; if [ -d ".git/rebase-apply" ] || [ -d ".git/rebase-merge" ]; then git rebase --abort; fi; }; f"
+    alias = ! git config --get-regexp ^alias\\. | sed -e s/^alias\\.// -e s/\\ /\\ =\\ /
+[filter "lfs"]
+    clean = git-lfs clean -- %f
+    smudge = git-lfs smudge -- %f
+    process = git-lfs filter-process
+    required = true
+[pager]
+    diff = delta
+    log = delta
+    reflog = delta
+    show = delta
+[interactive]
+    diffFilter = delta --color-only --features=interactive
+[delta]
+    features = line-numbers decorations
+    syntax-theme = Dracula
+    plus-style = syntax "#003800"
+    minus-style = syntax "#3f0001"
+[delta "decorations"]
+    commit-decoration-style = bold yellow box ul
+    file-style = bold yellow ul
+    file-decoration-style = none
+    hunk-header-decoration-style = cyan box ul
+[delta "line-numbers"]
+    line-numbers-left-style = cyan
+    line-numbers-right-style = cyan
+    line-numbers-minus-style = 124
+    line-numbers-plus-style = 28
