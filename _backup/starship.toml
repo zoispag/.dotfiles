@@ -11,6 +11,9 @@ symbol = "⛅ "
 [directory]
 truncation_length = 5
 
+[direnv]
+disabled = true
+
 [terraform]
 format = "[👷 $version]($style) "
 
