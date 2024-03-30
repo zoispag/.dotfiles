@@ -23,12 +23,14 @@ tap "pulumi/tap"
 tap "shivammathur/php"
 tap "yt-dlp/taps"
 
-# Run your GitHub Actions locally 🚀
+# Run your GitHub Actions locally
 brew "act"
 # Automate deployment, configuration, and upgrading
 brew "ansible"
 # Automate deployment, configuration, and upgrading
 brew "ansible@2.8"
+# Codec library for encoding and decoding AV1 video streams
+brew "aom"
 # GitOps Continuous Delivery for Kubernetes
 brew "argocd"
 # Official Amazon AWS command-line interface
@@ -41,6 +43,8 @@ brew "btop"
 brew "bzip2"
 # Mozilla CA certificate store
 brew "ca-certificates"
+# Vector graphics library with cross-device output support
+brew "cairo"
 # Cross-platform make
 brew "cmake"
 # Dependency Manager for PHP
@@ -49,6 +53,8 @@ brew "composer"
 brew "coreutils"
 # Get a file from an HTTP, HTTPS or FTP server
 brew "curl"
+# AV1 decoder targeted to be small and fast
+brew "dav1d"
 # Load/unload environment variables based on $PWD
 brew "direnv"
 # Lightweight DNS forwarder and DHCP server
@@ -77,8 +83,14 @@ brew "freetds"
 brew "freetype"
 # Terminal JSON viewer
 brew "fx"
+# GNU compiler collection
+brew "gcc"
+# Graphics library to dynamically manipulate images
+brew "gd"
 # GNU database manager
 brew "gdbm"
+# GNU internationalization (i18n) and localization (l10n) library
+brew "gettext"
 # GitHub command-line tool
 brew "gh"
 # Interpreter for PostScript and PDF
@@ -89,6 +101,8 @@ brew "git-delta"
 brew "git-lfs"
 # Distributed revision control system
 brew "git"
+# Core application library for C
+brew "glib"
 # GNU Pretty Good Privacy (PGP) package
 brew "gnupg"
 # GNU Transport Layer Security (TLS) Library
@@ -101,12 +115,20 @@ brew "gobject-introspection"
 brew "grex"
 # Smarter Dockerfile linter to validate best practices
 brew "hadolint"
+# OpenType text shaping engine
+brew "harfbuzz"
 # Kubernetes package manager
 brew "helm"
 # User-friendly cURL replacement (command-line HTTP client)
 brew "httpie"
 # Add GitHub support to git on the command-line
 brew "hub"
+# Tools and libraries to manipulate images in many formats
+brew "imagemagick"
+# Integer Set Library for the polyhedral model
+brew "isl"
+# JPEG image codec that aids compression and decompression
+brew "jpeg-turbo"
 # Lightweight and flexible command-line JSON processor
 brew "jq"
 # Little helper to run CNCF's k3s in Docker
@@ -115,6 +137,8 @@ brew "k3d"
 brew "k6"
 # Run local Kubernetes cluster in Docker
 brew "kind"
+# Network authentication protocol
+brew "krb5"
 # Tool that can switch between kubectl contexts easily and create aliases
 brew "kubectx"
 # Kubernetes command-line interface
@@ -143,6 +167,10 @@ brew "libomp", link: true
 brew "libssh2"
 # C library for reading, creating, and modifying zip archives
 brew "libzip"
+# Color management engine supporting ICC profiles
+brew "little-cms2"
+# Just-In-Time Compiler (JIT) for the Lua programming language
+brew "luajit"
 # Keep your Mac's application settings in sync
 brew "mackup"
 # CLI for Node.js style checker and lint tool for Markdown files
@@ -173,8 +201,12 @@ brew "openssl@1.1"
 brew "p11-kit"
 # 7-Zip (high compression file archiver) implementation
 brew "p7zip"
+# Framework for layout and rendering of i18n text
+brew "pango"
 # General-purpose scripting language
 brew "php"
+# Passphrase entry dialog utilizing the Assuan protocol
+brew "pinentry"
 # Python dependency management tool
 brew "pipenv"
 # Manage compile and link flags for libraries
@@ -191,18 +223,24 @@ brew "python@3.11"
 brew "python@3.8"
 # Interpreted, interactive, object-oriented programming language
 brew "python@3.9"
-# Library for command-line editing
-brew "readline"
 # Rust toolchain installer
 brew "rustup-init"
 # Command-line tool for the Amazon S3 service
 brew "s3cmd"
+# Low-level access to audio, keyboard, mouse, joystick, and graphics
+brew "sdl2"
 # Static analysis and lint tool, for (ba)sh scripts
 brew "shellcheck"
+# Compression/decompression library aiming for high speed
+brew "snappy"
+# Secure Reliable Transport
+brew "srt"
 # Cross-shell prompt for astronauts
 brew "starship"
 # CLI for generating a Software Bill of Materials from container images
 brew "syft"
+# Tool Command Language
+brew "tcl-tk"
 # User interface to the TELNET protocol
 brew "telnet"
 # Reads from existing Cloud Providers and generates Terraform code
@@ -211,6 +249,8 @@ brew "terracognita"
 brew "terraform"
 # Thin wrapper for Terraform e.g. for locking state
 brew "terragrunt"
+# OCR (Optical Character Recognition) engine
+brew "tesseract"
 # Kubernetes YAML manifests to Terraform HCL converter
 brew "tfk8s"
 # Static analysis security scanner for your terraform code
@@ -221,16 +261,24 @@ brew "tldr"
 brew "tree"
 # Validating, recursive, caching DNS resolver
 brew "unbound"
+# Video processing framework with simplicity in mind
+brew "vapoursynth"
 # JavaScript toolchain manager for reproducible environments
 brew "volta"
 # Executes a program periodically, showing output fullscreen
 brew "watch"
+# Image format providing lossless and lossy compression for web images
+brew "webp"
 # Internet file retriever
 brew "wget"
+# General-purpose data compression with high compression ratio
+brew "xz"
 # Process YAML, JSON, XML, CSV and properties documents from the CLI
 brew "yq"
 # Feature-rich command-line audio/video downloader
 brew "yt-dlp"
+# Scaling, colorspace conversion, and dithering library
+brew "zimg"
 # General-purpose lossless data-compression library
 brew "zlib"
 # Additional completion definitions for zsh
