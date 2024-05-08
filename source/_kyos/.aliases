@@ -11,14 +11,14 @@ alias ct='cd ~/Projects/kyos/clients'
 alias opstf='cd ~/Projects/kyos/ops-terraform'
 alias opsan='cd ~/Projects/kyos/ops-ansible'
 
-# docker-compose
-alias kddown='kd && docker-compose down && cd -'
-alias kdup='kd && docker-compose up -d && cd -'
-alias kdps='kd && docker-compose ps && cd -'
-alias cronstop='kd && docker-compose stop cron && cd -'
-alias cronstart='kd && docker-compose start cron && cd -'
-alias extrastop='kd && docker-compose stop cron swagger-editor mailcatcher python && cd -'
-alias extrastart='kd && docker-compose start cron swagger-editor mailcatcher python && cd -'
+# docker compose
+alias kddown='kd && docker compose down && cd -'
+alias kdup='kd && docker compose up -d && cd -'
+alias kdps='kd && docker compose ps && cd -'
+alias cronstop='kd && docker compose stop cron && cd -'
+alias cronstart='kd && docker compose start cron && cd -'
+alias extrastop='kd && docker compose stop cron swagger-editor mailcatcher python && cd -'
+alias extrastart='kd && docker compose start cron swagger-editor mailcatcher python && cd -'
 alias commonstart='kd && dup db php'
 
 # container execs

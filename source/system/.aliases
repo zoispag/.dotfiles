@@ -38,21 +38,22 @@ alias drmi='docker rmi'
 alias dpsa='docker ps -a'
 alias ctop='docker run --rm -ti -v /var/run/docker.sock:/var/run/docker.sock --name ctop quay.io/vektorlab/ctop:latest'
 
-# docker-compose
-alias dps='docker-compose ps'
-alias dup='docker-compose up -d'
-alias ddown='docker-compose down'
-alias dstart='docker-compose start'
-alias dstop='docker-compose stop'
+# docker compose
+alias dps='docker compose ps'
+alias dup='docker compose up -d'
+alias ddown='docker compose down'
+alias dstart='docker compose start'
+alias dstop='docker compose stop'
 alias drr='ddown && dup'
-alias dbuild='COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker-compose build'
+alias dbuild='COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker compose build'
 alias drb='ddown && dbuild && dup'
-alias dpull='docker-compose pull'
+alias dpull='docker compose pull'
 
 # typos 🙈
 alias dokcer='docker'
-alias dokcer-compose='docker-compose'
-alias docker-composer='docker-compose'
+alias docker-compose='docker compose'
+alias dokcer-compose='docker compose'
+alias docker-composer='docker compose'
 alias cd..="cd .."
 
 # Docker tools
