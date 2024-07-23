@@ -24,3 +24,12 @@ format = '🕙 [\[$time\]]($style) '
 [kubernetes]
 disabled = false
 symbol = '☸️ '
+
+[nodejs]
+disabled = true
+
+[php]
+disabled = true
+
+[docker_context]
+disabled = true
