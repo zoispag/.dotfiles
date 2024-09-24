@@ -3,10 +3,14 @@
 command_timeout = 1000
 
 # Use custom format
-add_newline = false
+add_newline = true
 
 [aws]
-symbol = "⛅ "
+symbol = "☁️ "
+format = 'on [$symbol($profile )(\($region\) )]($style)'
+
+[gcloud]
+disabled = true
 
 [directory]
 truncation_length = 5
@@ -23,7 +27,15 @@ format = '🕙 [\[$time\]]($style) '
 
 [kubernetes]
 disabled = false
-symbol = '☸️ '
+symbol = '☸️  '
+
+[[kubernetes.contexts]]
+# Using capture groups
+# Contexts from teleport are prefixed with the teleport cluster host.
+# The following entry matches on the Teleport (`teleport.example.online-name`)
+# and renames every matching kube context into a more readable format (`cluster-name`):
+context_pattern = "teleport.*.(com|net|nl|gr|app|online|site)-(?P<cluster>[\\w-]+)"
+context_alias = "$cluster"
 
 [nodejs]
 disabled = true
