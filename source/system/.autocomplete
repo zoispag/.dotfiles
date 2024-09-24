@@ -1,6 +1,14 @@
 # Autocomplete for docker
 fpath=(~/.zsh/completion $fpath)
 
-# autoload -U +X compinit && compinit
-# source <(kubectl completion zsh)
-# source <(minikube completion zsh)
+autoload -U +X bashcompinit && bashcompinit
+autoload -U +X compinit && compinit
+
+# Autocomplete for kubectl
+source <(kubectl completion zsh)
+complete -F __start_kubectl k
+compdef kubecolor=kubectl
+
+# Autocomplete for velero
+source <(velero completion zsh)
+complete -F __start_velero v

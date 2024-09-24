@@ -22,6 +22,11 @@ alias kgsv='kubectl get svc'
 alias kgj='kubectl get jobs'
 alias kgcj='kubectl get cronjobs'
 
+# velero
+alias v='velero'
+alias vgb='velero get backups'
+alias vbd='velero backup describe'
+
 # Retrieve raw secret values for the provided secret
 function kds() {
   local secret="$1";

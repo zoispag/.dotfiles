@@ -263,6 +263,8 @@ brew "tree"
 brew "unbound"
 # Video processing framework with simplicity in mind
 brew "vapoursynth"
+# Disaster recovery for Kubernetes resources and persistent volumes
+brew "velero"
 # JavaScript toolchain manager for reproducible environments
 brew "volta"
 # Executes a program periodically, showing output fullscreen
