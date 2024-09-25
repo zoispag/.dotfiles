@@ -5,6 +5,9 @@ command_timeout = 1000
 # Use custom format
 add_newline = true
 
+[line_break]
+disabled = true
+
 [aws]
 symbol = "☁️ "
 format = 'on [$symbol($profile )(\($region\) )]($style)'
@@ -23,7 +26,7 @@ format = "[👷 $version]($style) "
 
 [time]
 disabled = false
-format = '🕙 [\[$time\]]($style) '
+format = '🕙 [$time](bold bright-black) '
 
 [kubernetes]
 disabled = false
@@ -35,7 +38,15 @@ symbol = '☸️  '
 # The following entry matches on the Teleport (`teleport.example.online-name`)
 # and renames every matching kube context into a more readable format (`cluster-name`):
 context_pattern = "teleport.*.(com|net|nl|gr|app|online|site)-(?P<cluster>[\\w-]+)"
-context_alias = "$cluster"
+context_alias = "teleport:$cluster"
+
+[[kubernetes.contexts]]
+# Using capture groups
+# Contexts from AWS include the full ARN, which contains unnecessary information.
+# The following entry matches on the AWS format (`arn:aws:eks:<region>:<aws-account>:cluster/<cluster-name>`)
+# and renames every matching kube context into a more readable format (`eks:cluster-name`):
+context_pattern = "arn:aws:eks:.*:.*:cluster/(?P<cluster>[\\w-]+)"
+context_alias = "eks:$cluster"
 
 [nodejs]
 disabled = true
