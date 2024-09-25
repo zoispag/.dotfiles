@@ -12,3 +12,6 @@ compdef kubecolor=kubectl
 # Autocomplete for velero
 source <(velero completion zsh)
 complete -F __start_velero v
+
+# Autocomplete for ArgoCD
+source <(argocd completion zsh)
