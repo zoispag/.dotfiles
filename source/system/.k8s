@@ -27,6 +27,14 @@ alias v='velero'
 alias vgb='velero get backups'
 alias vbd='velero backup describe'
 
+# helm
+# Function to store all helm-generated files after running `helm template`
+function helmout () {
+	local releaseName="$1";
+
+	helm template --dry-run "$releaseName" . | awk -vout=out -F": " '$0~/^# Source: /{file=out"/"$2; print "Creating "file; system ("mkdir -p $(dirname "file"); echo -n "" > "file)} $0!~/^#/ && $0!="---"{print $0 >> file}'
+}
+
 # Retrieve raw secret values for the provided secret
 function kds() {
   local secret="$1";
