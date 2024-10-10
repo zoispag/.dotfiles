@@ -5,24 +5,27 @@ command_timeout = 1000
 # Use custom format
 add_newline = true
 
-[line_break]
-disabled = true
+format = """$env_var$kubernetes$directory$git_branch$git_status$aws$time
+$character
+"""
+
+[character]
+success_symbol = "╰⎯"
+error_symbol = "╰⎯"
+# ╭╴ ╰─
+
+[env_var]
+symbol = "╭╴"
+variable = 'SHELL'
+format = "$symbol"
+disabled = false
 
 [aws]
 symbol = "☁️ "
 format = 'on [$symbol($profile )(\($region\) )]($style)'
 
-[gcloud]
-disabled = true
-
 [directory]
 truncation_length = 5
-
-[direnv]
-disabled = true
-
-[terraform]
-format = "[👷 $version]($style) "
 
 [time]
 disabled = false
@@ -47,12 +50,3 @@ context_alias = "teleport:$cluster"
 # and renames every matching kube context into a more readable format (`eks:cluster-name`):
 context_pattern = "arn:aws:eks:.*:.*:cluster/(?P<cluster>[\\w-]+)"
 context_alias = "eks:$cluster"
-
-[nodejs]
-disabled = true
-
-[php]
-disabled = true
-
-[docker_context]
-disabled = true
