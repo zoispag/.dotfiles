@@ -283,8 +283,12 @@ brew "yt-dlp"
 brew "zimg"
 # General-purpose lossless data-compression library
 brew "zlib"
+# Fish-like fast/unobtrusive autosuggestions for zsh
+brew "zsh-autosuggestions"
 # Additional completion definitions for zsh
 brew "zsh-completions"
+# Fish shell like syntax highlighting for zsh
+brew "zsh-syntax-highlighting"
 # UNIX shell (command interpreter)
 brew "zsh"
 
