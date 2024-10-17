@@ -4,6 +4,7 @@ alias ...="cd ../.."
 
 # Better replacements (eza, bat, zoxide)
 alias ls='eza --git --icons=always'
+alias ll='ls -al'
 alias cat='bat --paging never --theme DarkNeon --style plain'
 alias catn='bat --paging never --theme DarkNeon --style=rule,header,numbers'
 alias fzfp='fzf --preview "bat --style=rule,numbers --color=always {}"'
