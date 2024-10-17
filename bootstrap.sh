@@ -39,6 +39,14 @@ rm ~/.config/starship.toml && ln -s "$DOTFILES"/_backup/starship.toml ~ && sourc
 # Install global Composer packages
 /usr/local/bin/composer global require laravel/installer
 
+# tmux config
+TMUX_HOME="${XDG_CONFIG_HOME:-${HOME}/.config}/tmux"
+mkdir -p "$TMUX_HOME"
+ln -s ~/.dotfiles/_backup/tmux.conf "$TMUX_HOME"/tmux.conf
+
+# Install tmux plugin Manager
+git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+
 # Create Projects directory
 if [ ! -d ~/Projects ]; then
   mkdir ~/Projects
