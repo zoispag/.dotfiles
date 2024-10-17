@@ -1,7 +1,14 @@
 # oh-my-zsh inspired
 alias ..="cd ../"
 alias ...="cd ../.."
-alias ll="ls -l"     # long list
+
+# Better replacements (eza, bat, zoxide)
+alias ls='eza --git --icons=always'
+alias cat='bat --paging never --theme DarkNeon --style plain'
+alias catn='bat --paging never --theme DarkNeon --style=rule,header,numbers'
+alias fzfp='fzf --preview "bat --style=rule,numbers --color=always {}"'
+
+alias watch='viddy'
 
 # Traversal
 alias dl="cd ~/Downloads"

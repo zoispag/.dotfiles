@@ -3,13 +3,10 @@ tap "armosec/kubescape"
 tap "buo/cask-upgrade"
 tap "cjbassi/gotop"
 tap "deggja/netfetch", "https://github.com/deggja/netfetch"
-tap "derailed/k9s"
-tap "dopplerhq/cli"
 tap "dteoh/sqa"
 tap "fairwindsops/tap"
 tap "github/gh"
 tap "golangci/tap"
-tap "goreleaser/tap"
 tap "hashicorp/tap"
 tap "hidetatz/tap"
 tap "homebrew/bundle"
@@ -17,8 +14,6 @@ tap "homebrew/cask"
 tap "homebrew/cask-fonts"
 tap "homebrew/core"
 tap "homebrew/services"
-tap "jesseduffield/lazygit"
-tap "norwoodj/tap"
 tap "pulumi/tap"
 tap "shivammathur/php"
 tap "yt-dlp/taps"
@@ -33,12 +28,8 @@ brew "ansible@2.8"
 brew "aom"
 # GitOps Continuous Delivery for Kubernetes
 brew "argocd"
-# Official Amazon AWS command-line interface
-brew "awscli"
 # Bourne-Again SHell, a UNIX command interpreter
 brew "bash"
-# Resource monitor. C++ version and continuation of bashtop and bpytop
-brew "btop"
 # Freely available high-quality data compressor
 brew "bzip2"
 # Mozilla CA certificate store
@@ -55,16 +46,10 @@ brew "coreutils"
 brew "curl"
 # AV1 decoder targeted to be small and fast
 brew "dav1d"
-# Load/unload environment variables based on $PWD
-brew "direnv"
 # Lightweight DNS forwarder and DHCP server
 brew "dnsmasq"
-# Docker Credential Helper for Amazon ECR
-brew "docker-credential-helper-ecr", link: false
 # Create Docker hosts locally and on cloud providers
 brew "docker-machine"
-# Command-line tool for DigitalOcean
-brew "doctl"
 # Convert text between DOS, UNIX, and Mac formats
 brew "dos2unix"
 # Disk Usage/Free Utility - a better 'df' alternative
@@ -91,16 +76,8 @@ brew "gd"
 brew "gdbm"
 # GNU internationalization (i18n) and localization (l10n) library
 brew "gettext"
-# GitHub command-line tool
-brew "gh"
 # Interpreter for PostScript and PDF
 brew "ghostscript"
-# Syntax-highlighting pager for git and diff output
-brew "git-delta"
-# Git extension for versioning large files
-brew "git-lfs"
-# Distributed revision control system
-brew "git"
 # Core application library for C
 brew "glib"
 # GNU Pretty Good Privacy (PGP) package
@@ -117,8 +94,6 @@ brew "grex"
 brew "hadolint"
 # OpenType text shaping engine
 brew "harfbuzz"
-# Kubernetes package manager
-brew "helm"
 # User-friendly cURL replacement (command-line HTTP client)
 brew "httpie"
 # Add GitHub support to git on the command-line
@@ -129,8 +104,6 @@ brew "imagemagick"
 brew "isl"
 # JPEG image codec that aids compression and decompression
 brew "jpeg-turbo"
-# Lightweight and flexible command-line JSON processor
-brew "jq"
 # Little helper to run CNCF's k3s in Docker
 brew "k3d"
 # Modern load testing tool, using Go and JavaScript
@@ -139,10 +112,6 @@ brew "k6"
 brew "kind"
 # Network authentication protocol
 brew "krb5"
-# Tool that can switch between kubectl contexts easily and create aliases
-brew "kubectx"
-# Kubernetes command-line interface
-brew "kubernetes-cli"
 # Kubernetes testing according to Hardening Guidance by NSA and CISA
 brew "kubescape", link: false
 # Kubernetes controller and tool for one-way encrypted Secrets
@@ -255,8 +224,6 @@ brew "tesseract"
 brew "tfk8s"
 # Static analysis security scanner for your terraform code
 brew "tfsec"
-# Simplified and community-driven man pages
-brew "tldr"
 # Display directories as trees (with optional color/HTML output)
 brew "tree"
 # Validating, recursive, caching DNS resolver
@@ -267,28 +234,18 @@ brew "vapoursynth"
 brew "velero"
 # JavaScript toolchain manager for reproducible environments
 brew "volta"
-# Executes a program periodically, showing output fullscreen
-brew "watch"
 # Image format providing lossless and lossy compression for web images
 brew "webp"
 # Internet file retriever
 brew "wget"
 # General-purpose data compression with high compression ratio
 brew "xz"
-# Process YAML, JSON, XML, CSV and properties documents from the CLI
-brew "yq"
 # Feature-rich command-line audio/video downloader
 brew "yt-dlp"
 # Scaling, colorspace conversion, and dithering library
 brew "zimg"
 # General-purpose lossless data-compression library
 brew "zlib"
-# Fish-like fast/unobtrusive autosuggestions for zsh
-brew "zsh-autosuggestions"
-# Additional completion definitions for zsh
-brew "zsh-completions"
-# Fish shell like syntax highlighting for zsh
-brew "zsh-syntax-highlighting"
 # UNIX shell (command interpreter)
 brew "zsh"
 
@@ -298,24 +255,14 @@ brew "armosec/kubescape/kubescape-cli"
 brew "cjbassi/gotop/gotop"
 # CLI tool to scan for network policies in Kubernetes clusters/namespaces and provide a score based on the amount of untargeted workloads
 brew "deggja/netfetch/netfetch"
-# 🐶 Kubernetes CLI To Manage Your Clusters In Style!
-brew "derailed/k9s/k9s"
-# The official Doppler CLI for managing your secrets
-brew "dopplerhq/cli/doppler"
 # Detect deprecated Kubernetes apiVersions
 brew "fairwindsops/tap/pluto"
 # Fast linters runner for Go.
 brew "golangci/tap/golangci-lint"
-# Deliver Go binaries as fast and easily as possible
-brew "goreleaser/tap/goreleaser"
 # Packer
 brew "hashicorp/tap/packer"
 # Colorize your kubectl output
 brew "hidetatz/tap/kubecolor"
-# A simple terminal UI for git commands, written in Go
-brew "jesseduffield/lazygit/lazygit"
-# Automatically generate markdown documentation for helm charts
-brew "norwoodj/tap/helm-docs"
 # Pulumi - Modern Infrastructure as Code. Any cloud, any language
 brew "pulumi/tap/pulumi"
 

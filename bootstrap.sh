@@ -2,6 +2,11 @@
 
 echo "Setting up your Mac..."
 
+# Check for devbox and install if we don't have it
+if test ! $(which devbox); then
+	curl -fsSL https://get.jetify.com/devbox | bash
+fi
+
 # Check for Homebrew and install if we don't have it
 if test ! $(which brew); then
   /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
@@ -22,6 +27,11 @@ chsh -s $(which zsh)
 
 # Delete default ~/.zshrc and link with backup
 rm ~/.zshrc && ln -s "$DOTFILES"/_backup/.zshrc ~ && source ~/.zshrc
+
+# Link global devbox with backup and install global devbox packages
+rm -f ~/.local/share/devbox/global/default/devbox.json \
+	&& ln -s "$DOTFILES"/_backup/devbox.json ~/.local/share/devbox/global/default/devbox.json \
+	&& refresh-global
 
 # Delete default starship config and link with backup
 rm ~/.config/starship.toml && ln -s "$DOTFILES"/_backup/starship.toml ~ && source ~/.config/starship.toml

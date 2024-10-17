@@ -1,9 +1,3 @@
-# Autocomplete for docker
-fpath=(~/.zsh/completion $fpath)
-
-autoload -U +X bashcompinit && bashcompinit
-autoload -U +X compinit && compinit
-
 # Autocomplete for kubectl
 source <(kubectl completion zsh)
 complete -F __start_kubectl k

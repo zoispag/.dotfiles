@@ -1,0 +1,40 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.12.0/.schema/devbox.schema.json",
+  "packages": [
+    "amazon-ecr-credential-helper@0.9.0",
+    "awscli2@2.17.64",
+    "bat@0.24.0",
+    "btop@1.4.0",
+    "delta@0.18.2",
+    "direnv@2.35.0",
+    "doctl@1.115.0",
+    "doppler@3.69.1",
+    "eza@0.20.2",
+    "fzf@0.55.0",
+    "gh@2.54.0",
+    "git-lfs@3.5.1",
+    "git@2.46.0",
+    "gotop@4.2.0",
+    "helm-docs@1.14.2",
+    "htop@3.3.0",
+    "jq@1.7.1",
+    "k9s@0.32.5",
+    "kubecolor@0.4.0",
+    "kubectl@1.31.0",
+    "kubectx@0.9.5",
+    "kubernetes-helm@3.16.1",
+    "lazygit@0.44.1",
+    "starship@1.20.1",
+    "tldr@1.6.1",
+    "tmux@3.5a",
+    "viddy@1.1.5",
+    "yq-go@4.44.3",
+    "zoxide@0.9.6"
+  ],
+  "shell": {
+    "init_hook": [
+      "echo 'Welcome to devbox!' > /dev/null"
+    ],
+    "scripts": {}
+  }
+}

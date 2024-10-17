@@ -19,40 +19,40 @@ setopt HIST_BEEP                 # Beep when accessing nonexistent history.
 
 alias forget=' forget_last_history_entry' # The alias starts with a space so it won't be included in history.
 
-forget_last_history_entry() {
-  # Set history file's location
-  local HISTORY_FILE="${HOME}/.zsh_history"
+# forget_last_history_entry() {
+#   # Set history file's location
+#   local HISTORY_FILE="${HOME}/.zsh_history"
 
-  # Create a temp unique file
-  local HISTORY_TEMP_FILE="${HISTORY_FILE}.$$"
+#   # Create a temp unique file
+#   local HISTORY_TEMP_FILE="${HISTORY_FILE}.$$"
 
-  local LINES_TO_REMOVE="${1:-1}"
+#   local LINES_TO_REMOVE="${1:-1}"
 
-  # shellcheck disable=SC2065
-  if ! test "$LINES_TO_REMOVE" -eq "$LINES_TO_REMOVE" > /dev/null 2>&1; then
-		echo "Non-numeric argument provided. Exiting."
-		return
-	else
-		LINES_TO_REMOVE="$((LINES_TO_REMOVE * -1))"
-	fi
+#   # shellcheck disable=SC2065
+#   if ! test "$LINES_TO_REMOVE" -eq "$LINES_TO_REMOVE" > /dev/null 2>&1; then
+# 		echo "Non-numeric argument provided. Exiting."
+# 		return
+# 	else
+# 		LINES_TO_REMOVE="$((LINES_TO_REMOVE * -1))"
+# 	fi
 
-	# Write current shell's history to the history file.
-  fc -W
+# 	# Write current shell's history to the history file.
+#   fc -W
 
-	# Remove last lines x from history
-	if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-    < "$HISTORY_FILE" head -n "${LINES_TO_REMOVE}" &> "$HISTORY_TEMP_FILE"
-	elif [[ "$OSTYPE" == "darwin"* ]]; then
-		if ! command -v ghead &> /dev/null; then
-			echo head does not work with negative numbers on Mac. Use ghead instead from GNU utils.
-			echo "$ brew install coreutils"
-			return
-		fi
+# 	# Remove last lines x from history
+# 	if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+#     < "$HISTORY_FILE" head -n "${LINES_TO_REMOVE}" &> "$HISTORY_TEMP_FILE"
+# 	elif [[ "$OSTYPE" == "darwin"* ]]; then
+# 		if ! command -v ghead &> /dev/null; then
+# 			echo head does not work with negative numbers on Mac. Use ghead instead from GNU utils.
+# 			echo "$ brew install coreutils"
+# 			return
+# 		fi
 
-		< "$HISTORY_FILE" ghead -n "${LINES_TO_REMOVE}" &> "$HISTORY_TEMP_FILE"
-	fi
-  mv "$HISTORY_TEMP_FILE" "$HISTORY_FILE"
+# 		< "$HISTORY_FILE" ghead -n "${LINES_TO_REMOVE}" &> "$HISTORY_TEMP_FILE"
+# 	fi
+#   mv "$HISTORY_TEMP_FILE" "$HISTORY_FILE"
 
-	# Read history file.
-  fc -R
-}
+# 	# Read history file.
+#   fc -R
+# }

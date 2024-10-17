@@ -7,21 +7,35 @@ export LANG=en_US.UTF-8
 # See https://discourse.brew.sh/t/failed-to-set-locale-category-lc-numeric-to-en-ru/5092/20
 export LC_ALL=en_US.UTF-8
 
-# Source my .dotfiles
-for file in `find ~/.dotfiles/source -name ".*"`; do
-    source "$file"
-done
+#################
+#  zinit setup  #
+#################
+ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
+[ ! -d $ZINIT_HOME ] && mkdir -p "$(dirname $ZINIT_HOME)"
+[ ! -d $ZINIT_HOME/.git ] && git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
+source "${ZINIT_HOME}/zinit.zsh"
 
+autoload -U +X bashcompinit && bashcompinit
+autoload -U +X compinit && compinit
+
+#################
+# zinit plugins #
+#################
+zinit light zsh-users/zsh-autosuggestions
+zinit light zsh-users/zsh-completions
+zinit light zsh-users/zsh-syntax-highlighting
+zinit light Aloxaf/fzf-tab
+
+# Configure Devbox as the primary package manager
+eval "$(devbox global shellenv --init-hook)"
+# Configure zsh to initialize starship
 eval "$(starship init zsh)"
+# Configure direnv hook
 eval "$(direnv hook zsh)"
 
-# Source zsh plugins
-source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-
-if type brew &>/dev/null; then
-  FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
-
-  autoload -Uz compinit
-  compinit
-fi
+###################
+# Source dotfiles #
+###################
+for file in `find ~/.dotfiles/source -name ".*"`; do
+	source "$file"
+done
