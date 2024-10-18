@@ -42,6 +42,7 @@ eval "$(direnv hook zsh)"
 # Shell integrations
 eval "$(fzf --zsh)"
 eval "$(zoxide init --cmd cd zsh)"
+eval "$(zellij setup --generate-auto-start zsh)"
 
 ###################
 # Source dotfiles #
