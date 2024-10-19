@@ -26,6 +26,7 @@ zinit light zsh-users/zsh-autosuggestions
 zinit light zsh-users/zsh-completions
 zinit light zsh-users/zsh-syntax-highlighting
 zinit light Aloxaf/fzf-tab
+zinit load atuinsh/atuin
 
 autoload -U +X bashcompinit && bashcompinit
 autoload -U +X compinit && compinit
@@ -41,6 +42,7 @@ eval "$(direnv hook zsh)"
 
 # Shell integrations
 eval "$(fzf --zsh)"
+eval "$(atuin init zsh)"
 eval "$(zoxide init --cmd cd zsh)"
 eval "$(zellij setup --generate-auto-start zsh)"
 
