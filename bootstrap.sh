@@ -36,11 +36,11 @@ rm -f ~/.local/share/devbox/global/default/devbox.json \
 # Delete default starship config and link with backup
 rm ~/.config/starship.toml && ln -s "$DOTFILES"/_backup/starship.toml ~ && source ~/.config/starship.toml
 
-# Install global Composer packages
-/usr/local/bin/composer global require laravel/installer
-
 # zellij config
 ln -s ~/.dotfiles/_backup/zellij ~/.config/zellij
+
+# Install global Composer packages
+/usr/local/bin/composer global require laravel/installer
 
 # Create Projects directory
 if [ ! -d ~/Projects ]; then
