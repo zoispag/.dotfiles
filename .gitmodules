@@ -1,0 +1,11 @@
+[submodule ".dotbot/dotbot"]
+	path = .dotbot/dotbot
+	url = https://github.com/anishathalye/dotbot
+
+[submodule ".dotbot/dotbot-brew"]
+	path = .dotbot/dotbot-brew
+	url = https://github.com/d12frosted/dotbot-brew.git
+
+[submodule ".dotbot/dotbot-if"]
+	path = .dotbot/dotbot-if
+	url = https://github.com/zoispag/dotbot-if.git

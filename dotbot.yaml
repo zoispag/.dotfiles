@@ -1,0 +1,64 @@
+- defaults:
+    link:
+      relink: true
+
+- clean: ['~']
+
+- link:
+    ~/.zshrc:
+      force: true
+      path: _backup/.zshrc
+    ~/.local/share/devbox/global/default/devbox.json:
+      create: true
+      force: true
+      path: _backup/devbox.json
+    ~/.config/starship.toml:
+      create: true
+      force: true
+      path: _backup/starship.toml
+    ~/.config/zellij:
+      create: true
+      force: true
+      path: _backup/zellij
+    ~/.vimrc:
+      force: true
+      path: _backup/.vimrc
+    ~/.gitignore:
+      force: true
+      path: _backup/.gitignore
+    ~/.gitconfig:
+      force: true
+      path: _backup/.gitconfig
+    ~/.mackup.cfg:
+      force: true
+      path: .mackup.cfg
+    /usr/local/bin/battery-status:
+      path: bin/battery-status
+
+- create:
+    - ~/Projects
+
+- if:
+    cond: 'test ! $(which devbox)'
+    met:
+    - shell:
+      - [curl -fsSL https://get.jetify.com/devbox | bash, Install DevBox]
+
+- if:
+    cond: 'test ! $(which brew)'
+    met:
+    - shell:
+      - [/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)", Install Homebrew]
+
+- shell:
+  - [chsh -s $(which zsh), Set ZSH as default shell]
+  - [git submodule update --init --recursive, Installing submodules]
+  - ['eval "$(devbox global shellenv --preserve-path-stack -r)" && hash -r', Install devbox globals]
+  - [mackup restore, Run mackup restore]
+  - [/usr/local/bin/composer global require laravel/installer, Add Laravel as a global composer package]
+
+- tap:
+    - homebrew/bundle
+
+- brewfile:
+    - Brewfile
