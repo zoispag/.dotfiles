@@ -246,8 +246,6 @@ brew "yt-dlp"
 brew "zimg"
 # General-purpose lossless data-compression library
 brew "zlib"
-# UNIX shell (command interpreter)
-brew "zsh"
 
 # Kubernetes misconfiguration testing
 brew "armosec/kubescape/kubescape-cli"
