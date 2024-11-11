@@ -28,6 +28,10 @@
       create: true
       force: true
       path: _backup/nvim
+    ~/.config/fastfetch:
+      create: true
+      force: true
+      path: _backup/fastfetch
     ~/.vimrc:
       force: true
       path: _backup/.vimrc
