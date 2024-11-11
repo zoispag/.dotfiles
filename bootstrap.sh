@@ -36,6 +36,9 @@ rm -f ~/.local/share/devbox/global/default/devbox.json \
 # Delete default starship config and link with backup
 rm ~/.config/starship.toml && ln -s "$DOTFILES"/_backup/starship.toml ~ && source ~/.config/starship.toml
 
+# neovim config
+ln -s ~/.dotfiles/_backup/nvim ~/.config/nvim
+
 # zellij config
 ln -s ~/.dotfiles/_backup/zellij ~/.config/zellij
 

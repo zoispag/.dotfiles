@@ -25,6 +25,8 @@
     "kubectx@0.9.5",
     "kubernetes-helm@3.16.1",
     "lazygit@0.44.1",
+    "neovim@0.10.2",
+    "ripgrep@14.1.1",
     "starship@1.20.1",
     "tldr@1.6.1",
     "viddy@1.1.5",

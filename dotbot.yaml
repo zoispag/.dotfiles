@@ -20,6 +20,10 @@
       create: true
       force: true
       path: _backup/zellij
+    ~/.config/nvim:
+      create: true
+      force: true
+      path: _backup/nvim
     ~/.vimrc:
       force: true
       path: _backup/.vimrc
