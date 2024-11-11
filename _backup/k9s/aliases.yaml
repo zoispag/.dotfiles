@@ -1,0 +1,13 @@
+aliases:
+  dp: deployments
+  sec: v1/secrets
+  jo: jobs
+  cr: clusterroles
+  crb: clusterrolebindings
+  ro: roles
+  rb: rolebindings
+  np: networkpolicies
+  sn: snapshot.storage.k8s.io/v1/volumesnapshots
+  sm: monitoring.coreos.com/v1/servicemonitors
+  pm: monitoring.coreos.com/v1/podmonitors
+

@@ -20,6 +20,10 @@
       create: true
       force: true
       path: _backup/zellij
+    ~/.config/k9s:
+      create: true
+      force: true
+      path: _backup/k9s
     ~/.config/nvim:
       create: true
       force: true
