@@ -1,4 +1,18 @@
 plugins:
+  evict-pods:
+    shortCut: Shift-V
+    confirm: true
+    description: "Evict pod"
+    scopes:
+      - pods
+    command: kubectl
+    dangerous: true
+    background: true
+    args:
+      - evict-pod
+      - $NAME
+      - -n
+      - $NAMESPACE
   # Manage cert-manager Certificate resouces via cmctl.
   # See: https://github.com/cert-manager/cmctl
   cert-status:
