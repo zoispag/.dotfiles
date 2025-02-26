@@ -38,9 +38,9 @@ symbol = '☸️  '
 [[kubernetes.contexts]]
 # Using capture groups
 # Contexts from teleport are prefixed with the teleport cluster host.
-# The following entry matches on the Teleport (`teleport.example.online-name`)
+# The following entry matches on the Teleport (`example.teleport.sh`)
 # and renames every matching kube context into a more readable format (`cluster-name`):
-context_pattern = "teleport.*.(com|net|nl|gr|app|online|site)-(?P<cluster>[\\w-]+)"
+context_pattern = ".*\\.teleport\\.sh-(?P<cluster>[\\w-]+)"
 context_alias = "teleport:$cluster"
 
 [[kubernetes.contexts]]
