@@ -10,9 +10,6 @@ tap "golangci/tap"
 tap "hashicorp/tap"
 tap "hidetatz/tap"
 tap "homebrew/bundle"
-tap "homebrew/cask"
-tap "homebrew/cask-fonts"
-tap "homebrew/core"
 tap "homebrew/services"
 tap "pulumi/tap"
 tap "shivammathur/php"
@@ -22,8 +19,6 @@ tap "yt-dlp/taps"
 brew "act"
 # Automate deployment, configuration, and upgrading
 brew "ansible"
-# Automate deployment, configuration, and upgrading
-brew "ansible@2.8"
 # Codec library for encoding and decoding AV1 video streams
 brew "aom"
 # GitOps Continuous Delivery for Kubernetes
@@ -164,8 +159,6 @@ brew "nmap"
 brew "node"
 # Development kit for the Java programming language
 brew "openjdk@17"
-# Cryptography and SSL/TLS Toolkit
-brew "openssl@1.1"
 # Library to load and enumerate PKCS#11 modules
 brew "p11-kit"
 # 7-Zip (high compression file archiver) implementation
@@ -188,8 +181,6 @@ brew "pyenv"
 brew "python@3.10"
 # Interpreted, interactive, object-oriented programming language
 brew "python@3.11"
-# Interpreted, interactive, object-oriented programming language
-brew "python@3.8"
 # Interpreted, interactive, object-oriented programming language
 brew "python@3.9"
 # Rust toolchain installer
@@ -268,8 +259,6 @@ brew "pulumi/tap/pulumi"
 cask "1password"
 # Command-line helper for the 1Password password manager
 cask "1password-cli"
-# Stand alone ad blocker
-cask "adguard"
 # Chromium based browser
 cask "arc"
 # Menu bar icon organizer
@@ -304,8 +293,6 @@ cask "microsoft-auto-update"
 cask "microsoft-office"
 # Online collaborative whiteboard platform
 cask "miro"
-# Open source implementation of Microsoft's .NET Framework
-cask "mono-mdk"
 # VPN client for secure internet access and private browsing
 cask "postman"
 # Command-line shell and scripting language
@@ -322,8 +309,6 @@ cask "quicklook-json"
 cask "raycast"
 # Tool to reverse the direction of scrolling
 cask "scroll-reverser"
-# Video chat, voice call and instant messaging application
-cask "skype"
 # Team communication and collaboration software
 cask "slack"
 # Add a global delay to Command-Q to stop accidental app quits
@@ -360,7 +345,6 @@ mas "Numbers", id: 409203825
 mas "Pages", id: 409201541
 mas "Prime Video", id: 545519333
 mas "The Unarchiver", id: 425424353
-mas "Today", id: 6443714928
 mas "Twitter", id: 1482454543
 
 vscode "4ops.packer"
@@ -399,7 +383,6 @@ vscode "tamasfe.even-better-toml"
 vscode "tberman.json-schema-validator"
 vscode "timonwong.shellcheck"
 vscode "tomoki1207.pdf"
-vscode "vtrois.gitmoji-vscode"
 vscode "vue.volar"
 vscode "wakatime.vscode-wakatime"
 vscode "yzane.markdown-pdf"

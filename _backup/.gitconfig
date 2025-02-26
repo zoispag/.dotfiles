@@ -1,7 +1,7 @@
 [user]
     email = zpagoulatos@hotmail.com
     name = Zois Pagoulatos
-    signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDEHcI/vLXOTUFS7WCQ+PMEXrNkjM4p/STcJ89OvitGt
+    signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILKJJBkc2Z69XQwKDlTZM5AuRGiwt7YaOBZMCzs8b5pw
 [core]
     excludesfile = /Users/zoispag/.gitignore
     autocrlf = input
