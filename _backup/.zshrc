@@ -11,6 +11,12 @@ fi
 # See https://discourse.brew.sh/t/failed-to-set-locale-category-lc-numeric-to-en-ru/5092/20
 export LC_ALL=en_US.UTF-8
 
+############
+# homebrew #
+############
+
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
 #################
 #  zinit setup  #
 #################
