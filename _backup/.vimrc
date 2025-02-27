@@ -57,7 +57,7 @@ call plug#end()
 " ---- Theme ---- "
 let g:material_style='palenight'
 set background=dark
-colorscheme vim-material
+silent! colorscheme vim-material
 
 
 
