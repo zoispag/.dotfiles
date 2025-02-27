@@ -261,8 +261,6 @@ cask "1password"
 cask "1password-cli"
 # Chromium based browser
 cask "arc"
-# Menu bar icon organizer
-cask "bartender"
 # Server and cloud storage browser
 cask "cyberduck"
 # Disk space visualizer
@@ -275,24 +273,18 @@ cask "docker"
 cask "font-meslo-lg-nerd-font"
 # GIT client
 cask "fork"
-# Git client focusing on productivity
-cask "gitkraken"
 # Web browser
 cask "google-chrome"
 # Free and open-source media player
 cask "iina"
 # Terminal emulator as alternative to Apple's Terminal app
 cask "iterm2"
-# Kubernetes IDE
-cask "lens"
 # Native desktop app for Messenger (formerly Facebook Messenger)
 cask "messenger"
 # Provides updates to various Microsoft products
 cask "microsoft-auto-update"
 # Office suite
 cask "microsoft-office"
-# Online collaborative whiteboard platform
-cask "miro"
 # VPN client for secure internet access and private browsing
 cask "postman"
 # Command-line shell and scripting language
@@ -321,8 +313,6 @@ cask "sublime-text"
 cask "syntax-highlight"
 # Native GUI tool for relational databases
 cask "tableplus"
-# Messaging app with a focus on speed and security
-cask "telegram"
 # Customizable email client
 cask "transmission"
 # File transfer application
