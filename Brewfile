@@ -1,14 +1,12 @@
 tap "1password/tap"
 tap "armosec/kubescape"
 tap "buo/cask-upgrade"
-tap "cjbassi/gotop"
 tap "deggja/netfetch", "https://github.com/deggja/netfetch"
 tap "dteoh/sqa"
 tap "fairwindsops/tap"
 tap "github/gh"
 tap "golangci/tap"
 tap "hashicorp/tap"
-tap "hidetatz/tap"
 tap "homebrew/bundle"
 tap "homebrew/services"
 tap "pulumi/tap"
@@ -33,6 +31,8 @@ brew "ca-certificates"
 brew "cairo"
 # Cross-platform make
 brew "cmake"
+# Command-line tool to manage cert-manager
+brew "cmctl"
 # Dependency Manager for PHP
 brew "composer"
 # GNU File, Shell, and Text utilities
@@ -43,6 +43,8 @@ brew "curl"
 brew "dav1d"
 # Lightweight DNS forwarder and DHCP server
 brew "dnsmasq"
+# Docker Credential Helper for Amazon ECR
+brew "docker-credential-helper-ecr"
 # Create Docker hosts locally and on cloud providers
 brew "docker-machine"
 # Convert text between DOS, UNIX, and Mac formats
@@ -91,26 +93,18 @@ brew "hadolint"
 brew "harfbuzz"
 # User-friendly cURL replacement (command-line HTTP client)
 brew "httpie"
-# Add GitHub support to git on the command-line
-brew "hub"
 # Tools and libraries to manipulate images in many formats
 brew "imagemagick"
 # Integer Set Library for the polyhedral model
 brew "isl"
 # JPEG image codec that aids compression and decompression
 brew "jpeg-turbo"
-# Little helper to run CNCF's k3s in Docker
-brew "k3d"
 # Modern load testing tool, using Go and JavaScript
 brew "k6"
 # Run local Kubernetes cluster in Docker
 brew "kind"
 # Network authentication protocol
 brew "krb5"
-# Kubernetes testing according to Hardening Guidance by NSA and CISA
-brew "kubescape", link: false
-# Kubernetes controller and tool for one-way encrypted Secrets
-brew "kubeseal"
 # Multi-format archive and compression library
 brew "libarchive"
 # Subtitle renderer for the ASS/SSA subtitle format
@@ -183,8 +177,6 @@ brew "python@3.10"
 brew "python@3.11"
 # Interpreted, interactive, object-oriented programming language
 brew "python@3.9"
-# Rust toolchain installer
-brew "rustup-init"
 # Command-line tool for the Amazon S3 service
 brew "s3cmd"
 # Low-level access to audio, keyboard, mouse, joystick, and graphics
@@ -205,6 +197,8 @@ brew "tcl-tk"
 brew "telnet"
 # Reads from existing Cloud Providers and generates Terraform code
 brew "terracognita"
+# Tool to generate documentation from Terraform modules
+brew "terraform-docs"
 # Tool to build, change, and version infrastructure
 brew "terraform"
 # Thin wrapper for Terraform e.g. for locking state
@@ -213,6 +207,8 @@ brew "terragrunt"
 brew "tesseract"
 # Kubernetes YAML manifests to Terraform HCL converter
 brew "tfk8s"
+# Linter for Terraform files
+brew "tflint"
 # Static analysis security scanner for your terraform code
 brew "tfsec"
 # Display directories as trees (with optional color/HTML output)
@@ -240,8 +236,6 @@ brew "zlib"
 
 # Kubernetes misconfiguration testing
 brew "armosec/kubescape/kubescape-cli"
-# A terminal based graphical activity monitor inspired by gtop and vtop
-brew "cjbassi/gotop/gotop"
 # CLI tool to scan for network policies in Kubernetes clusters/namespaces and provide a score based on the amount of untargeted workloads
 brew "deggja/netfetch/netfetch"
 # Detect deprecated Kubernetes apiVersions
@@ -250,8 +244,6 @@ brew "fairwindsops/tap/pluto"
 brew "golangci/tap/golangci-lint"
 # Packer
 brew "hashicorp/tap/packer"
-# Colorize your kubectl output
-brew "hidetatz/tap/kubecolor"
 # Pulumi - Modern Infrastructure as Code. Any cloud, any language
 brew "pulumi/tap/pulumi"
 
@@ -269,6 +261,8 @@ cask "daisydisk"
 cask "discord"
 # App to build and share containerized applications and microservices
 cask "docker"
+# JetBrainsMono Nerd Font families (JetBrains Mono)
+cask "font-jetbrains-mono-nerd-font"
 # Developer targeted fonts with a high number of glyphs
 cask "font-meslo-lg-nerd-font"
 # GIT client
@@ -285,6 +279,8 @@ cask "messenger"
 cask "microsoft-auto-update"
 # Office suite
 cask "microsoft-office"
+# Knowledge base that works on top of a local folder of plain text Markdown files
+cask "obsidian"
 # VPN client for secure internet access and private browsing
 cask "postman"
 # Command-line shell and scripting language
@@ -301,6 +297,8 @@ cask "quicklook-json"
 cask "raycast"
 # Tool to reverse the direction of scrolling
 cask "scroll-reverser"
+# Web browser
+cask "sigmaos"
 # Team communication and collaboration software
 cask "slack"
 # Add a global delay to Command-Q to stop accidental app quits
@@ -331,6 +329,7 @@ mas "Dato", id: 1470584107
 mas "Keynote", id: 409183694
 mas "Microsoft Remote Desktop", id: 1295203466
 mas "myTuner Radio Pro", id: 808285143
+mas "Nautik", id: 1672838783
 mas "Numbers", id: 409203825
 mas "Pages", id: 409201541
 mas "Prime Video", id: 545519333
