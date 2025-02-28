@@ -267,6 +267,8 @@ cask "font-jetbrains-mono-nerd-font"
 cask "font-meslo-lg-nerd-font"
 # GIT client
 cask "fork"
+# Desktop client for GitHub repositories
+cask "github"
 # Web browser
 cask "google-chrome"
 # Free and open-source media player
@@ -333,6 +335,7 @@ mas "Nautik", id: 1672838783
 mas "Numbers", id: 409203825
 mas "Pages", id: 409201541
 mas "Prime Video", id: 545519333
+mas "Reader.", id: 6475002485
 mas "The Unarchiver", id: 425424353
 
 vscode "4ops.packer"
