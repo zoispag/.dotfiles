@@ -251,8 +251,10 @@ brew "pulumi/tap/pulumi"
 cask "1password"
 # Command-line helper for the 1Password password manager
 cask "1password-cli"
-# Chromium based browser
-cask "arc"
+# AirPods companion app
+cask "airbuddy"
+# Application uninstaller
+cask "appcleaner"
 # Server and cloud storage browser
 cask "cyberduck"
 # Disk space visualizer
@@ -271,16 +273,28 @@ cask "fork"
 cask "github"
 # Web browser
 cask "google-chrome"
+# User-friendly cURL replacement (command-line HTTP client)
+cask "httpie"
 # Free and open-source media player
 cask "iina"
 # Terminal emulator as alternative to Apple's Terminal app
 cask "iterm2"
+# JetBrains tools manager
+cask "jetbrains-toolbox"
+# End-to-end encryption software
+cask "keybase"
+# Open-source Markdown editor
+cask "macdown"
 # Native desktop app for Messenger (formerly Facebook Messenger)
 cask "messenger"
 # Provides updates to various Microsoft products
 cask "microsoft-auto-update"
 # Office suite
 cask "microsoft-office"
+# Meet, chat, call, and collaborate in just one place
+cask "microsoft-teams"
+# Security software for business
+cask "nordlayer"
 # Knowledge base that works on top of a local folder of plain text Markdown files
 cask "obsidian"
 # VPN client for secure internet access and private browsing
@@ -313,7 +327,9 @@ cask "sublime-text"
 cask "syntax-highlight"
 # Native GUI tool for relational databases
 cask "tableplus"
-# Customizable email client
+# Tinker tool for PHP and Laravel developers
+cask "tinkerwell"
+# Open-source BitTorrent client
 cask "transmission"
 # File transfer application
 cask "transmit"
@@ -321,6 +337,8 @@ cask "transmit"
 cask "visual-studio-code"
 # Desktop client for WhatsApp
 cask "whatsapp"
+# VPN client for secure internet access and private browsing
+cask "windscribe"
 # Video communication and virtual meeting platform
 cask "zoom"
 
@@ -335,7 +353,7 @@ mas "Nautik", id: 1672838783
 mas "Numbers", id: 409203825
 mas "Pages", id: 409201541
 mas "Prime Video", id: 545519333
-mas "Reader.", id: 6475002485
+mas "ReadKit - Reading Hub", id: 1615798039
 mas "The Unarchiver", id: 425424353
 
 vscode "4ops.packer"
