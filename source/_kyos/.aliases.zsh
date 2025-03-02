@@ -1,5 +1,7 @@
 alias dssh='ssh -p 2222'
 alias dscp='scp -P 2222'
+alias tssh='ssh -p 3022'
+alias tscp='scp -P 3022'
 
 # paths
 alias kyos='cd ~/Projects/kyos'
