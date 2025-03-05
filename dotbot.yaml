@@ -32,6 +32,10 @@
       create: true
       force: true
       path: _backup/fastfetch
+    ~/.hammerspoon/init.lua:
+      create: true
+      force: true
+      path: _backup/.hammerspoon/init.lua
     ~/.vimrc:
       force: true
       path: _backup/.vimrc
