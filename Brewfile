@@ -315,8 +315,6 @@ cask "quicklook-json"
 cask "raycast"
 # Tool to reverse the direction of scrolling
 cask "scroll-reverser"
-# Web browser
-cask "sigmaos"
 # Team communication and collaboration software
 cask "slack"
 # Add a global delay to Command-Q to stop accidental app quits
@@ -341,6 +339,8 @@ cask "visual-studio-code"
 cask "whatsapp"
 # VPN client for secure internet access and private browsing
 cask "windscribe"
+# Gecko based web browser
+cask "zen-browser"
 # Video communication and virtual meeting platform
 cask "zoom"
 
