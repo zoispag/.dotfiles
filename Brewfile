@@ -129,6 +129,8 @@ brew "libzip"
 brew "little-cms2"
 # Just-In-Time Compiler (JIT) for the Lua programming language
 brew "luajit"
+# Kubernetes CLI To Manage Your Clusters In Style!
+brew "k9s"
 # Keep your Mac's application settings in sync
 brew "mackup"
 # CLI for Node.js style checker and lint tool for Markdown files
