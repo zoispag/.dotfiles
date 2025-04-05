@@ -1,18 +1,8 @@
 k9s:
-  liveViewAutoRefresh: false
   screenDumpDir: /Users/zoispag/Library/Application Support/k9s/screen-dumps
-  refreshRate: 2
-  maxConnRetry: 5
-  readOnly: false
-  noExitOnCtrlC: false
   ui:
-    enableMouse: false
-    headless: false
-    logoless: false
-    crumbsless: false
-    reactive: true
     noIcons: false
-    defaultsToFullScreen: false
+    # skin: catppuccin-latte
   skipLatestRevCheck: false
   disablePodCounting: false
   shellPod:
