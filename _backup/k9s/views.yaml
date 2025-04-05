@@ -1,0 +1,18 @@
+views:
+  karpenter.sh/v1/nodeclaims:
+    columns:
+      - NAMESPACE|H
+      - NODECLASS|H
+      - NODEPOOL|H
+      - CAPACITY|H
+  external-secrets.io/v1beta1/externalsecrets:
+    sortColumn: 'LAST SYNC:asc'
+    columns:
+      - NAMESPACE
+      - NAME
+      - STORETYPE
+      - STORE
+      - 'REFRESH INTERVAL'
+      - 'LAST SYNC:.status.refreshTime|T'
+      - STATUS
+      - READY
