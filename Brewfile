@@ -342,7 +342,7 @@ cask "whatsapp"
 # VPN client for secure internet access and private browsing
 cask "windscribe"
 # Gecko based web browser
-cask "zen-browser"
+cask "zen"
 # Video communication and virtual meeting platform
 cask "zoom"
 
