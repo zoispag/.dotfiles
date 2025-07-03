@@ -45,6 +45,9 @@
     ~/.gitconfig:
       force: true
       path: _backup/.gitconfig
+    ~/.krew-plugins.txt:
+      force: true
+      path: _backup/krew-plugins.txt
     ~/.mackup.cfg:
       force: true
       path: .mackup.cfg
@@ -76,9 +79,7 @@
   - ['eval "$(devbox global shellenv --preserve-path-stack -r)" && hash -r', Install devbox globals]
   # - [mackup restore, Run mackup restore]
   - [composer global require laravel/installer, Add Laravel as a global composer package]
-
-- tap:
-    - homebrew/bundle
+  - [sync-krew, Install krew plugins]
 
 - brewfile:
     - Brewfile

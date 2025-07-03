@@ -1,0 +1,5 @@
+browse-pvc
+df-pv
+evict-pod
+get-all
+ktop

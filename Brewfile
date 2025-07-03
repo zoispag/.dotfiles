@@ -105,6 +105,8 @@ brew "k6"
 brew "kind"
 # Network authentication protocol
 brew "krb5"
+# Package manager for kubectl plugins
+brew "krew"
 # Multi-format archive and compression library
 brew "libarchive"
 # Subtitle renderer for the ASS/SSA subtitle format
@@ -278,7 +280,7 @@ cask "google-chrome"
 # Desktop automation application
 cask "hammerspoon"
 # User-friendly cURL replacement (command-line HTTP client)
-cask "httpie"
+cask "httpie-desktop"
 # Free and open-source media player
 cask "iina"
 # Terminal emulator as alternative to Apple's Terminal app
