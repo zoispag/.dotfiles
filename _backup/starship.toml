@@ -5,7 +5,7 @@ command_timeout = 1000
 # Use custom format
 add_newline = true
 
-format = """$env_var$kubernetes$directory$git_branch$git_status$aws$time
+format = """$env_var$python$kubernetes$directory$git_branch$git_status$aws$time
 $character
 """
 
@@ -23,6 +23,16 @@ disabled = false
 [aws]
 symbol = "☁️ "
 format = 'on [$symbol($profile )(\($region\) )]($style)'
+
+[python]
+format = '[\($symbol$virtualenv\)]($style) '
+symbol = " "
+detect_extensions = []
+detect_files = []
+detect_folders = []
+python_binary = []
+disabled = false
+style = "yellow bold"
 
 [directory]
 truncation_length = 5
