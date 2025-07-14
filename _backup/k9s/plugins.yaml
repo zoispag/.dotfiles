@@ -48,3 +48,14 @@ plugins:
     args:
       - -c
       - "cmctl inspect secret --context $CONTEXT -n $NAMESPACE $NAME |& less"
+  sync-app:
+    shortCut: Shift-S
+    confirm: false
+    scopes:
+      - apps
+    description: Sync a argocd app
+    command: bash
+    background: false
+    args:
+      - -c
+      - "argocd app sync $NAME"
