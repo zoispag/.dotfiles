@@ -1,6 +1,12 @@
 views:
   karpenter.sh/v1/nodeclaims:
     columns:
+      - TYPE
+      - NAME
+      - NODE
+      - 'CORES:.status.capacity.cpu'
+      - 'RAM:.status.capacity.memory'
+      - 'MAX PODS:.status.capacity.pods'
       - NAMESPACE|H
       - NODECLASS|H
       - NODEPOOL|H
