@@ -1,4 +1,38 @@
 plugins:
+  taint-node:
+    shortCut: Shift-T
+    confirm: false
+    description: "Taint node with custom or default taint"
+    scopes:
+      - nodes
+    command: bash
+    background: false
+    args:
+      - -c
+      - |
+        read -p "Enter taint (format key=value:effect, default k9s=true:NoSchedule): " TAINT
+        if [ -z "$TAINT" ]; then
+          TAINT="k9s=true:NoSchedule"
+        fi
+        echo "kubectl --context $CONTEXT taint nodes $NAME $TAINT --overwrite=true" >> ~/.k9s/debug.log
+        kubectl --context $CONTEXT taint nodes $NAME $TAINT --overwrite=true 2>&1 | tee -a ~/.k9s/debug.log
+  untaint-node:
+    shortCut: Shift-U
+    confirm: false
+    description: "Remove taint k9s=true:NoSchedule from node"
+    scopes:
+      - nodes
+    command: bash
+    background: false
+    args:
+      - -c
+      - |
+        read -p "Enter taint to remove (format key:effect, default k9s=true:NoSchedule): " TAINT
+        if [ -z "$TAINT" ]; then
+          TAINT="k9s=true:NoSchedule"
+        fi
+        echo "kubectl --context $CONTEXT taint nodes $NAME $TAINT- --overwrite=true" >> ~/.k9s/debug.log
+        kubectl --context $CONTEXT taint nodes $NAME $TAINT- --overwrite=true 2>&1 | tee -a ~/.k9s/debug.log
   evict-pods:
     shortCut: Shift-V
     confirm: true
@@ -12,7 +46,7 @@ plugins:
       - -c
       - |
         echo "kubectl evict-pod --context $CONTEXT $NAME -n $NAMESPACE" >> ~/.k9s/debug.log
-        kubectl evict-pod --context $CONTEXT $NAME -n $NAMESPACE
+        kubectl evict-pod --context $CONTEXT $NAME -n $NAMESPACE 2>&1 | tee -a ~/.k9s/debug.log
   # Manage cert-manager Certificate resouces via cmctl.
   # See: https://github.com/cert-manager/cmctl
   cert-status:
