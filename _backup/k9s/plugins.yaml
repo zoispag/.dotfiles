@@ -5,14 +5,14 @@ plugins:
     description: "Evict pod"
     scopes:
       - pods
-    command: kubectl
+    command: bash
     dangerous: true
     background: true
     args:
-      - evict-pod
-      - $NAME
-      - -n
-      - $NAMESPACE
+      - -c
+      - |
+        echo "kubectl evict-pod --context $CONTEXT $NAME -n $NAMESPACE" >> ~/.k9s/debug.log
+        kubectl evict-pod --context $CONTEXT $NAME -n $NAMESPACE
   # Manage cert-manager Certificate resouces via cmctl.
   # See: https://github.com/cert-manager/cmctl
   cert-status:
