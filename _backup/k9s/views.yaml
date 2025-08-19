@@ -1,4 +1,23 @@
 views:
+  v1/pods:
+    columns:
+      - NAMESPACE
+      - NAME
+      - 'OWNERKIND:.metadata.ownerReferences[0].kind'
+      - PF
+      - READY
+      - STATUS
+      - RESTARTS
+      - IP
+      - NODE
+      - AGE
+      - ROLE|H
+      - CPU|H
+      - '%CPU/R|H'
+      - '%CPU/L|H'
+      - MEM|H
+      - '%MEM/R|H'
+      - '%MEM/L|H'
   karpenter.sh/v1/nodeclaims:
     columns:
       - TYPE
