@@ -30,7 +30,7 @@ views:
       - NODECLASS|H
       - NODEPOOL|H
       - CAPACITY|H
-  external-secrets.io/v1beta1/externalsecrets:
+  external-secrets.io/v1/externalsecrets:
     sortColumn: 'LAST SYNC:asc'
     columns:
       - NAMESPACE
