@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+## This bash script preceeds the dotbot installation and is no longer kept up to date.
+## It is only preserved for historical purposes.
+
 echo "Setting up your Mac..."
 
 # Check for devbox and install if we don't have it
