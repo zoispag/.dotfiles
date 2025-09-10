@@ -1,4 +1,5 @@
 browse-pvc
+crd-wizard
 df-pv
 evict-pod
 get-all

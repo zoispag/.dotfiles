@@ -93,3 +93,15 @@ plugins:
     args:
       - -c
       - "argocd app sync $NAME"
+  crd-wizard:
+    shortCut: Shift-W
+    description: CRD Wizard
+    dangerous: false
+    scopes:
+      - crds
+    command: bash
+    background: false
+    confirm: false
+    args:
+      - -c
+      - "kubectl crd-wizard tui --kind $COL-KIND"
