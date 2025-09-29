@@ -122,3 +122,16 @@ plugins:
         trap "rm -f '$tmpfile'" EXIT
         ${EDITOR:-vim} "$tmpfile"
         kubectl --context "$CONTEXT" apply -f "$tmpfile" --warnings-as-errors
+  node-shell:
+    shortCut: Ctrl-N
+    description: "Open a root shell on a node using the node-shell plugin"
+    scopes:
+      - nodes
+    command: kubectl
+    args:
+      - node-shell
+      - $NAME
+      - --context
+      - $CONTEXT
+    background: false
+    confirm: false
