@@ -105,3 +105,20 @@ plugins:
     args:
       - -c
       - "kubectl crd-wizard tui --kind $COL-KIND"
+  resource-creator:
+    shortCut: Shift-K
+    description: Apply resource from editor with kubectl
+    scopes:
+      - all
+    command: bash
+    background: false
+    args:
+      - -c
+      - |
+        set -e
+        # Create tmp file
+        tmpfile=$(mktemp /tmp/k9s-apply-XXXXXX).yaml
+        # Cleanup tmp file at the end
+        trap "rm -f '$tmpfile'" EXIT
+        ${EDITOR:-vim} "$tmpfile"
+        kubectl --context "$CONTEXT" apply -f "$tmpfile" --warnings-as-errors
