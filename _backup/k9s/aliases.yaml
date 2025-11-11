@@ -10,4 +10,5 @@ aliases:
   sn: snapshot.storage.k8s.io/v1/volumesnapshots
   sm: monitoring.coreos.com/v1/servicemonitors
   pm: monitoring.coreos.com/v1/podmonitors
-  nc: karpenter.sh/v1/nodeclaims
+  nc: nodeclaims
+  nl: nodepools
