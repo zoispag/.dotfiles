@@ -5,3 +5,4 @@ evict-pod
 get-all
 ktop
 node-shell
+kc
