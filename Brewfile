@@ -2,15 +2,18 @@ tap "1password/tap"
 tap "armosec/kubescape"
 tap "buo/cask-upgrade"
 tap "deggja/netfetch", "https://github.com/deggja/netfetch"
-tap "dteoh/sqa"
 tap "fairwindsops/tap"
 tap "github/gh"
 tap "golangci/tap"
 tap "hashicorp/tap"
 tap "homebrew/bundle"
 tap "homebrew/services"
+tap "kyosenergy/tap"
+tap "minamijoyo/hcledit"
+tap "oven-sh/bun"
 tap "pulumi/tap"
 tap "shivammathur/php"
+tap "threatcl/repo"
 tap "yt-dlp/taps"
 
 # Run your GitHub Actions locally
@@ -29,6 +32,8 @@ brew "bzip2"
 brew "ca-certificates"
 # Vector graphics library with cross-device output support
 brew "cairo"
+# Cloudflare Tunnel client (formerly Argo Tunnel)
+brew "cloudflared"
 # Cross-platform make
 brew "cmake"
 # Command-line tool to manage cert-manager
@@ -43,6 +48,8 @@ brew "curl"
 brew "dav1d"
 # Lightweight DNS forwarder and DHCP server
 brew "dnsmasq"
+# Tool for exploring each layer in a docker image
+brew "dive"
 # Docker Credential Helper for Amazon ECR
 brew "docker-credential-helper-ecr"
 # Create Docker hosts locally and on cloud providers
@@ -85,6 +92,8 @@ brew "gnutls"
 brew "go"
 # Generate introspection data for GObject libraries
 brew "gobject-introspection"
+# Deliver Go binaries as fast and easily as possible
+brew "goreleaser"
 # Command-line tool for generating regular expressions
 brew "grex"
 # Smarter Dockerfile linter to validate best practices
@@ -101,12 +110,16 @@ brew "isl"
 brew "jpeg-turbo"
 # Modern load testing tool, using Go and JavaScript
 brew "k6"
+# Kubernetes CLI To Manage Your Clusters In Style!
+brew "k9s"
 # Run local Kubernetes cluster in Docker
 brew "kind"
 # Network authentication protocol
 brew "krb5"
 # Package manager for kubectl plugins
 brew "krew"
+# FAST Kubernetes manifests validator, with support for Custom Resources!
+brew "kubeconform"
 # Multi-format archive and compression library
 brew "libarchive"
 # Subtitle renderer for the ASS/SSA subtitle format
@@ -125,6 +138,8 @@ brew "libmicrohttpd"
 brew "libomp", link: true
 # C library implementing the SSH2 protocol
 brew "libssh2"
+# YAML Parser
+brew "libyaml"
 # C library for reading, creating, and modifying zip archives
 brew "libzip"
 # Color management engine supporting ICC profiles
@@ -165,6 +180,8 @@ brew "p7zip"
 brew "pango"
 # General-purpose scripting language
 brew "php"
+# PHP internationalization extension
+brew "php-intl"
 # Passphrase entry dialog utilizing the Assuan protocol
 brew "pinentry"
 # Python dependency management tool
@@ -183,6 +200,8 @@ brew "python@3.11"
 brew "python@3.9"
 # Command-line tool for the Amazon S3 service
 brew "s3cmd"
+# Terminal multiplexer with VT100/ANSI terminal emulation
+brew "screen"
 # Low-level access to audio, keyboard, mouse, joystick, and graphics
 brew "sdl2"
 # Static analysis and lint tool, for (ba)sh scripts
@@ -203,8 +222,6 @@ brew "telnet"
 brew "terracognita"
 # Tool to generate documentation from Terraform modules
 brew "terraform-docs"
-# Tool to build, change, and version infrastructure
-brew "terraform"
 # Thin wrapper for Terraform e.g. for locking state
 brew "terragrunt"
 # OCR (Optical Character Recognition) engine
@@ -219,6 +236,8 @@ brew "tfsec"
 brew "tree"
 # Validating, recursive, caching DNS resolver
 brew "unbound"
+# Extremely fast Python package installer and resolver, written in Rust
+brew "uv"
 # Video processing framework with simplicity in mind
 brew "vapoursynth"
 # Disaster recovery for Kubernetes resources and persistent volumes
@@ -231,6 +250,8 @@ brew "webp"
 brew "wget"
 # General-purpose data compression with high compression ratio
 brew "xz"
+# Linter for YAML files
+brew "yamllint"
 # Feature-rich command-line audio/video downloader
 brew "yt-dlp"
 # Scaling, colorspace conversion, and dithering library
@@ -240,6 +261,8 @@ brew "zlib"
 
 # Kubernetes misconfiguration testing
 brew "armosec/kubescape/kubescape-cli"
+# eks-node-viewer is a tool for visualizing dynamic node usage within an EKS cluster.
+brew "aws/tap/eks-node-viewer"
 # CLI tool to scan for network policies in Kubernetes clusters/namespaces and provide a score based on the amount of untargeted workloads
 brew "deggja/netfetch/netfetch"
 # Detect deprecated Kubernetes apiVersions
@@ -248,8 +271,18 @@ brew "fairwindsops/tap/pluto"
 brew "golangci/tap/golangci-lint"
 # Packer
 brew "hashicorp/tap/packer"
+# Terraform
+brew "hashicorp/tap/terraform"
+# Automatically gets credentials for Amazon ECR on docker push/docker pull with support for AWS SSO
+brew "kyosenergy/tap/docker-credential-sso-ecr-login"
+# A command line editor for HCL
+brew "minamijoyo/hcledit/hcledit"
+# Incredibly fast JavaScript runtime, bundler, transpiler and package manager - all in one.
+brew "oven-sh/bun/bun"
 # Pulumi - Modern Infrastructure as Code. Any cloud, any language
 brew "pulumi/tap/pulumi"
+# Documenting your Threat Models with HCL
+brew "threatcl/repo/threatcl"
 
 # Password manager that keeps all passwords secure behind one password
 cask "1password"
@@ -271,6 +304,8 @@ cask "docker"
 cask "font-jetbrains-mono-nerd-font"
 # Developer targeted fonts with a high number of glyphs
 cask "font-meslo-lg-nerd-font"
+# Kubernetes IDE
+cask "freelens"
 # GIT client
 cask "fork"
 # Desktop client for GitHub repositories
@@ -287,8 +322,14 @@ cask "iina"
 cask "iterm2"
 # JetBrains tools manager
 cask "jetbrains-toolbox"
+# Menu bar manager
+cask "jordanbaird-ice"
+# Keyboard customiser
+cask "karabiner-elements"
 # End-to-end encryption software
 cask "keybase"
+# App to manage software development and track bugs
+cask "linear-linear"
 # Open-source Markdown editor
 cask "macdown"
 # Native desktop app for Messenger (formerly Facebook Messenger)
@@ -351,49 +392,60 @@ cask "zoom"
 mas "1Password for Safari", id: 1569813296
 mas "Bear", id: 1091189122
 mas "Boop", id: 1518425043
+mas "Budget Flow", id: 1640091876
 mas "Dato", id: 1470584107
 mas "Keynote", id: 409183694
-mas "Microsoft Remote Desktop", id: 1295203466
+mas "Messenger", id: 1480068668
 mas "myTuner Radio Pro", id: 808285143
 mas "Nautik", id: 1672838783
 mas "Numbers", id: 409203825
 mas "Pages", id: 409201541
 mas "Prime Video", id: 545519333
-mas "ReadKit - Reading Hub", id: 1615798039
+mas "ReadKit", id: 1615798039
 mas "The Unarchiver", id: 425424353
+mas "Windows App", id: 1295203466
 
 vscode "4ops.packer"
+vscode "adpyke.vscode-sql-formatter"
 vscode "alefragnani.project-manager"
 vscode "annsk.alignment"
+vscode "betajob.modulestf"
 vscode "bierner.markdown-preview-github-styles"
 vscode "bradlc.vscode-tailwindcss"
 vscode "caarlos0.language-prometheus"
+vscode "continue.continue"
+vscode "dannysteenman.iam-actions-snippets"
+vscode "docker.docker"
+vscode "donjayamanne.githistory"
 vscode "eamodio.gitlens"
 vscode "editorconfig.editorconfig"
 vscode "exiasr.hadolint"
 vscode "foxundermoon.shell-format"
 vscode "github.codespaces"
-vscode "github.copilot-chat"
 vscode "github.copilot"
+vscode "github.copilot-chat"
 vscode "github.github-vscode-theme"
 vscode "github.vscode-github-actions"
 vscode "github.vscode-pull-request-github"
 vscode "golang.go"
 vscode "grapecity.gc-excelviewer"
-vscode "graphql.vscode-graphql-syntax"
 vscode "graphql.vscode-graphql"
+vscode "graphql.vscode-graphql-syntax"
 vscode "hashicorp.terraform"
 vscode "hogashi.crontab-syntax-highlight"
 vscode "laravel.vscode-laravel"
 vscode "lunuan.kubernetes-templates"
+vscode "mathworks.language-matlab"
 vscode "mhutchie.git-graph"
 vscode "mikestead.dotenv"
 vscode "mrmlnc.vscode-duplicate"
+vscode "ms-azuretools.vscode-containers"
 vscode "ms-azuretools.vscode-docker"
 vscode "ms-kubernetes-tools.vscode-kubernetes-tools"
 vscode "ms-python.debugpy"
 vscode "ms-python.python"
 vscode "ms-python.vscode-pylance"
+vscode "ms-python.vscode-python-envs"
 vscode "ms-vscode-remote.remote-containers"
 vscode "ms-vscode-remote.remote-ssh-edit"
 vscode "ms-vscode-remote.remote-ssh"
@@ -402,11 +454,11 @@ vscode "ms-vscode.powershell"
 vscode "ms-vscode.remote-explorer"
 vscode "ms-vscode.sublime-keybindings"
 vscode "ms-vsliveshare.vsliveshare"
+vscode "openai.chatgpt"
 vscode "phplasma.csv-to-table"
-vscode "pulumi.pulumi-lsp-client"
-vscode "redhat.ansible"
 vscode "redhat.vscode-commons"
 vscode "redhat.vscode-yaml"
+vscode "saoudrizwan.claude-dev"
 vscode "sharat.vscode-brewfile"
 vscode "sumneko.lua"
 vscode "tamasfe.even-better-toml"
@@ -417,3 +469,8 @@ vscode "vue.volar"
 vscode "wakatime.vscode-wakatime"
 vscode "yzane.markdown-pdf"
 vscode "yzhang.markdown-all-in-one"
+
+go "github.com/awslabs/amazon-ecr-credential-helper/ecr-login/cli/docker-credential-ecr-login"
+go "golang.org/x/tools/gopls"
+go "github.com/kyosenergy/sso-ecr-login"
+go "honnef.co/go/tools/cmd/staticcheck"
