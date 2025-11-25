@@ -70,8 +70,13 @@ alias trivy='docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v $HO
 alias tf='terraform'
 alias tg='terragrunt'
 
+# AI
+alias copilot='bunx @github/copilot --banner'
+alias gemini='bunx @google/gemini-cli'
+
 # Laravel
 alias a='php artisan'
+alias solo='php artisan solo'
 
 # Laravel Dusk
 alias dusk='a dusk --debug'
