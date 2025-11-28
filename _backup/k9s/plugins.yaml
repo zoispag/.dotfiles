@@ -135,3 +135,14 @@ plugins:
       - $CONTEXT
     background: false
     confirm: false
+  external-secret-refresh:
+    shortCut: Shift-R
+    confirm: false
+    scopes:
+      - externalsecrets
+    description: Force sync
+    command: bash
+    background: false
+    args:
+      - -c
+      - "kubectl annotate es $NAME force-sync=$(date +%s) --overwrite --context $CONTEXT -n $NAMESPACE"
