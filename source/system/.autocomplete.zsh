@@ -10,6 +10,9 @@ complete -F __start_velero v
 # Autocomplete for ArgoCD
 source <(argocd completion zsh)
 
+# Autocomplete for OpenCode
+source <(opencode completion)
+
 # Completion styling
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
