@@ -2,7 +2,7 @@
 
 # Open GitKraken using the current repo directory in the cli.
 function kraken () {
-	/Applications/GitKraken.app/Contents/MacOS/GitKraken -p "$(git rev-parse --show-toplevel)" &>/dev/null &
+  /Applications/GitKraken.app/Contents/MacOS/GitKraken -p "$(git rev-parse --show-toplevel)" &>/dev/null &
 }
 
 # Create a new directory and enter it
