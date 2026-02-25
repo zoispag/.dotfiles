@@ -24,6 +24,26 @@
       create: true
       force: true
       path: _backup/k9s
+    ~/.config/opencode/opencode.jsonc:
+      create: true
+      force: true
+      path: _backup/opencode/opencode.jsonc
+    ~/.config/opencode/oh-my-opencode.jsonc:
+      create: true
+      force: true
+      path: _backup/opencode/oh-my-opencode.jsonc
+    ~/.config/opencode/package.json:
+      create: true
+      force: true
+      path: _backup/opencode/package.json
+    ~/.config/opencode/bun.lock:
+      create: true
+      force: true
+      path: _backup/opencode/bun.lock
+    ~/.config/opencode/plugin:
+      create: true
+      force: true
+      path: _backup/opencode/plugin
     ~/.config/nvim:
       create: true
       force: true
@@ -45,6 +65,9 @@
     ~/.gitconfig:
       force: true
       path: _backup/.gitconfig
+    ~/.tmux.conf:
+      force: true
+      path: _backup/.tmux.conf
     ~/.krew-plugins.txt:
       force: true
       path: _backup/krew-plugins.txt
@@ -52,34 +75,34 @@
       force: true
       path: .mackup.cfg
 
-- create:
-    - ~/Projects
+# - create:
+#     - ~/Projects
 
-- if:
-    cond: 'test ! $(which devbox)'
-    met:
-    - shell:
-      - [curl -fsSL https://get.jetify.com/devbox | bash, Install DevBox]
+# - if:
+#     cond: 'test ! $(which devbox)'
+#     met:
+#     - shell:
+#       - [curl -fsSL https://get.jetify.com/devbox | bash, Install DevBox]
 
-- if:
-    cond: 'test ! $(which brew)'
-    met:
-    - shell:
-      - [/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)", Install Homebrew]
+# - if:
+#     cond: 'test ! $(which brew)'
+#     met:
+#     - shell:
+#       - [/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)", Install Homebrew]
 
-- if:
-    cond: 'test ! ~/.vim/autoload/plug.vim'
-    met:
-    - shell:
-      - [curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim | vim, Install Plug]
+# - if:
+#     cond: 'test ! ~/.vim/autoload/plug.vim'
+#     met:
+#     - shell:
+#       - [curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim | vim, Install Plug]
 
-- shell:
-  - [chsh -s $(which zsh), Set ZSH as default shell]
-  - [git submodule update --init --recursive, Installing submodules]
-  - ['eval "$(devbox global shellenv --preserve-path-stack -r)" && hash -r', Install devbox globals]
-  # - [mackup restore, Run mackup restore]
-  - [composer global require laravel/installer, Add Laravel as a global composer package]
-  - [sync-krew, Install krew plugins]
+# - shell:
+#   - [chsh -s $(which zsh), Set ZSH as default shell]
+#   - [git submodule update --init --recursive, Installing submodules]
+#   - ['eval "$(devbox global shellenv --preserve-path-stack -r)" && hash -r', Install devbox globals]
+#   # - [mackup restore, Run mackup restore]
+#   - [composer global require laravel/installer, Add Laravel as a global composer package]
+#   - [sync-krew, Install krew plugins]
 
-- brewfile:
-    - Brewfile
+# - brewfile:
+#     - Brewfile

@@ -1,7 +1,11 @@
 tap "1password/tap"
+tap "anomalyco/tap"
 tap "armosec/kubescape"
+tap "aws/tap"
 tap "buo/cask-upgrade"
+tap "darksworm/tap"
 tap "deggja/netfetch", "https://github.com/deggja/netfetch"
+tap "dunglas/frankenphp"
 tap "fairwindsops/tap"
 tap "github/gh"
 tap "golangci/tap"
@@ -232,6 +236,8 @@ brew "tfk8s"
 brew "tflint"
 # Static analysis security scanner for your terraform code
 brew "tfsec"
+# Terminal multiplexer with VT100/ANSI terminal emulation
+brew "tmux"
 # Display directories as trees (with optional color/HTML output)
 brew "tree"
 # Validating, recursive, caching DNS resolver
@@ -259,12 +265,18 @@ brew "zimg"
 # General-purpose lossless data-compression library
 brew "zlib"
 
+# The AI coding agent built for the terminal.
+brew "anomalyco/tap/opencode"
 # Kubernetes misconfiguration testing
 brew "armosec/kubescape/kubescape-cli"
 # eks-node-viewer is a tool for visualizing dynamic node usage within an EKS cluster.
 brew "aws/tap/eks-node-viewer"
+# A GitOps CLI tool for managing ArgoCD applications
+cask "darksworm/tap/argonaut"
 # CLI tool to scan for network policies in Kubernetes clusters/namespaces and provide a score based on the amount of untargeted workloads
 brew "deggja/netfetch/netfetch"
+# Modern PHP app server
+brew "dunglas/frankenphp/frankenphp"
 # Detect deprecated Kubernetes apiVersions
 brew "fairwindsops/tap/pluto"
 # Fast linters runner for Go.

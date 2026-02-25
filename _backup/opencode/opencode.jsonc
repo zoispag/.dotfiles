@@ -1,0 +1,30 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "autoupdate": true,
+  "experimental": {
+    "disable_paste_summary": true
+  },
+  "tui": {
+    "scroll_acceleration": {
+      "enabled": true
+    }
+  },
+  "small_model": "github-copilot/gpt-5-mini",
+  "agent": {
+    "compaction": {
+      "model": "github-copilot/gpt-5-mini"
+    }
+  },
+  "plugin": [
+    // "@plannotator/opencode@latest",
+    "oh-my-opencode",
+    "./plugin/protect-sensitive-files.js",
+    "opencode-mystatus"
+  ],
+  "command": {
+    "quotas": {
+      "description": "Query quota usage for all AI accounts",
+      "template": "Use the mystatus tool to query quota usage. Return the result as-is without modification, ONLY for GitHub Copilot. If there are any errors, suppress them.",
+    }
+  }
+}
