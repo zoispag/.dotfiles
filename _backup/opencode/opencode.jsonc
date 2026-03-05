@@ -4,11 +4,6 @@
   "experimental": {
     "disable_paste_summary": true
   },
-  "tui": {
-    "scroll_acceleration": {
-      "enabled": true
-    }
-  },
   "small_model": "github-copilot/gpt-5-mini",
   "agent": {
     "compaction": {
