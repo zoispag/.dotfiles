@@ -60,9 +60,13 @@
       "variant": "xhigh",
       "temperature": 0.1
     },
+    "deep": {
+      "model": "github-copilot/gpt-5.2-codex",
+      "variant": "medium",
+      "temperature": 0.1
+    },
     "artistry": {
       "model": "github-copilot/gemini-3.1-pro-preview",
-      "variant": "max",
       "temperature": 1
     },
     "quick": {
@@ -72,7 +76,8 @@
       "model": "github-copilot/claude-sonnet-4.6"
     },
     "unspecified-high": {
-      "model": "github-copilot/claude-sonnet-4.6"
+      "model": "github-copilot/claude-opus-4.6",
+      "variant": "max"
     },
     "writing": {
       "model": "github-copilot/gemini-3-flash-preview"
