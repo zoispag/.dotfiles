@@ -342,10 +342,8 @@ cask "karabiner-elements"
 cask "keybase"
 # App to manage software development and track bugs
 cask "linear-linear"
-# Open-source Markdown editor
-cask "macdown"
-# Native desktop app for Messenger (formerly Facebook Messenger)
-cask "messenger"
+# Markdown editor with live preview and syntax highlighting
+cask "macdown-3000"
 # Provides updates to various Microsoft products
 cask "microsoft-auto-update"
 # Office suite
