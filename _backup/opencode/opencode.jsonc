@@ -10,8 +10,17 @@
       "model": "github-copilot/gpt-5-mini"
     }
   },
+  "mcp": {
+    "github": {
+      "type": "remote",
+      "url": "https://api.githubcopilot.com/mcp/",
+      "oauth": false,
+      "headers": {
+        "Authorization": "Bearer {env:GITHUB_TOKEN}"
+      }
+    }
+  },
   "plugin": [
-    // "@plannotator/opencode@latest",
     "oh-my-opencode",
     "./plugin/protect-sensitive-files.js",
     "opencode-mystatus"
