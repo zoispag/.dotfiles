@@ -23,7 +23,8 @@
   "plugin": [
     "oh-my-opencode",
     "./plugin/protect-sensitive-files.js",
-    "opencode-mystatus"
+    "opencode-mystatus",
+    "opentmux"
   ],
   "command": {
     "quotas": {
