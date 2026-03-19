@@ -1,3 +1,10 @@
+# --- agentskill.sh ---
+# slug: terraform-renovate-merge
+# owner: zoispag
+# contentSha: 16dc486
+# installed: 2026-03-19T00:00:00.000Z
+# source: local
+# ---
 ---
 name: terraform-renovate-merge
 description: Scans a GitHub org for open Renovate dependency-update PRs that run Terraform, checks if GitHub Actions passed and the terraform plan produced no infrastructure changes, then approves and merges them. Use this skill whenever the user asks to merge, approve, or clean up Renovate PRs in a GitHub org — especially phrases like "merge safe renovate PRs", "approve terraform renovate PRs", "clean up no-change renovate PRs", "merge renovate PRs with no changes", or "which renovate PRs can I auto-merge". Trigger even if the user doesn't say "terraform" explicitly — if they're in a terraform-heavy org and asking about renovate PR cleanup, this skill applies.
