@@ -1,0 +1,26 @@
+font-family = MesloLGS Nerd Font Mono
+font-size = 15
+
+palette = 0=#1d1d25
+palette = 1=#eb4897
+palette = 2=#5fd070
+palette = 3=#f7ce76
+palette = 4=#5cc8fa
+palette = 5=#bf6cf7
+palette = 6=#5dcbc9
+palette = 7=#cbcbed
+palette = 8=#636667
+palette = 9=#eb4691
+palette = 10=#5fd070
+palette = 11=#f8d686
+palette = 12=#5cc8fa
+palette = 13=#cc87f8
+palette = 14=#61d2d3
+palette = 15=#d5d6f1
+background = #1d1d25
+foreground = #cbcbed
+cursor-color = #cbcbed
+selection-background = #eb4897
+selection-foreground = #ffffff
+
+background_opacity_cells = true

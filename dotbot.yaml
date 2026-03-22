@@ -20,6 +20,10 @@
       create: true
       force: true
       path: _backup/zellij
+    ~/.config/ghostty:
+      create: true
+      force: true
+      path: _backup/ghostty
     ~/.config/k9s:
       create: true
       force: true

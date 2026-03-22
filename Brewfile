@@ -304,6 +304,8 @@ cask "1password-cli"
 cask "airbuddy"
 # Application uninstaller
 cask "appcleaner"
+# Ghostty-based terminal with vertical tabs and notifications for AI coding agents
+cask "cmux"
 # Server and cloud storage browser
 cask "cyberduck"
 # Disk space visualizer
