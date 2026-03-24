@@ -24,3 +24,5 @@ selection-background = #eb4897
 selection-foreground = #ffffff
 
 background_opacity_cells = true
+
+term = xterm-256color
