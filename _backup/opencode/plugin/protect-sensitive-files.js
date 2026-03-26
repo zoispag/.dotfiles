@@ -26,13 +26,6 @@ const SENSITIVE_FILE_PATTERNS = [
   /env\.staging$/,
   /env\.development$/,
   
-  // Credentials & secrets
-  /credentials/i,
-  /secrets?/i,
-  /\.secrets$/,
-  /vault/i,
-  /password/i,
-  
   // Certificates & keys
   /\.key$/,
   /\.pem$/,
@@ -61,7 +54,6 @@ const SENSITIVE_FILE_PATTERNS = [
   /\.aws\/config$/,
   /\.docker\/config\.json$/,
   /auth\.json$/,
-  /\.token$/,
   
   // Database configs
   /database\.yml$/,

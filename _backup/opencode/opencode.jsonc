@@ -21,10 +21,11 @@
     }
   },
   "plugin": [
-    "oh-my-opencode",
+    "oh-my-opencode@latest",
+		"@tarquinen/opencode-dcp@latest",
+    "opentmux@latest",
+    "opencode-mystatus@latest",
     "./plugin/protect-sensitive-files.js",
-    "opencode-mystatus",
-    "opentmux"
   ],
   "command": {
     "quotas": {
