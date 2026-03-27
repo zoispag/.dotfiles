@@ -25,12 +25,12 @@
 		"@tarquinen/opencode-dcp@latest",
     "opentmux@latest",
     "opencode-mystatus@latest",
-    "./plugin/protect-sensitive-files.js",
+    "./plugin/protect-sensitive-files.js"
   ],
   "command": {
     "quotas": {
       "description": "Query quota usage for all AI accounts",
-      "template": "Use the mystatus tool to query quota usage. Return the result as-is without modification, ONLY for GitHub Copilot. If there are any errors, suppress them.",
+      "template": "Use the mystatus tool to query quota usage. Return the result as-is without modification, ONLY for GitHub Copilot. If there are any errors, suppress them."
     },
     "copilot-feedback": {
       "template": "Copilot reviewed the PR and generated comments. Please review only the unresolved comments and make any suggestions necessary (and only when it makes sense). Be critical about it and think hard if you need to change anything. If you have any doubts, ask me questions in interview-style). After that, reply to Copilot's comments.",
