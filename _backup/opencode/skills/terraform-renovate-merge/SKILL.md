@@ -7,7 +7,7 @@
 # ---
 ---
 name: terraform-renovate-merge
-description: Scans a GitHub org for open Renovate dependency-update PRs that run Terraform, checks if GitHub Actions passed and the terraform plan produced no infrastructure changes, then approves and merges them. Use this skill whenever the user asks to merge, approve, or clean up Renovate PRs in a GitHub org — especially phrases like "merge safe renovate PRs", "approve terraform renovate PRs", "clean up no-change renovate PRs", "merge renovate PRs with no changes", or "which renovate PRs can I auto-merge". Trigger even if the user doesn't say "terraform" explicitly — if they're in a terraform-heavy org and asking about renovate PR cleanup, this skill applies.
+description: Scans a GitHub org for open Renovate dependency-update PRs that run Terraform, checks if GitHub Actions passed and the terraform plan produced no infrastructure changes, then approves and merges them. Use this skill whenever the user asks to merge, approve, or clean up Renovate PRs in a GitHub org — especially phrases like "merge safe renovate PRs", "approve terraform renovate PRs", "clean up no-change renovate PRs", "merge renovate PRs with no changes", or "which renovate PRs can I auto-merge". Trigger even if the user doesn't say "terraform" explicitly — if they're in a terraform-heavy org and asking about renovate PR cleanup, this skill applies. Also covers non-Terraform-provider updates in terraform repos: GitHub Actions action updates, terraform tooling updates (terraform-ls, tflint, opentofu), and any other Renovate PR that runs a terraform plan and produces "No changes."
 ---
 
 # Terraform Renovate PR Merge
@@ -42,6 +42,15 @@ For each PR, look at `statusCheckRollup`. A PR is terraform-relevant if it has a
 PRs with no checks at all, or only non-terraform checks, are out of scope for this workflow — skip them without reporting.
 
 > **Why this matters**: Relying on repo name prefix (e.g. `tf-`) misses repos that run terraform but aren't named that way, and includes repos that have the prefix but don't run a plan on every PR. The checks are ground truth.
+
+**What counts as a terraform-relevant PR title**: Do NOT filter by PR title. Any of the following are valid and must be included if their checks are terraform-relevant:
+
+- Terraform provider/module updates: `update terraform-aws-modules/vpc to v5.x`
+- GitHub Actions action updates in terraform repos: `update kyosenergy-engineering/tf-gh-actions action to v1.6.0`
+- Terraform tooling updates: `update dependency terraform-ls to v0.38.6`, `update tflint to v0.x`, `update opentofu to v1.x`
+- Helm/Docker image updates in repos where those feed terraform variables
+
+All of these run `terraform plan` in CI, and if the plan shows "No changes", they are safe to merge.
 
 ### Step 3: Check CI status (ignoring SKIPPED/NEUTRAL)
 
@@ -122,5 +131,9 @@ Always show skipped PRs with the reason — the user needs to know what still re
 **Merge queue / branch protection**: If `gh pr merge --squash` fails with "not mergeable: head branch not up to date", retry with `--auto`. If it fails for other reasons (e.g. required reviewers), report it in the table and move on.
 
 **Docker/non-provider Renovate PRs in terraform repos**: Repos like `tf-aws-sftpgo` can have PRs updating Docker image tags (e.g. `update caddy docker tag`). These still run `terraform plan` because the image is a terraform variable. They follow the same rules — if the plan shows no changes, merge; if it shows changes, skip.
+
+**GitHub Actions action updates in terraform repos**: PRs like `update kyosenergy-engineering/tf-gh-actions action to v1.6.0` update the CI workflow actions themselves. They still run `terraform plan` as part of CI. The plan output is the safety signal — if it shows "No changes", the action update did not alter infrastructure behaviour and is safe to merge.
+
+**Terraform tooling updates** (terraform-ls, tflint, opentofu, terraform itself): PRs like `update dependency terraform-ls to v0.38.6` update tool version pins (`.tool-versions`, `.terraform-version`, or similar config files). These do not change `.tf` resource definitions, so the plan consistently shows "No changes." Apply the same two-check rule — plan must say "No changes" and must NOT have a "Plan: X to add/change/destroy" line.
 
 **Abandoned PRs**: Renovate sometimes marks stale PRs as "abandoned" in the title. Skip them.
