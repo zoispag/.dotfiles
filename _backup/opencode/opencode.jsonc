@@ -21,7 +21,7 @@
     }
   },
   "plugin": [
-    "oh-my-opencode@latest",
+    "oh-my-openagent@latest",
     "opentmux@latest",
     "opencode-mystatus@latest",
     "./plugin/protect-sensitive-files.js"

@@ -8,7 +8,7 @@
       "model": "github-copilot/claude-sonnet-4.6"
     },
     "prometheus": {
-      "model": "github-copilot/claude-opus-4.6",
+      "model": "github-copilot/claude-opus-4.7",
       "variant": "max"
     },
     "atlas": {
@@ -23,7 +23,7 @@
       "variant": "medium"
     },
     "momus": {
-      "model": "github-copilot/claude-opus-4.6",
+      "model": "github-copilot/claude-opus-4.7",
       "variant": "max"
     },
     "sisyphus-junior": {
@@ -69,7 +69,7 @@
       "model": "github-copilot/claude-sonnet-4.6"
     },
     "unspecified-high": {
-      "model": "github-copilot/claude-opus-4.6",
+      "model": "github-copilot/claude-opus-4.7",
       "variant": "max"
     },
     "writing": {

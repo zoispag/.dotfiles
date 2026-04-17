@@ -58,7 +58,3 @@ for file in `find ~/.dotfiles/source -name ".*"`; do
 	source "$file"
 done
 
-# >>> opentmux >>>
-export OPENCODE_PORT=4096
-alias opencode='opentmux'
-# <<< opentmux <<<
