@@ -1,10 +1,3 @@
-# --- agentskill.sh ---
-# slug: copilot-feedback
-# owner: zoispag
-# contentSha: local
-# installed: 2026-03-30T00:00:00.000Z
-# source: local
-# ---
 ---
 name: copilot-feedback
 description: Review and respond to GitHub Copilot's PR review comments. Reads unresolved Copilot review comments on the current PR, critically evaluates whether each suggestion is worth applying, applies code changes when they make sense, then replies to each comment. Use this skill whenever the user asks to handle Copilot feedback, process Copilot PR comments, review Copilot suggestions, respond to Copilot reviews, or clean up after a Copilot review. Also trigger when phrases like "deal with copilot comments", "apply copilot suggestions", "reply to copilot" or "address copilot feedback" appear.
