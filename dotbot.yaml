@@ -32,10 +32,10 @@
       create: true
       force: true
       path: _backup/opencode/opencode.jsonc
-    ~/.config/opencode/oh-my-opencode.jsonc:
+    ~/.config/opencode/oh-my-openagent.jsonc:
       create: true
       force: true
-      path: _backup/opencode/oh-my-opencode.jsonc
+      path: _backup/opencode/oh-my-openagent.jsonc
     ~/.config/opencode/package.json:
       create: true
       force: true

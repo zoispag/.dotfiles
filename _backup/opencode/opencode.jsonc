@@ -7,7 +7,7 @@
   "small_model": "github-copilot/gpt-5-mini",
   "agent": {
     "compaction": {
-      "model": "github-copilot/gpt-5-mini"
+      "model": "github-copilot/claude-sonnet-4.6"
     }
   },
   "mcp": {
@@ -22,7 +22,6 @@
   },
   "plugin": [
     "oh-my-openagent@latest",
-    "opentmux@latest",
     "opencode-mystatus@latest",
     "./plugin/protect-sensitive-files.js"
   ],
