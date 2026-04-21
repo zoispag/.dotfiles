@@ -3,6 +3,7 @@ tap "anomalyco/tap"
 tap "armosec/kubescape"
 tap "aws/tap"
 tap "buo/cask-upgrade"
+tap "dailybothq/tap"
 tap "darksworm/tap"
 tap "deggja/netfetch", "https://github.com/deggja/netfetch"
 tap "dunglas/frankenphp"
@@ -11,12 +12,15 @@ tap "github/gh"
 tap "golangci/tap"
 tap "hashicorp/tap"
 tap "homebrew/bundle"
+tap "homebrew/cask"
 tap "homebrew/services"
 tap "kyosenergy/tap"
 tap "minamijoyo/hcledit"
 tap "oven-sh/bun"
 tap "pulumi/tap"
+tap "robusta-dev/holmesgpt"
 tap "shivammathur/php"
+tap "teamookla/speedtest"
 tap "threatcl/repo"
 tap "yt-dlp/taps"
 
@@ -28,14 +32,26 @@ brew "ansible"
 brew "aom"
 # GitOps Continuous Delivery for Kubernetes
 brew "argocd"
+# Shell history sync and search
+brew "atuin"
+# Official Amazon AWS command-line interface
+brew "awscli"
+# Microsoft Azure CLI 2.0
+brew "azure-cli"
 # Bourne-Again SHell, a UNIX command interpreter
 brew "bash"
+# Clone of cat(1) with syntax highlighting and Git integration
+brew "bat"
+# Resource monitor. C++ version and continuation of bashtop and bpytop
+brew "btop"
 # Freely available high-quality data compressor
 brew "bzip2"
 # Mozilla CA certificate store
 brew "ca-certificates"
 # Vector graphics library with cross-device output support
 brew "cairo"
+# Prevent cloud misconfigurations during build-time for IaC tools
+brew "checkov"
 # Cloudflare Tunnel client (formerly Argo Tunnel)
 brew "cloudflared"
 # Cross-platform make
@@ -46,22 +62,34 @@ brew "cmctl"
 brew "composer"
 # GNU File, Shell, and Text utilities
 brew "coreutils"
+# Tool for interacting with remote images and registries
+brew "crane"
 # Get a file from an HTTP, HTTPS or FTP server
 brew "curl"
 # AV1 decoder targeted to be small and fast
 brew "dav1d"
-# Lightweight DNS forwarder and DHCP server
-brew "dnsmasq"
+# Load/unload environment variables based on $PWD
+brew "direnv"
 # Tool for exploring each layer in a docker image
 brew "dive"
+# Lightweight DNS forwarder and DHCP server
+brew "dnsmasq"
 # Docker Credential Helper for Amazon ECR
 brew "docker-credential-helper-ecr"
 # Create Docker hosts locally and on cloud providers
 brew "docker-machine"
+# Command-line tool for DigitalOcean
+brew "doctl"
+# CLI for interacting with Doppler secrets and configuration
+brew "doppler"
 # Convert text between DOS, UNIX, and Mac formats
 brew "dos2unix"
 # Disk Usage/Free Utility - a better 'df' alternative
 brew "duf"
+# Modern, maintained replacement for ls
+brew "eza"
+# Like neofetch, but much faster because written mostly in C
+brew "fastfetch"
 # Download assets from a commit, branch, or tag of GitHub repositories
 brew "fetch"
 # Play, record, convert, and stream audio and video
@@ -76,6 +104,8 @@ brew "freetds"
 brew "freetype"
 # Terminal JSON viewer
 brew "fx"
+# Command-line fuzzy finder written in Go
+brew "fzf"
 # GNU compiler collection
 brew "gcc"
 # Graphics library to dynamically manipulate images
@@ -84,8 +114,16 @@ brew "gd"
 brew "gdbm"
 # GNU internationalization (i18n) and localization (l10n) library
 brew "gettext"
+# GitHub command-line tool
+brew "gh"
 # Interpreter for PostScript and PDF
 brew "ghostscript"
+# Distributed revision control system
+brew "git"
+# Syntax-highlighting pager for git and diff output
+brew "git-delta"
+# Git extension for versioning large files
+brew "git-lfs"
 # Core application library for C
 brew "glib"
 # GNU Pretty Good Privacy (PGP) package
@@ -94,24 +132,40 @@ brew "gnupg"
 brew "gnutls"
 # Open source programming language to build simple/reliable/efficient software
 brew "go"
+# Task is a task runner/build tool that aims to be simpler and easier to use
+brew "go-task"
 # Generate introspection data for GObject libraries
 brew "gobject-introspection"
 # Deliver Go binaries as fast and easily as possible
 brew "goreleaser"
+# Terminal based graphical activity monitor inspired by gtop
+brew "gotop"
 # Command-line tool for generating regular expressions
 brew "grex"
 # Smarter Dockerfile linter to validate best practices
 brew "hadolint"
 # OpenType text shaping engine
 brew "harfbuzz"
+# The Kubernetes Package Manager
+brew "helm"
+# Tool for automatically generating markdown documentation for helm charts
+brew "helm-docs"
+# Improved top (interactive process viewer)
+brew "htop"
 # User-friendly cURL replacement (command-line HTTP client)
 brew "httpie"
+# C/C++ and Java libraries for Unicode and globalization
+brew "icu4c@77"
 # Tools and libraries to manipulate images in many formats
 brew "imagemagick"
+# Cost estimates for Terraform
+brew "infracost"
 # Integer Set Library for the polyhedral model
 brew "isl"
 # JPEG image codec that aids compression and decompression
 brew "jpeg-turbo"
+# Lightweight and flexible command-line JSON processor
+brew "jq"
 # Modern load testing tool, using Go and JavaScript
 brew "k6"
 # Kubernetes CLI To Manage Your Clusters In Style!
@@ -122,8 +176,16 @@ brew "kind"
 brew "krb5"
 # Package manager for kubectl plugins
 brew "krew"
+# Colorize your kubectl output
+brew "kubecolor"
 # FAST Kubernetes manifests validator, with support for Custom Resources!
 brew "kubeconform"
+# Kubernetes command-line interface
+brew "kubectl"
+# Tool that can switch between kubectl contexts easily and create aliases
+brew "kubectx"
+# Simple terminal UI for git commands
+brew "lazygit"
 # Multi-format archive and compression library
 brew "libarchive"
 # Subtitle renderer for the ASS/SSA subtitle format
@@ -148,10 +210,10 @@ brew "libyaml"
 brew "libzip"
 # Color management engine supporting ICC profiles
 brew "little-cms2"
+# Run LogQL queries against a Loki server
+brew "logcli"
 # Just-In-Time Compiler (JIT) for the Lua programming language
 brew "luajit"
-# Kubernetes CLI To Manage Your Clusters In Style!
-brew "k9s"
 # Keep your Mac's application settings in sync
 brew "mackup"
 # CLI for Node.js style checker and lint tool for Markdown files
@@ -164,8 +226,8 @@ brew "minikube"
 brew "mpg123"
 # Media player based on MPlayer and mplayer2
 brew "mpv"
-# Fast, highly customisable system info script
-brew "neofetch"
+# Ambitious Vim-fork focused on extensibility and agility
+brew "neovim"
 # HTTP/2 C Library
 brew "nghttp2"
 # HTTP(S) server and reverse proxy, and IMAP/POP3 proxy server
@@ -192,6 +254,12 @@ brew "pinentry"
 brew "pipenv"
 # Manage compile and link flags for libraries
 brew "pkg-config"
+# Package compiler and linker metadata toolkit
+brew "pkgconf"
+# Python package management tool
+brew "poetry"
+# .NET Core
+brew "powershell"
 # Password generator
 brew "pwgen"
 # Python version management
@@ -202,6 +270,8 @@ brew "python@3.10"
 brew "python@3.11"
 # Interpreted, interactive, object-oriented programming language
 brew "python@3.9"
+# Search tool like grep and The Silver Searcher
+brew "ripgrep"
 # Command-line tool for the Amazon S3 service
 brew "s3cmd"
 # Terminal multiplexer with VT100/ANSI terminal emulation
@@ -236,6 +306,8 @@ brew "tfk8s"
 brew "tflint"
 # Static analysis security scanner for your terraform code
 brew "tfsec"
+# Simplified and community-driven man pages
+brew "tldr"
 # Terminal multiplexer with VT100/ANSI terminal emulation
 brew "tmux"
 # Display directories as trees (with optional color/HTML output)
@@ -248,8 +320,12 @@ brew "uv"
 brew "vapoursynth"
 # Disaster recovery for Kubernetes resources and persistent volumes
 brew "velero"
+# Modern watch command
+brew "viddy"
 # JavaScript toolchain manager for reproducible environments
 brew "volta"
+# Command-line interface for the WakaTime api
+brew "wakatime-cli"
 # Image format providing lossless and lossy compression for web images
 brew "webp"
 # Internet file retriever
@@ -258,12 +334,18 @@ brew "wget"
 brew "xz"
 # Linter for YAML files
 brew "yamllint"
+# Process YAML, JSON, XML, CSV and properties documents from the CLI
+brew "yq"
 # Feature-rich command-line audio/video downloader
 brew "yt-dlp"
+# Pluggable terminal workspace, with terminal multiplexer as the base feature
+brew "zellij"
 # Scaling, colorspace conversion, and dithering library
 brew "zimg"
 # General-purpose lossless data-compression library
 brew "zlib"
+# Shell extension to navigate your filesystem faster
+brew "zoxide"
 
 # The AI coding agent built for the terminal.
 brew "anomalyco/tap/opencode"
@@ -271,8 +353,12 @@ brew "anomalyco/tap/opencode"
 brew "armosec/kubescape/kubescape-cli"
 # eks-node-viewer is a tool for visualizing dynamic node usage within an EKS cluster.
 brew "aws/tap/eks-node-viewer"
+# dailybot command line tool
+brew "dailybothq/tap/dailybot"
 # A GitOps CLI tool for managing ArgoCD applications
 cask "darksworm/tap/argonaut"
+# Messaging app with a focus on speed and security
+cask "telegram"
 # CLI tool to scan for network policies in Kubernetes clusters/namespaces and provide a score based on the amount of untargeted workloads
 brew "deggja/netfetch/netfetch"
 # Modern PHP app server
@@ -293,6 +379,10 @@ brew "minamijoyo/hcledit/hcledit"
 brew "oven-sh/bun/bun"
 # Pulumi - Modern Infrastructure as Code. Any cloud, any language
 brew "pulumi/tap/pulumi"
+# Robusta HolmesGPT CLI
+brew "robusta-dev/holmesgpt/holmesgpt"
+# Team Ookla speedtest CLI
+brew "teamookla/speedtest/speedtest"
 # Documenting your Threat Models with HCL
 brew "threatcl/repo/threatcl"
 
@@ -313,6 +403,8 @@ cask "daisydisk"
 # Voice and text chat software
 cask "discord"
 # App to build and share containerized applications and microservices
+cask "docker-desktop"
+# App to build and share containerized applications and microservices
 cask "docker"
 # JetBrainsMono Nerd Font families (JetBrains Mono)
 cask "font-jetbrains-mono-nerd-font"
@@ -322,6 +414,8 @@ cask "font-meslo-lg-nerd-font"
 cask "freelens"
 # GIT client
 cask "fork"
+# Speech to text application
+cask "handy"
 # Desktop client for GitHub repositories
 cask "github"
 # Web browser
@@ -365,7 +459,7 @@ cask "proxyman"
 # QuickLook generator for Markdown files
 cask "qlmarkdown"
 # Thumbnails, static previews, cover art and metadata for video files
-cask "qlvideo"
+cask "quicklook-video"
 # QuickLook plugin for JSON files
 cask "quicklook-json"
 # Control your tools with a few keystrokes
@@ -374,8 +468,6 @@ cask "raycast"
 cask "scroll-reverser"
 # Team communication and collaboration software
 cask "slack"
-# Add a global delay to Command-Q to stop accidental app quits
-cask "slowquitapps"
 # Open-source media center
 cask "stremio"
 # Text editor for code, markup and prose
@@ -394,6 +486,8 @@ cask "transmit"
 cask "visual-studio-code"
 # Desktop client for WhatsApp
 cask "whatsapp"
+# Live wallpaper app
+cask "wallspace"
 # VPN client for secure internet access and private browsing
 cask "windscribe"
 # Gecko based web browser
@@ -414,6 +508,7 @@ mas "Numbers", id: 409203825
 mas "Pages", id: 409201541
 mas "Prime Video", id: 545519333
 mas "ReadKit", id: 1615798039
+mas "Say No to Notch", id: 1639306886
 mas "The Unarchiver", id: 425424353
 mas "Windows App", id: 1295203466
 
@@ -437,6 +532,7 @@ vscode "github.codespaces"
 vscode "github.copilot"
 vscode "github.copilot-chat"
 vscode "github.github-vscode-theme"
+vscode "mechatroner.rainbow-csv"
 vscode "github.vscode-github-actions"
 vscode "github.vscode-pull-request-github"
 vscode "golang.go"
@@ -472,6 +568,7 @@ vscode "redhat.vscode-commons"
 vscode "redhat.vscode-yaml"
 vscode "saoudrizwan.claude-dev"
 vscode "sharat.vscode-brewfile"
+vscode "sst-dev.opencode"
 vscode "sumneko.lua"
 vscode "tamasfe.even-better-toml"
 vscode "tberman.json-schema-validator"

@@ -32,15 +32,12 @@ zinit light zsh-users/zsh-autosuggestions
 zinit light zsh-users/zsh-completions
 zinit light zsh-users/zsh-syntax-highlighting
 zinit light Aloxaf/fzf-tab
-zinit load atuinsh/atuin
 
 autoload -U +X bashcompinit && bashcompinit
 autoload -U +X compinit && compinit
 
 zinit cdreplay -q
 
-# Configure Devbox as the primary package manager
-eval "$(devbox global shellenv --init-hook)"
 # Configure zsh to initialize starship
 eval "$(starship init zsh)"
 # Configure direnv hook
@@ -57,4 +54,3 @@ eval "$(zoxide init --cmd cd zsh)"
 for file in `find ~/.dotfiles/source -name ".*"`; do
 	source "$file"
 done
-

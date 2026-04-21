@@ -8,10 +8,6 @@
     ~/.zshrc:
       force: true
       path: _backup/.zshrc
-    ~/.local/share/devbox/global/default/devbox.json:
-      create: true
-      force: true
-      path: _backup/devbox.json
     ~/.config/starship.toml:
       create: true
       force: true
@@ -87,12 +83,6 @@
     - ~/Projects
 
 - if:
-    cond: 'test ! $(which devbox)'
-    met:
-    - shell:
-      - [curl -fsSL https://get.jetify.com/devbox | bash, Install DevBox]
-
-- if:
     cond: 'test ! $(which brew)'
     met:
     - shell:
@@ -107,7 +97,6 @@
 - shell:
   - [chsh -s $(which zsh), Set ZSH as default shell]
   - [git submodule update --init --recursive, Installing submodules]
-  - ['eval "$(devbox global shellenv --preserve-path-stack -r)" && hash -r', Install devbox globals]
   # - [mackup restore, Run mackup restore]
   - [composer global require laravel/installer, Add Laravel as a global composer package]
   - [sync-krew, Install krew plugins]
