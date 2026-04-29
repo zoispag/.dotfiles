@@ -28,6 +28,10 @@
       create: true
       force: true
       path: _backup/opencode/opencode.jsonc
+    ~/.config/opencode/tui.json:
+      create: true
+      force: true
+      path: _backup/opencode/tui.json
     ~/.config/opencode/oh-my-openagent.jsonc:
       create: true
       force: true

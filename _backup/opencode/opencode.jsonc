@@ -2,7 +2,14 @@
   "$schema": "https://opencode.ai/config.json",
   "autoupdate": true,
   "experimental": {
-    "disable_paste_summary": true
+    "disable_paste_summary": true,
+		"quotaToast": {
+      "enableToast": true,
+      "showSessionTokens": false,
+      "enabledProviders": "auto",
+      "formatStyle": "allWindows",
+      "percentDisplayMode": "used"
+    }
   },
   "small_model": "github-copilot/gpt-5-mini",
   "agent": {
@@ -22,13 +29,7 @@
   },
   "plugin": [
     "oh-my-openagent@latest",
-    "opencode-mystatus@latest",
+    "@slkiser/opencode-quota",
     "./plugin/protect-sensitive-files.js"
-  ],
-  "command": {
-    "quotas": {
-      "description": "Query quota usage for all AI accounts",
-      "template": "Use the mystatus tool to query quota usage. Return the result as-is without modification, ONLY for GitHub Copilot. If there are any errors, suppress them."
-    }
-  }
+  ]
 }
