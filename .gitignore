@@ -1,3 +1,6 @@
 # Local secrets
 source/_kyos/.secrets
 source/system/.secrets
+
+# AI-assisted development
+.sisyphus/
