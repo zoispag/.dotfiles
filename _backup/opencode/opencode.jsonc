@@ -29,6 +29,24 @@
       "headers": {
         "Authorization": "Bearer {env:GITHUB_TOKEN}"
       }
+    },
+   	"grafana_cloud": {
+      "type": "local",
+      "command": ["uvx", "mcp-grafana"],
+      "enabled": true,
+      "environment": {
+        "GRAFANA_URL": "{env:GRAFANA_CLOUD_URL}",
+        "GRAFANA_SERVICE_ACCOUNT_TOKEN": "{env:GRAFANA_CLOUD_SERVICE_ACCOUNT_TOKEN}"
+      }
+    },
+   	"grafana_k8s": {
+      "type": "local",
+      "command": ["uvx", "mcp-grafana"],
+      "enabled": true,
+      "environment": {
+        "GRAFANA_URL": "{env:GRAFANA_K8S_URL}",
+        "GRAFANA_SERVICE_ACCOUNT_TOKEN": "{env:GRAFANA_K8S_SERVICE_ACCOUNT_TOKEN}"
+      }
     }
   },
   "plugin": [
