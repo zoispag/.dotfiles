@@ -3,6 +3,9 @@
   "experimental": {
     "auto_resume": true
   },
+  "git_master": {
+	"include_co_authored_by": false
+  },
   "agents": {
     "sisyphus": {
       "model": "github-copilot/claude-sonnet-4.6"
