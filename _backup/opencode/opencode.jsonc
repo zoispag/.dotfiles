@@ -3,13 +3,13 @@
   "autoupdate": true,
   "experimental": {
     "disable_paste_summary": true,
-		"quotaToast": {
-      "enableToast": true,
-      "showSessionTokens": false,
-      "enabledProviders": "auto",
-      "formatStyle": "allWindows",
-      "percentDisplayMode": "used"
-    }
+      "quotaToast": {
+	      "enableToast": true,
+	      "showSessionTokens": false,
+	      "enabledProviders": "auto",
+	      "formatStyle": "allWindows",
+	      "percentDisplayMode": "used"
+	    }
   },
   "small_model": "github-copilot/gpt-5-mini",
   "agent": {
