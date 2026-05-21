@@ -3,11 +3,25 @@
   "experimental": {
     "auto_resume": true
   },
+  "auto_update": true,
   "git_master": {
-	"include_co_authored_by": false
+    "commit_footer": false,
+    "include_co_authored_by": false
+  },
+  "disabled_skills": [
+    "playwright"
+  ],
+  "disabled_commands": [
+    "init-deep"
+  ],
+  "browser_automation_engine": {
+    "provider": "agent-browser"
   },
   "agents": {
     "sisyphus": {
+      "model": "github-copilot/claude-sonnet-4.6"
+    },
+    "sisyphus-junior": {
       "model": "github-copilot/claude-sonnet-4.6"
     },
     "prometheus": {
@@ -40,7 +54,7 @@
       "model": "github-copilot/gpt-5.4-mini"
     },
     "explore": {
-      "model": "github-copilot/gpt-5.4-mini"
+      "model": "github-copilot/grok-code-fast-1"
     },
     "multimodal-looker": {
       "model": "github-copilot/gemini-3-flash-preview"
