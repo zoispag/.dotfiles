@@ -1,9 +1,11 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "autoupdate": true,
+  "lsp": {},
   "plugin": [
     "oh-my-openagent@latest",
-    "@slkiser/opencode-quota",
+    "opencode-wakatime@latest",
+    "@slkiser/opencode-quota@latest",
     "./plugin/protect-sensitive-files.js"
   ],
   "experimental": {
