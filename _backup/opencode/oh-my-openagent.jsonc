@@ -25,7 +25,7 @@
       "model": "github-copilot/claude-sonnet-4.6"
     },
     "prometheus": {
-      "model": "github-copilot/claude-opus-4.6",
+      "model": "github-copilot/claude-opus-4.8",
       "variant": "high"
     },
     "atlas": {
@@ -40,11 +40,8 @@
       "variant": "medium"
     },
     "momus": {
-      "model": "github-copilot/claude-opus-4.6",
+      "model": "github-copilot/claude-opus-4.8",
       "variant": "high"
-    },
-    "sisyphus-junior": {
-      "model": "github-copilot/claude-sonnet-4.6"
     },
     "oracle": {
       "model": "github-copilot/gpt-5.4",
@@ -57,7 +54,7 @@
       "model": "github-copilot/claude-haiku-4.5"
     },
     "multimodal-looker": {
-      "model": "github-copilot/gemini-3-flash-preview"
+      "model": "github-copilot/gemini-3.5-flash"
     }
   },
   "categories": {
@@ -86,11 +83,11 @@
       "model": "github-copilot/claude-sonnet-4.6"
     },
     "unspecified-high": {
-      "model": "github-copilot/claude-opus-4.6",
+      "model": "github-copilot/claude-opus-4.8",
       "variant": "high"
     },
     "writing": {
-      "model": "github-copilot/gemini-3-flash-preview"
+      "model": "github-copilot/gemini-3.5-flash"
     }
   }
 }
