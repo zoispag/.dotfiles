@@ -19,3 +19,8 @@ Thumbs.db
 # Application specific files
 /vendor/
 /node_modules/
+
+# AI-specific files
+/.omc/
+
+**/.claude/settings.local.json
