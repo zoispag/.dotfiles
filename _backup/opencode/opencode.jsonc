@@ -48,6 +48,14 @@
         "GRAFANA_SERVICE_ACCOUNT_TOKEN": "{env:GRAFANA_K8S_SERVICE_ACCOUNT_TOKEN}"
       }
     },
+    "argocd": {
+      "type": "local",
+      "command": ["npx", "argocd-mcp@latest", "stdio"],
+      "environment": {
+	      "ARGOCD_BASE_URL": "{env:ARGOCD_BASE_URL}",
+	      "ARGOCD_API_TOKEN": "{env:ARGOCD_API_TOKEN}"
+      }
+    },
     "slack": {
       "type": "local",
       "command": ["npx", "-y", "slack-mcp-server@latest", "--transport", "stdio"],
