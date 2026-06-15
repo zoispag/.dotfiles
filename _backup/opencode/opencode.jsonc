@@ -28,6 +28,10 @@
         "Authorization": "Bearer {env:GITHUB_TOKEN}"
       }
     },
+    "linear": {
+      "type": "remote",
+      "url": "https://mcp.linear.app/mcp"
+    },
     "grafana_cloud": {
       "type": "local",
       "command": ["uvx", "mcp-grafana"],
