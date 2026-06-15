@@ -45,6 +45,14 @@
         "GRAFANA_URL": "{env:GRAFANA_K8S_URL}",
         "GRAFANA_SERVICE_ACCOUNT_TOKEN": "{env:GRAFANA_K8S_SERVICE_ACCOUNT_TOKEN}"
       }
+    },
+    "slack": {
+      "type": "local",
+      "command": ["npx", "-y", "slack-mcp-server@latest", "--transport", "stdio"],
+      "enabled": true,
+      "environment": {
+        "SLACK_MCP_XOXP_TOKEN": "{env:SLACK_MCP_XOXP_TOKEN}"
+      }
     }
   }
 }
