@@ -4,16 +4,20 @@
   "plugin": [
     "oh-my-openagent@latest",
     "opencode-wakatime@latest",
+    "@riskihajar/opencode-omniroute-auth@latest",
     "./plugin/protect-sensitive-files.js"
   ],
+  "provider": {
+    "omniroute": {
+      "options": {
+        "baseURL": "http://localhost:20128/v1",
+        "apiMode": "chat",
+        "stripOpenCodeSystemPrompt": false
+      }
+    }
+  },
   "experimental": {
     "disable_paste_summary": true
-  },
-  "small_model": "github-copilot/gpt-5-mini",
-  "agent": {
-    "compaction": {
-      "model": "github-copilot/claude-sonnet-4.6"
-    }
   },
   "mcp": {
     "vanta": {
@@ -52,8 +56,8 @@
       "type": "local",
       "command": ["npx", "argocd-mcp@latest", "stdio"],
       "environment": {
-	      "ARGOCD_BASE_URL": "{env:ARGOCD_BASE_URL}",
-	      "ARGOCD_API_TOKEN": "{env:ARGOCD_API_TOKEN}"
+        "ARGOCD_BASE_URL": "{env:ARGOCD_BASE_URL}",
+        "ARGOCD_API_TOKEN": "{env:ARGOCD_API_TOKEN}"
       }
     },
     "slack": {
@@ -64,7 +68,7 @@
       }
     },
     "zammad": {
-   	  "type": "local",
+      "type": "local",
       "command": ["uvx", "--from", "git+https://github.com/basher83/zammad-mcp.git", "mcp-zammad"],
       "environment": {
         "ZAMMAD_URL": "{env:ZAMMAD_URL}",

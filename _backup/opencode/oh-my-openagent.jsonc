@@ -1,7 +1,14 @@
 {
-  "$schema": "https://raw.githubusercontent.com/code-yeongyu/oh-my-openagent/dev/assets/oh-my-opencode.schema.json",
+  "$schema": "https://raw.githubusercontent.com/code-yeongyu/oh-my-openagent/main/assets/oh-my-opencode.schema.json",
   "experimental": {
     "auto_resume": true
+  },
+  "tmux": {
+    "enabled": true,
+    "layout": "main-vertical",
+    "main_pane_size": 60,
+    "main_pane_min_width": 120,
+    "agent_pane_min_width": 40
   },
   "auto_update": true,
   "git_master": {
@@ -14,44 +21,46 @@
   "disabled_commands": [
     "init-deep"
   ],
+  "background_task": {
+    "defaultConcurrency": 5
+  },
   "browser_automation_engine": {
     "provider": "agent-browser"
   },
+  "sisyphus_agent": {
+    "planner_enabled": true,
+    "replace_plan": true
+  },
   "agents": {
     "sisyphus": {
-      "model": "github-copilot/claude-sonnet-4.6"
+      "model": "omniroute/cc/claude-sonnet-4-6"
     },
     "sisyphus-junior": {
-      "model": "github-copilot/claude-sonnet-4.6"
+      "model": "omniroute/cc/claude-sonnet-4-6"
     },
     "prometheus": {
-      "model": "github-copilot/claude-opus-4.8",
-      "variant": "high"
+      "model": "omniroute/cc/claude-opus-4-8"
     },
     "atlas": {
-      "model": "github-copilot/claude-sonnet-4.6"
+      "model": "omniroute/cc/claude-sonnet-4-6"
     },
     "hephaestus": {
-      "model": "github-copilot/gpt-5.3-codex",
-      "variant": "medium"
+      "model": "omniroute/cc/claude-opus-4-8"
     },
     "metis": {
-      "model": "github-copilot/claude-sonnet-4.6",
-      "variant": "medium"
+      "model": "omniroute/cc/claude-opus-4-8"
     },
     "momus": {
-      "model": "github-copilot/claude-opus-4.8",
-      "variant": "high"
+      "model": "omniroute/cc/claude-opus-4-8"
     },
     "oracle": {
-      "model": "github-copilot/gpt-5.4",
-      "variant": "high"
+      "model": "omniroute/cc/claude-opus-4-8"
     },
     "librarian": {
-      "model": "github-copilot/gpt-5.4-mini"
+      "model": "omniroute/cc/claude-haiku-4-5-20251001"
     },
     "explore": {
-      "model": "github-copilot/claude-haiku-4.5"
+      "model": "omniroute/cc/claude-haiku-4-5-20251001"
     },
     "multimodal-looker": {
       "model": "github-copilot/gemini-3.5-flash"
@@ -59,35 +68,28 @@
   },
   "categories": {
     "visual-engineering": {
-      "model": "github-copilot/gemini-3.1-pro-preview",
-      "temperature": 0.8
+      "model": "omniroute/antigravity/gemini-3.5-flash-preview"
     },
     "ultrabrain": {
-      "model": "github-copilot/gpt-5.3-codex",
-      "variant": "xhigh",
-      "temperature": 0.1
+      "model": "omniroute/cx/gpt-5.5"
     },
     "deep": {
-      "model": "github-copilot/gpt-5.3-codex",
-      "variant": "medium",
-      "temperature": 0.1
+      "model": "omniroute/cc/claude-opus-4-8"
     },
     "artistry": {
-      "model": "github-copilot/gemini-3.1-pro-preview",
-      "temperature": 1
+      "model": "omniroute/antigravity/gemini-3.5-flash-preview"
     },
     "quick": {
-      "model": "github-copilot/gpt-5.4-mini"
+      "model": "omniroute/cc/claude-haiku-4-5-20251001"
     },
     "unspecified-low": {
-      "model": "github-copilot/claude-sonnet-4.6"
+      "model": "omniroute/cc/claude-sonnet-4-6",
     },
     "unspecified-high": {
-      "model": "github-copilot/claude-opus-4.8",
-      "variant": "high"
+      "model": "omniroute/cc/claude-opus-4-8"
     },
     "writing": {
-      "model": "github-copilot/gemini-3.5-flash"
+      "model": "omniroute/cc/claude-sonnet-4-6"
     }
   }
 }
