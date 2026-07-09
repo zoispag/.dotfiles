@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+KREW_PLUGINS_PATH="${KREW_PLUGINS_PATH:-$HOME/.krew-plugins.txt}"
+
+sync_krew() {
+	if [[ ! -f "$KREW_PLUGINS_PATH" ]]; then
+		echo "⚠️  No krew plugins file found at $KREW_PLUGINS_PATH"
+		return 1
+	fi
+
+	if ! command -v kubectl &>/dev/null; then
+		echo "❌ kubectl is not installed. Please install kubectl first."
+		return 1
+	fi
+
+	echo "📦 [krew] Installing plugins..."
+	local installed
+	installed="$(kubectl krew list | awk '{print $1}')"
+	local plugin
+	while IFS= read -r plugin; do
+		[[ -z "$plugin" ]] && continue
+		if ! grep -qx "$plugin" <<<"$installed"; then
+			echo "➡️  Installing $plugin"
+			kubectl krew install "$plugin"
+		else
+			echo "✅ $plugin already installed"
+		fi
+	done <"$KREW_PLUGINS_PATH"
+}
+
+export_krew() {
+	kubectl krew list | awk '{print $1}' >"$KREW_PLUGINS_PATH"
+}
+
+case "${1:-sync}" in
+export) export_krew ;;
+sync | "") sync_krew ;;
+*)
+	echo "Usage: ${0##*/} [sync|export]" >&2
+	exit 2
+	;;
+esac

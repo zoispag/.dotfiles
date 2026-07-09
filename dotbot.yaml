@@ -79,6 +79,10 @@
     ~/.krew-plugins.txt:
       force: true
       path: _backup/krew-plugins.txt
+    ~/bin:
+      create: true
+      force: true
+      path: _backup/bin
     ~/.mackup.cfg:
       force: true
       path: .mackup.cfg
@@ -98,12 +102,22 @@
     - shell:
       - [curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim | vim, Install Plug]
 
+- if:
+    cond: 'test ! -d ~/.tmux/plugins/tpm'
+    met:
+    - shell:
+      - [git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm, Install tmux plugin manager]
+
 - shell:
   - [chsh -s $(which zsh), Set ZSH as default shell]
   - [git submodule update --init --recursive, Installing submodules]
+  # tpm's installer only works from inside a running tmux server (it reads
+  # TMUX_PLUGIN_MANAGER_PATH via run-shell). Use an isolated socket so the
+  # user's own tmux sessions are never touched, then tear it down.
+  - ['tmux -L tpm_bootstrap -f ~/.tmux.conf new-session -d \; run-shell ~/.tmux/plugins/tpm/bindings/install_plugins && sleep 5 ; tmux -L tpm_bootstrap kill-server 2>/dev/null || true', Install tmux plugins]
   # - [mackup restore, Run mackup restore]
   - [composer global require laravel/installer, Add Laravel as a global composer package]
-  - [sync-krew, Install krew plugins]
+  - [~/bin/sync-krew, Install krew plugins]
 
 - brewfile:
     - Brewfile

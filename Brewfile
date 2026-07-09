@@ -42,6 +42,8 @@ brew "azure-cli"
 brew "bash"
 # Clone of cat(1) with syntax highlighting and Git integration
 brew "bat"
+# Arbitrary precision calculator (required by tmux-net-speed)
+brew "bc"
 # Resource monitor. C++ version and continuation of bashtop and bpytop
 brew "btop"
 # Freely available high-quality data compressor
