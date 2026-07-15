@@ -1,0 +1,149 @@
+#!/usr/bin/env bash
+
+# Open GitKraken using the current repo directory in the cli.
+function kraken () {
+  /Applications/GitKraken.app/Contents/MacOS/GitKraken -p "$(git rev-parse --show-toplevel)" &>/dev/null &
+}
+
+# Create a new directory and enter it
+function mkd() {
+  mkdir -p "$@" && cd "$_";
+}
+
+# Determine size of a file or total size of a directory
+function fs() {
+  if du -b /dev/null > /dev/null 2>&1; then
+    local arg=-sbh;
+  else
+    local arg=-sh;
+  fi
+  if [[ -n "$@" ]]; then
+    du $arg -- "$@";
+  else
+    du $arg .[^.]* ./*;
+  fi;
+}
+
+# `tre` is a shorthand for `tree` with hidden files and color enabled, listing
+# directories first. The output gets piped into `less` with options to preserve color.
+function tre() {
+  local ignore=".git|node_modules|vendor"
+  tree -aC -I ${ignore} --dirsfirst "$@" | less -FNRX;
+}
+
+# Start a PHP server from a directory, optionally specifying the port
+function phpserve() {
+  local port="${1:-4000}";
+  sleep 1 && open "http://localhost:${port}/" &
+  php -S "localhost:${port}";
+}
+
+# Start an HTTP server from a directory, optionally specifying the port
+function pyserve() {
+  local port="${1:-8000}";
+  sleep 1 && open "http://localhost:${port}/" &
+  # Set the default Content-Type to `text/plain` instead of `application/octet-stream`
+  # And serve everything as UTF-8 (although not technically correct, this doesn’t break anything for binary files)
+  python -c $'import SimpleHTTPServer;\nmap = SimpleHTTPServer.SimpleHTTPRequestHandler.extensions_map;\nmap[""] = "text/plain";\nfor key, value in map.items():\n\tmap[key] = value + ";charset=UTF-8";\nSimpleHTTPServer.test();' "$port";
+}
+
+function py3serve() {
+  local port="${1:-8000}";
+  sleep 1 && open "http://localhost:${port}/" &
+
+  python3 -m http.server $port
+}
+
+# Start a Node.js server from a directory, optionally specifying the port
+function npmserve() {
+  local port="${1:-3000}";
+  npx http-server -p ${port} -o
+}
+
+# Start a Ruby server from a directory, optionally specifying the port
+function rubyserve() {
+  local port="${1:-8080}";
+  sleep 1 && open "http://localhost:${port}/" &
+  ruby -run -ehttpd . -p${port}
+}
+
+extract () {
+  if [ -f $1 ] ; then
+    case $1 in
+      *.tar.bz2) tar xjf $1    ;;
+      *.tar.gz)  tar xzf $1    ;;
+      *.bz2)     bunzip2 $1    ;;
+      *.rar)     unrar x $1    ;;
+      *.gz)      gunzip $1     ;;
+      *.tar)     tar xf $1     ;;
+      *.tbz2)    tar xjf $1    ;;
+      *.tgz)     tar xzf $1    ;;
+      *.zip)     unzip $1      ;;
+      *.Z)       uncompress $1 ;;
+      *.7z)      7zr e $1      ;;
+      *)         echo "'$1' cannot be extracted via extract()" ;;
+    esac
+  else
+    echo "'$1' is not a valid file"
+  fi
+}
+
+function weather() {
+  if [ $# -eq 0 ]; then
+    # Call self with "Alphen aan den Rijn" as an argument
+    $0 "Alphen aan den Rijn"
+  else
+    # Change IFS, in order to quickly join all arguments with %20 as glue and set it back
+    old="$IFS"; IFS='%20'; city="'$*'"; IFS=$old
+  fi
+
+  eval "curl http://wttr.in/${city}"
+}
+
+function rates() {
+  eval "curl http://eur.rate.sx"
+}
+
+function fx() {
+  crypto="$1"
+
+  if [ -z "$crypto" ]; then
+    crypto="BTC"
+  fi
+
+  eval "curl http://rate.sx/${crypto}?qF"
+}
+
+function joke() {
+  curl https://icanhazdadjoke.com
+}
+
+# Shell function that automatically handles tmux sessions and port allocation for OpenCode
+function oc() {
+  local base_name=$(basename "$PWD" | tr '.' '-')
+  local path_hash=$(echo "$PWD" | md5sum | cut -c1-4)
+  local session_name="${base_name}-${path_hash}"
+
+  # Find available port
+  local port=4096
+  while [ $port -lt 5096 ]; do
+    if ! lsof -i :$port >/dev/null 2>&1; then
+      break
+    fi
+    port=$((port + 1))
+  done
+
+  export OPENCODE_PORT=$port
+
+  if [ -n "$TMUX" ]; then
+    opencode --port $port "$@"
+  else
+    local oc_cmd="OPENCODE_PORT=$port opencode --port $port $(printf '%q ' "$@"); exec $SHELL"
+    if tmux has-session -t "$session_name" 2>/dev/null; then
+      tmux new-window -t "$session_name" -c "$PWD" "$oc_cmd"
+      tmux attach-session -t "$session_name"
+    else
+      tmux new-session -s "$session_name" -c "$PWD" "$oc_cmd"
+    fi
+  fi
+}

@@ -1,6 +1,12 @@
-# Local secrets
-source/_kyos/.secrets
-source/system/.secrets
+# Local secrets: never track any .secrets file anywhere in the repo.
+**/.secrets
+.secrets
+
+# Local IDE settings: never track any .vscode folder anywhere in the repo.
+.vscode/
+
+# Local OS files: never track any .DS_Store file anywhere in the repo.
+.DS_Store
 
 # AI-assisted development
 .sisyphus/

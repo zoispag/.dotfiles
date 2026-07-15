@@ -10,10 +10,14 @@ BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 cd "${BASEDIR}"
 
-(cd "${DOTBOT_DIR}" && git submodule update --init --recursive)
+# Init all submodules (dotbot + the dotbot-if / dotbot-brew plugins) BEFORE
+# invoking dotbot: the --plugin-dir args below load code from those submodules,
+# and the config's `if:` / `brewfile:` directives fail to parse if they're empty.
+git submodule update --init --recursive
 
 "${BASEDIR}/${DOTBOT_DIR}/${DOTBOT_BIN}" \
 	-d "${BASEDIR}" \
 	--plugin-dir .dotbot/dotbot-brew \
 	--plugin-dir .dotbot/dotbot-if \
+	--plugin-dir .dotbot/dotbot-krew \
 	-c "${CONFIG}" "${@}"

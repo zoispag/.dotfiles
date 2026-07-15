@@ -1,0 +1,95 @@
+{
+  "$schema": "https://raw.githubusercontent.com/code-yeongyu/oh-my-openagent/main/assets/oh-my-opencode.schema.json",
+  "experimental": {
+    "auto_resume": true
+  },
+  "tmux": {
+    "enabled": true,
+    "layout": "main-vertical",
+    "main_pane_size": 60,
+    "main_pane_min_width": 120,
+    "agent_pane_min_width": 40
+  },
+  "auto_update": true,
+  "git_master": {
+    "commit_footer": false,
+    "include_co_authored_by": false
+  },
+  "disabled_skills": [
+    "playwright"
+  ],
+  "disabled_commands": [
+    "init-deep"
+  ],
+  "background_task": {
+    "defaultConcurrency": 5
+  },
+  "browser_automation_engine": {
+    "provider": "agent-browser"
+  },
+  "sisyphus_agent": {
+    "planner_enabled": true,
+    "replace_plan": true
+  },
+  "agents": {
+    "sisyphus": {
+      "model": "omniroute/cc/claude-sonnet-5"
+    },
+    "sisyphus-junior": {
+      "model": "omniroute/cc/claude-sonnet-5"
+    },
+    "prometheus": {
+      "model": "omniroute/cc/claude-opus-4-8"
+    },
+    "atlas": {
+      "model": "omniroute/cc/claude-sonnet-5"
+    },
+    "hephaestus": {
+      "model": "omniroute/cc/claude-opus-4-8"
+    },
+    "metis": {
+      "model": "omniroute/cc/claude-opus-4-8"
+    },
+    "momus": {
+      "model": "omniroute/cc/claude-opus-4-8"
+    },
+    "oracle": {
+      "model": "omniroute/cc/claude-opus-4-8"
+    },
+    "librarian": {
+      "model": "omniroute/cc/claude-haiku-4-5-20251001"
+    },
+    "explore": {
+      "model": "omniroute/cc/claude-haiku-4-5-20251001"
+    },
+    "multimodal-looker": {
+      "model": "github-copilot/gemini-3.5-flash"
+    }
+  },
+  "categories": {
+    "visual-engineering": {
+      "model": "omniroute/antigravity/gemini-3.5-flash-preview"
+    },
+    "ultrabrain": {
+      "model": "omniroute/cx/gpt-5.5"
+    },
+    "deep": {
+      "model": "omniroute/cc/claude-opus-4-8"
+    },
+    "artistry": {
+      "model": "omniroute/antigravity/gemini-3.5-flash-preview"
+    },
+    "quick": {
+      "model": "omniroute/cc/claude-haiku-4-5-20251001"
+    },
+    "unspecified-low": {
+      "model": "omniroute/cc/claude-sonnet-5",
+    },
+    "unspecified-high": {
+      "model": "omniroute/cc/claude-opus-4-8"
+    },
+    "writing": {
+      "model": "omniroute/cc/claude-sonnet-5"
+    }
+  }
+}
