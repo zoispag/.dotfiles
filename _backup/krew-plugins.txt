@@ -1,8 +1,0 @@
-browse-pvc
-crd-wizard
-df-pv
-evict-pod
-get-all
-ktop
-node-shell
-kc

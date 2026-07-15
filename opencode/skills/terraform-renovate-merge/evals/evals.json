@@ -1,0 +1,119 @@
+{
+  "skill_name": "terraform-renovate-merge",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Hey, there are a bunch of open renovate PRs in the my-org org. Can you find all the terraform-related ones where CI passed and the plan shows no changes, and merge them?",
+      "expected_output": "Discovers all open Renovate PRs org-wide using gh search prs, identifies terraform-relevant PRs by checking for terraform/tflint checks in statusCheckRollup (not just repo name prefix), checks CI status correctly ignoring SKIPPED/NEUTRAL conclusions, verifies terraform plan shows 'No changes. Your infrastructure' AND no 'Plan: X to add/change/destroy' line, approves and merges qualifying PRs, presents a results table of terraform PRs with skip reasons for non-qualifying ones.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "uses-org-wide-search",
+          "text": "Uses gh search prs or equivalent for org-wide discovery (not a hardcoded repo list)",
+          "how": "Output shows PRs from multiple repos being evaluated"
+        },
+        {
+          "id": "identifies-via-checks-not-only-prefix",
+          "text": "Identifies terraform PRs by checking statusCheckRollup for terraform/tflint checks, not solely by repo name prefix",
+          "how": "Agent fetches statusCheckRollup data and uses it to filter, rather than using only repo name heuristics"
+        },
+        {
+          "id": "handles-skipped-checks",
+          "text": "SKIPPED/NEUTRAL check conclusions are ignored and do not prevent a PR from being classified as SUCCESS",
+          "how": "Agent's jq filter explicitly excludes SKIPPED and NEUTRAL from consideration"
+        },
+        {
+          "id": "dual-plan-check",
+          "text": "Uses both positive ('No changes') and negative ('Plan: X to') checks on plan comments",
+          "how": "Output or reasoning shows both checks were applied before qualifying a PR"
+        },
+        {
+          "id": "excludes-prs-with-changes",
+          "text": "PRs where terraform plan has actual changes are excluded even if CI passes",
+          "how": "Table shows such PRs as skipped with 'plan has changes' reason"
+        },
+        {
+          "id": "results-table-present",
+          "text": "Output contains a formatted table with PR number, repo, title, CI status, plan result, and action taken",
+          "how": "Markdown table present in output"
+        },
+        {
+          "id": "skip-reasons-present",
+          "text": "Skipped terraform PRs include an explanation (CI pending/failing, plan has changes, no plan comment)",
+          "how": "Table or notes mention reason for each skipped PR"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "merge safe renovate PRs in my-org",
+      "expected_output": "Interprets 'safe' as CI green AND no terraform plan changes. Uses org-wide discovery. Identifies terraform-relevant PRs via CI check names. Correctly ignores SKIPPED checks. Applies dual plan check. Approves and merges qualifying PRs. Shows results table.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "interprets-safe-correctly",
+          "text": "Interprets 'safe' as requiring BOTH CI green AND terraform plan no changes",
+          "how": "Both CI check and plan check are performed before merging"
+        },
+        {
+          "id": "uses-org-wide-search",
+          "text": "Uses org-wide discovery despite terse prompt",
+          "how": "Multiple repos are checked"
+        },
+        {
+          "id": "handles-skipped-checks",
+          "text": "SKIPPED check conclusions do not block PRs from being merged",
+          "how": "PRs with SKIPPED optional checks are correctly classified as SUCCESS"
+        },
+        {
+          "id": "excludes-prs-with-actual-changes",
+          "text": "Does not merge PRs where terraform plan shows 'Plan: X to change/add/destroy'",
+          "how": "Such PRs are marked skipped in the table"
+        },
+        {
+          "id": "results-table-present",
+          "text": "Presents a results table even for a terse one-liner prompt",
+          "how": "Markdown table with PR details present in output"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "I see a bunch of renovate PRs in my notifications for the my-org GitHub org. Which ones have a green CI and no terraform changes and can be auto-merged?",
+      "expected_output": "Identifies all terraform-relevant PRs by checking CI check names in statusCheckRollup. Correctly handles SKIPPED conclusions. Distinguishes PRs with 'No changes' plan from PRs with actual changes. Reports skipped PRs with reasons. Non-terraform Renovate PRs are noted as out of scope.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "uses-org-wide-search",
+          "text": "Searches org-wide for Renovate PRs",
+          "how": "Uses gh search prs across the org"
+        },
+        {
+          "id": "handles-skipped-checks",
+          "text": "SKIPPED/NEUTRAL check conclusions are ignored",
+          "how": "Infracost SKIPPED does not prevent a PR from being classified as passing"
+        },
+        {
+          "id": "identifies-no-change-prs",
+          "text": "Correctly identifies which PRs have 'No changes. Your infrastructure' in plan output",
+          "how": "Output lists qualifying PRs with explicit reference to plan output"
+        },
+        {
+          "id": "excludes-prs-with-changes",
+          "text": "PRs with actual terraform plan changes are clearly marked as not safe to auto-merge",
+          "how": "Table shows them skipped with reason"
+        },
+        {
+          "id": "results-table-present",
+          "text": "Provides a clear table showing all evaluated terraform PRs and their status",
+          "how": "Structured output with PR details and disposition"
+        },
+        {
+          "id": "non-terraform-prs-scoped-out",
+          "text": "Non-terraform Renovate PRs (Docker actions, GitHub Actions, language deps) are noted as out of scope rather than incorrectly included or merged",
+          "how": "Output acknowledges scope is terraform-running PRs only"
+        }
+      ]
+    }
+  ]
+}

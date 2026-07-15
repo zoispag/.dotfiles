@@ -1,0 +1,16 @@
+# https://github.com/clbx/kubectl-browse-pvc — browse PVC contents from the command line
+browse-pvc
+# https://github.com/pehlicd/crd-wizard — explore Kubernetes CR(D)s via a TUI or web interface
+crd-wizard
+# https://github.com/yashbhutwala/kubectl-df-pv — show disk usage (like unix df) for persistent volumes
+df-pv
+# https://github.com/rajatjindal/kubectl-evict-pod — evict a given pod
+evict-pod
+# https://github.com/stackitcloud/kubectl-get-all — like `kubectl get all` but really everything
+get-all
+# https://github.com/vladimirvivien/ktop — a top tool to display workload metrics
+ktop
+# https://github.com/kvaps/kubectl-node-shell — spawn a root shell on a node via kubectl
+node-shell
+# https://github.com/sunny0826/kubecm — interactive CRUD operations to manage kubeconfig
+kc

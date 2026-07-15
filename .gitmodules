@@ -9,3 +9,7 @@
 [submodule ".dotbot/dotbot-if"]
 	path = .dotbot/dotbot-if
 	url = https://github.com/zoispag/dotbot-if.git
+
+[submodule ".dotbot/dotbot-krew"]
+	path = .dotbot/dotbot-krew
+	url = https://github.com/zoispag/dotbot-krew.git

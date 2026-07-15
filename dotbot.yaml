@@ -4,91 +4,108 @@
 
 - clean: ['~']
 
+# Layout is grouped by app; the link TARGET decides home (~) vs XDG (~/.config).
 - link:
+    # --- Shell (home-targeted) ---
     ~/.zshrc:
       force: true
-      path: _backup/.zshrc
+      path: zsh/zshrc
+
+    # --- Prompt (XDG-targeted) ---
     ~/.config/starship.toml:
       create: true
       force: true
-      path: _backup/starship.toml
+      path: starship/starship.toml
+
+    # --- Terminal multiplexers / emulators (XDG-targeted) ---
     ~/.config/zellij:
       create: true
       force: true
-      path: _backup/zellij
+      path: zellij
     ~/.config/ghostty:
       create: true
       force: true
-      path: _backup/ghostty
+      path: ghostty
+
+    # --- k9s (XDG-targeted) ---
     ~/.config/k9s:
       create: true
       force: true
-      path: _backup/k9s
+      path: k9s
+
+    # --- opencode (XDG-targeted, per-file links so app writes don't touch the repo) ---
     ~/.config/opencode/opencode.jsonc:
       create: true
       force: true
-      path: _backup/opencode/opencode.jsonc
+      path: opencode/opencode.jsonc
     ~/.config/opencode/tui.json:
       create: true
       force: true
-      path: _backup/opencode/tui.json
+      path: opencode/tui.json
     ~/.config/opencode/oh-my-openagent.jsonc:
       create: true
       force: true
-      path: _backup/opencode/oh-my-openagent.jsonc
+      path: opencode/oh-my-openagent.jsonc
     ~/.config/opencode/package.json:
       create: true
       force: true
-      path: _backup/opencode/package.json
+      path: opencode/package.json
     ~/.config/opencode/bun.lock:
       create: true
       force: true
-      path: _backup/opencode/bun.lock
+      path: opencode/bun.lock
     ~/.config/opencode/plugin:
       create: true
       force: true
-      path: _backup/opencode/plugin
+      path: opencode/plugin
     ~/.config/opencode/skills:
       create: true
       force: true
-      path: _backup/opencode/skills
+      path: opencode/skills
+
+    # --- nvim (XDG-targeted) ---
     ~/.config/nvim:
       create: true
       force: true
-      path: _backup/nvim
+      path: nvim
+
+    # --- fastfetch (XDG-targeted) ---
     ~/.config/fastfetch:
       create: true
       force: true
-      path: _backup/fastfetch
+      path: fastfetch
+
+    # --- hammerspoon (home-targeted) ---
     ~/.hammerspoon/init.lua:
       create: true
       force: true
-      path: _backup/.hammerspoon/init.lua
+      path: hammerspoon/init.lua
+
+    # --- vim (home-targeted) ---
     ~/.vimrc:
       force: true
-      path: _backup/.vimrc
+      path: vim/vimrc
+
+    # --- git (home-targeted) ---
     ~/.gitignore:
       force: true
-      path: _backup/.gitignore
+      path: git/gitignore
     ~/.gitconfig:
       force: true
-      path: _backup/.gitconfig
+      path: git/gitconfig
+
+    # --- tmux (home-targeted) ---
     ~/.tmux.conf:
       force: true
-      path: _backup/.tmux.conf
-    ~/.krew-plugins.txt:
-      force: true
-      path: _backup/krew-plugins.txt
-    ~/bin:
-      create: true
-      force: true
-      path: _backup/bin
+      path: tmux/tmux.conf
+
+    # --- mackup (repo-root config, unchanged) ---
     ~/.mackup.cfg:
       force: true
       path: .mackup.cfg
 
 - create:
-    - ~/Projects
+  - ~/Projects
 
 - if:
     cond: 'test ! $(which brew)'
@@ -108,16 +125,37 @@
     - shell:
       - [git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm, Install tmux plugin manager]
 
-- shell:
-  - [chsh -s $(which zsh), Set ZSH as default shell]
-  - [git submodule update --init --recursive, Installing submodules]
-  # tpm's installer only works from inside a running tmux server (it reads
-  # TMUX_PLUGIN_MANAGER_PATH via run-shell). Use an isolated socket so the
-  # user's own tmux sessions are never touched, then tear it down.
-  - ['tmux -L tpm_bootstrap -f ~/.tmux.conf new-session -d \; run-shell ~/.tmux/plugins/tpm/bindings/install_plugins && sleep 5 ; tmux -L tpm_bootstrap kill-server 2>/dev/null || true', Install tmux plugins]
-  # - [mackup restore, Run mackup restore]
-  - [composer global require laravel/installer, Add Laravel as a global composer package]
-  - [~/bin/sync-krew, Install krew plugins]
+# Only change the login shell when it isn't already zsh (avoids a chsh password prompt on re-runs).
+- if:
+    cond: 'test "$SHELL" != "$(which zsh)"'
+    met:
+    - shell:
+      - [chsh -s $(which zsh), Set ZSH as default shell]
 
-- brewfile:
-    - Brewfile
+# Run only when no plugins beyond tpm itself are installed yet.
+# tpm's installer needs a running tmux server (reads TMUX_PLUGIN_MANAGER_PATH via
+# run-shell), so bootstrap on an isolated socket that never touches real sessions.
+- if:
+    cond: 'test -z "$(ls ~/.tmux/plugins 2>/dev/null | grep -v ''^tpm$'')"'
+    met:
+    - shell:
+      - ['tmux -L tpm_bootstrap -f ~/.tmux.conf new-session -d \; run-shell ~/.tmux/plugins/tpm/bindings/install_plugins && sleep 5 ; tmux -L tpm_bootstrap kill-server 2>/dev/null || true', Install tmux plugins]
+
+# Install the Laravel installer only when it isn't already present.
+- if:
+    cond: 'test ! -f ~/.composer/vendor/bin/laravel && test ! -f ~/.config/composer/vendor/bin/laravel'
+    met:
+    - shell:
+      - [composer global require laravel/installer, Add Laravel as a global composer package]
+
+- shell:
+  - [echo 'Mackup restore is commented out by default; uncomment to restore your backed-up app configs', Display mackup restore message]
+  # - [mackup restore, Run mackup restore]
+
+# - brewfile:
+  # - Brewfile
+
+# Runs after brewfile so kubectl + krew (installed via Homebrew) already exist;
+# the krewfile plugin guards on them and does not bootstrap.
+- krewfile:
+  - Krewfile
