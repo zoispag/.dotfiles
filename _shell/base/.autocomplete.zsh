@@ -1,17 +1,23 @@
+# Completions are cached by _zcache (see zsh/zshrc) -- generating them live costs
+# ~430ms warm / ~1.3s cold, since each one is a separate process invocation.
+
 # Autocomplete for kubectl
-source <(kubectl completion zsh)
-complete -F __start_kubectl k
+# NB: `complete -F __start_kubectl k` used to live here, but __start_kubectl only
+# exists in `kubectl completion bash` -- under the zsh script the alias got no
+# completion at all. compdef is the zsh-native equivalent.
+_zcache kubectl-completion kubectl kubectl completion zsh
+compdef k=kubectl
 compdef kubecolor=kubectl
 
 # Autocomplete for velero
-source <(velero completion zsh)
-complete -F __start_velero v
+_zcache velero-completion velero velero completion zsh
+compdef v=velero
 
 # Autocomplete for ArgoCD
-source <(argocd completion zsh)
+_zcache argocd-completion argocd argocd completion zsh
 
 # Autocomplete for OpenCode
-source <(opencode completion)
+_zcache opencode-completion opencode opencode completion
 
 # Completion styling
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'

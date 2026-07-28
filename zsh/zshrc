@@ -11,11 +11,53 @@ fi
 # See https://discourse.brew.sh/t/failed-to-set-locale-category-lc-numeric-to-en-ru/5092/20
 export LC_ALL=en_US.UTF-8
 
+#################
+# startup cache #
+#################
+# Most tools ship their shell integration as `eval "$(tool init)"`, which forks a
+# process on every new shell. Those forks dominated startup (~600ms warm, ~2s cold),
+# so the generated code is cached to disk instead and only regenerated when the
+# tool's own binary is newer than the cache -- i.e. after a `brew upgrade`.
+zmodload -F zsh/parameter p:commands
+
+ZSH_CACHE_DIR="${XDG_CACHE_HOME:-${HOME}/.cache}/zsh"
+[[ -d $ZSH_CACHE_DIR ]] || mkdir -p "$ZSH_CACHE_DIR"
+
+# _zcache <cache-name> <binary> <command...>
+# Sources the cached output of <command>, rebuilding it if <binary> is newer.
+# Quietly does nothing when <binary> isn't installed.
+_zcache() {
+	local name=$1 bin=${commands[$2]:-$2}
+	shift 2
+
+	local cache="${ZSH_CACHE_DIR}/${name}.zsh"
+	[[ -x $bin ]] || return 0
+
+	if [[ ! -s $cache || $bin -nt $cache ]]; then
+		# Write via a temp file so concurrent shells can't read a half-written cache.
+		local tmp="${cache}.$$"
+		if "$@" >| "$tmp"; then
+			mv -f "$tmp" "$cache"
+		else
+			rm -f "$tmp"
+			return 1
+		fi
+	fi
+
+	source "$cache"
+}
+
+# Drop the cache; the next shell rebuilds it.
+zcache-clear() {
+	rm -f "${ZSH_CACHE_DIR}"/*.zsh(N) "${ZDOTDIR:-$HOME}"/.zcompdump(N)
+	echo "cleared ${ZSH_CACHE_DIR} and .zcompdump -- start a new shell to rebuild"
+}
+
 ############
 # homebrew #
 ############
 
-eval "$(/opt/homebrew/bin/brew shellenv)"
+_zcache brew /opt/homebrew/bin/brew /opt/homebrew/bin/brew shellenv
 
 #################
 #  zinit setup  #
@@ -34,23 +76,37 @@ zinit light zsh-users/zsh-syntax-highlighting
 zinit light Aloxaf/fzf-tab
 
 autoload -U +X bashcompinit && bashcompinit
-autoload -U +X compinit && compinit
+
+# Run the full, security-audited compinit at most once a day; the rest of the time
+# trust the existing dump (-C), which skips compaudit over every fpath directory.
+autoload -Uz compinit
+() {
+	local dump="${ZDOTDIR:-$HOME}/.zcompdump"
+	local -a fresh=( ${dump}(Nmh-24) )
+
+	if (( $#fresh )); then
+		compinit -C -d "$dump"
+	else
+		compinit -d "$dump"
+	fi
+}
 
 zinit cdreplay -q
 
 # Configure zsh to initialize starship
-eval "$(starship init zsh)"
+_zcache starship starship starship init zsh
 # Configure direnv hook
-eval "$(direnv hook zsh)"
+_zcache direnv direnv direnv hook zsh
 
 # Shell integrations
-eval "$(fzf --zsh)"
-eval "$(atuin init zsh)"
-eval "$(zoxide init --cmd cd zsh)"
+_zcache fzf fzf fzf --zsh
+_zcache atuin atuin atuin init zsh
+_zcache zoxide zoxide zoxide init --cmd cd zsh
 
 ###################
 # Source dotfiles #
 ###################
-for file in `find ~/.dotfiles/_shell -name ".*"`; do
+# Glob rather than fork `find`; (N.) skips missing matches and non-regular files.
+for file in ~/.dotfiles/_shell/*/.*(N.); do
 	source "$file"
 done
