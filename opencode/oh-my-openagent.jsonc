@@ -33,16 +33,16 @@
   },
   "agents": {
     "sisyphus": {
-      "model": "omniroute/cc/claude-sonnet-5"
+      "model": "omniroute/cc/claude-opus-4-8"
     },
     "sisyphus-junior": {
-      "model": "omniroute/cc/claude-sonnet-5"
+      "model": "omniroute/cc/claude-opus-4-8"
     },
     "prometheus": {
       "model": "omniroute/cc/claude-opus-4-8"
     },
     "atlas": {
-      "model": "omniroute/cc/claude-sonnet-5"
+      "model": "omniroute/cc/claude-opus-4-8"
     },
     "hephaestus": {
       "model": "omniroute/cc/claude-opus-4-8"
@@ -63,33 +63,33 @@
       "model": "omniroute/cc/claude-haiku-4-5-20251001"
     },
     "multimodal-looker": {
-      "model": "github-copilot/gemini-3.5-flash"
+      "model": "omniroute/cc/claude-opus-4-8"
     }
   },
   "categories": {
     "visual-engineering": {
-      "model": "omniroute/antigravity/gemini-3.5-flash-preview"
+      "model": "omniroute/cc/claude-opus-4-8"
     },
     "ultrabrain": {
-      "model": "omniroute/cx/gpt-5.5"
+      "model": "omniroute/cc/claude-opus-4-8"
     },
     "deep": {
       "model": "omniroute/cc/claude-opus-4-8"
     },
     "artistry": {
-      "model": "omniroute/antigravity/gemini-3.5-flash-preview"
+      "model": "omniroute/cc/claude-opus-4-8"
     },
     "quick": {
       "model": "omniroute/cc/claude-haiku-4-5-20251001"
     },
     "unspecified-low": {
-      "model": "omniroute/cc/claude-sonnet-5",
+      "model": "omniroute/cc/claude-opus-4-8"
     },
     "unspecified-high": {
       "model": "omniroute/cc/claude-opus-4-8"
     },
     "writing": {
-      "model": "omniroute/cc/claude-sonnet-5"
+      "model": "omniroute/cc/claude-opus-4-8"
     }
   }
 }
