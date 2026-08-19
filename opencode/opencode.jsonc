@@ -5,6 +5,7 @@
     "oh-my-openagent@latest",
     "opencode-wakatime@latest",
     "@riskihajar/opencode-omniroute-auth@latest",
+    "opencode-plan-canvas-plugin@latest",
     "./plugin/protect-sensitive-files.js"
   ],
   "provider": {
