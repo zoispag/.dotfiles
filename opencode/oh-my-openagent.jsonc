@@ -57,10 +57,10 @@
       "model": "omniroute/cc/claude-opus-4-8"
     },
     "librarian": {
-      "model": "omniroute/cc/claude-haiku-4-5-20251001"
+      "model": "omniroute/cc/claude-opus-4-8"
     },
     "explore": {
-      "model": "omniroute/cc/claude-haiku-4-5-20251001"
+      "model": "omniroute/cc/claude-opus-4-8"
     },
     "multimodal-looker": {
       "model": "omniroute/cc/claude-opus-4-8"
