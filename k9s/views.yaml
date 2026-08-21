@@ -15,6 +15,22 @@ views:
       - '%CPU/L|H'
       - '%MEM/R|H'
       - '%MEM/L|H'
+  v1/pods@python:
+    columns:
+      - NAME
+      - READY
+      - STATUS
+      - 'TENANT:.metadata.annotations.ops\.kyos\.com/tenant'
+      - 'MODEL:.metadata.annotations.ops\.kyos\.com/model'
+      - 'JOB ID:.metadata.annotations.ops\.kyos\.com/job-id'
+      - AGE
+      - RESTARTS|H
+      - PF|H
+      - IP|H
+      - '%CPU/R|H'
+      - '%CPU/L|H'
+      - '%MEM/R|H'
+      - '%MEM/L|H'
 
   v1/pods:
     columns:
