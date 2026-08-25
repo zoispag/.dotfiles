@@ -70,7 +70,15 @@
     },
     "zammad": {
       "type": "local",
-      "command": ["uvx", "--from", "git+https://github.com/basher83/zammad-mcp.git", "mcp-zammad"],
+      // TEMPORARY: fork pending upstream PR basher83/Zammad-MCP#310 (prompt ticket_id
+      // annotated int, so FastMCP rejects opencode's "$1" placeholder with PromptError).
+      // Revert to git+https://github.com/basher83/zammad-mcp.git once #310 lands.
+      "command": [
+        "uvx",
+        "--from",
+        "git+https://github.com/zoispag/Zammad-MCP.git@fix/prompt-string-arguments",
+        "mcp-zammad"
+      ],
       "environment": {
         "ZAMMAD_URL": "{env:ZAMMAD_URL}",
         "ZAMMAD_HTTP_TOKEN": "{env:ZAMMAD_HTTP_TOKEN}"
