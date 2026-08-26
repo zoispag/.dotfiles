@@ -80,7 +80,7 @@
       "model": "omniroute/cc/claude-opus-4-8"
     },
     "quick": {
-      "model": "omniroute/cc/claude-haiku-4-5-20251001"
+      "model": "omniroute/cc/claude-opus-4-8"
     },
     "unspecified-low": {
       "model": "omniroute/cc/claude-opus-4-8"
