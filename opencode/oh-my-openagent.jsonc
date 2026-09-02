@@ -1,6 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/code-yeongyu/oh-my-openagent/main/assets/oh-my-opencode.schema.json",
   "experimental": {
+    "disable_omo_env": true,
     "auto_resume": true
   },
   "tmux": {
