@@ -21,6 +21,6 @@ Thumbs.db
 /node_modules/
 
 # AI-specific files
+/.sisyphus/
 /.omc/
-
 **/.claude/settings.local.json
