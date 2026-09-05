@@ -33,6 +33,12 @@
       force: true
       path: k9s
 
+    # --- sofka (XDG-targeted) ---
+    ~/.config/sofka:
+      create: true
+      force: true
+      path: sofka
+
     # --- opencode (XDG-targeted, per-file links so app writes don't touch the repo) ---
     ~/.config/opencode/opencode.jsonc:
       create: true

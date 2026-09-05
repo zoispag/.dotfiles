@@ -16,6 +16,7 @@ tap "homebrew/cask"
 tap "homebrew/services"
 tap "kyosenergy/tap"
 tap "minamijoyo/hcledit"
+tap "nklmilojevic/sofka"
 tap "oven-sh/bun"
 tap "pulumi/tap"
 tap "robusta-dev/holmesgpt"
@@ -377,6 +378,8 @@ brew "hashicorp/tap/terraform"
 brew "kyosenergy/tap/docker-credential-sso-ecr-login"
 # A command line editor for HCL
 brew "minamijoyo/hcledit/hcledit"
+# Kubernetes TUI written in Rust, a reimagining of k9s
+brew "nklmilojevic/sofka/sofka"
 # Incredibly fast JavaScript runtime, bundler, transpiler and package manager - all in one.
 brew "oven-sh/bun/bun"
 # Pulumi - Modern Infrastructure as Code. Any cloud, any language
