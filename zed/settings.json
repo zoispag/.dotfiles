@@ -1,0 +1,94 @@
+// Zed settings
+//
+// For information on how to configure Zed, see the Zed
+// documentation: https://zed.dev/docs/configuring-zed
+//
+// To see all of Zed's default settings without changing your
+// custom settings, run `zed: open default settings` from the
+// command palette (cmd-shift-p / ctrl-shift-p)
+{
+  "enable_language_server": true,
+  "completions": {
+    "lsp": true
+  },
+  "diff_view_style": "unified",
+  "edit_predictions": {
+    "allow_data_collection": "no",
+    "provider": "copilot"
+  },
+  "cli_default_open_behavior": "new_window",
+  "icon_theme": {
+    "mode": "dark",
+    "light": "Material Icon Theme",
+    "dark": "Material Icon Theme"
+  },
+  "agent_servers": {
+    "claude-acp": {
+      "default_config_options": {
+        "model": "sonnet",
+        "mode": "bypassPermissions"
+      },
+      "type": "registry"
+    },
+    "opencode": {
+      "default_config_options": {
+        "model": "omniroute/claude/claude-sonnet-5"
+      },
+      "type": "registry"
+    }
+  },
+  "format_on_save": "off",
+  "proxy": "",
+  "git_panel": {
+    "tree_view": true,
+    "dock": "left"
+  },
+  "agent": {
+    "sidebar_side": "right",
+    "dock": "right",
+    "favorite_models": [],
+    "model_parameters": [],
+    "commit_message_model": {
+      "provider": "copilot_chat",
+      "model": "claude-haiku-4.5"
+    },
+    "commit_message_instructions": "Use the Conventional Commits format: <type>(<scope>): <description>."
+  },
+  "project_panel": {
+    "dock": "left"
+  },
+  "telemetry": {
+    "diagnostics": false,
+    "metrics": false
+  },
+  "session": {
+    "trust_all_worktrees": true
+  },
+  "terminal": {
+    "show_count_badge": true,
+    "dock": "right",
+    "font_size": 16.0,
+    "font_family": "MesloLGS Nerd Font Mono"
+  },
+  "git": {
+    "inline_blame": {
+      "show_commit_summary": true,
+      "enabled": true
+    }
+  },
+  "buffer_font_fallbacks": [
+    "Menlo",
+    "Monaco",
+    "Courier New",
+    "JetBrainsMono Nerd Font Mono"
+  ],
+  "buffer_font_family": "Operator Mono Lig",
+  "base_keymap": "SublimeText",
+  "ui_font_size": 16,
+  "buffer_font_size": 16.0,
+  "theme": {
+    "mode": "light",
+    "light": "GitHub Light",
+    "dark": "GitHub Dark Dimmed",
+  },
+}

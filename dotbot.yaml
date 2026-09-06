@@ -63,6 +63,12 @@
       force: true
       path: opencode/skills
 
+    # --- zed (XDG-targeted, per-file link so app writes don't touch the repo) ---
+    ~/.config/zed/settings.json:
+      create: true
+      force: true
+      path: zed/settings.json
+
     # --- nvim (XDG-targeted) ---
     ~/.config/nvim:
       create: true
