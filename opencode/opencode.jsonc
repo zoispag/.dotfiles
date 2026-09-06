@@ -83,6 +83,10 @@
         "ZAMMAD_URL": "{env:ZAMMAD_URL}",
         "ZAMMAD_HTTP_TOKEN": "{env:ZAMMAD_HTTP_TOKEN}"
       }
+    },
+    "solo": {
+      "type": "local",
+      "command": ["/Applications/Solo.app/Contents/MacOS/mcp"]
     }
   }
 }
