@@ -1,0 +1,367 @@
+# sofka - https://github.com/nklmilojevic/sofka
+#
+# Translated from the k9s setup in ../k9s (config.yaml, aliases.yaml,
+# views.yaml, plugins.yaml). Docs: https://github.com/nklmilojevic/sofka/tree/main/docs
+#
+# Linked to ~/.config/sofka by dotbot. `:reload` re-reads it live and `:config`
+# shows the loaded sources plus any warnings.
+
+# ---------------------------------------------------------------------------
+# Base options (k9s/config.yaml)
+# ---------------------------------------------------------------------------
+
+# k9s had `skin: catppuccin-latte` commented out. sofka auto-detects a dark or
+# light terminal and picks catppuccin-mocha / catppuccin-latte; the skin is
+# built in, so the k9s/skins/ file is not needed. Uncomment to pin it.
+# [skin]
+# name = "catppuccin-latte"
+
+# k9s logger: tail 100, buffer 5000, sinceSeconds -1 (no lookback).
+[logs]
+tail = 100
+buffer = 5000
+
+# k9s shellPod (busybox:1.35.0 in `default`) -> the node debug pod that
+# `:debug` starts on a node. CPU/memory limits have no equivalent.
+[debug]
+node_image = "busybox:1.35.0"
+node_namespace = "default"
+
+# k9s thresholds: cpu/memory warn 70, critical 90 (% of request/limit).
+[thresholds]
+utilization = { warn = 70, critical = 90 }
+
+# ---------------------------------------------------------------------------
+# Aliases (k9s/aliases.yaml)
+# ---------------------------------------------------------------------------
+# A target is a plural, a kind, or plural.group; the k9s apiVersion prefix
+# (v1/secrets, snapshot.storage.k8s.io/v1/volumesnapshots) is not accepted.
+[aliases]
+dp = "deployments"
+sec = "secrets"
+jo = "jobs"
+cr = "clusterroles"
+crb = "clusterrolebindings"
+ro = "roles"
+rb = "rolebindings"
+np = "networkpolicies"
+sn = "volumesnapshots.snapshot.storage.k8s.io"
+sm = "servicemonitors.monitoring.coreos.com"
+pm = "podmonitors.monitoring.coreos.com"
+nc = "nodeclaims"
+nl = "nodepools"
+
+# ---------------------------------------------------------------------------
+# Views (k9s/views.yaml)
+# ---------------------------------------------------------------------------
+# Columns overlay sofka's curated ones: a matching header replaces it in place,
+# new columns land before AGE. `wide = true` is the k9s `|H` (shown after `w`).
+# `path` is a JSON Pointer, so `/` inside a label or annotation key is `~1`.
+
+# v1/pods. NAMESPACE appears automatically in all-namespaces mode, IP and NODE
+# are built-in wide columns, and PF has no equivalent (`:pf` lists forwards).
+# The k9s `v1/pods@matlab` / `v1/pods@python` views cannot be expressed yet:
+# sofka selects a column layout per kind, not per namespace (feature request:
+# https://github.com/nklmilojevic/sofka/issues/348). Their ops.kyos.com
+# annotation columns are on every pods view instead, showing <none> where the
+# annotations are absent, and the two namespaces get bookmarks.
+[views."v1/pods"]
+
+[[views."v1/pods".columns]]
+name = "OWNERKIND"
+path = "/metadata/ownerReferences/0/kind"
+
+[[views."v1/pods".columns]]
+name = "TENANT"
+path = "/metadata/annotations/ops.kyos.com~1tenant"
+
+[[views."v1/pods".columns]]
+name = "MODEL"
+path = "/metadata/annotations/ops.kyos.com~1model"
+
+[[views."v1/pods".columns]]
+name = "JOB ID"
+path = "/metadata/annotations/ops.kyos.com~1job-id"
+
+# karpenter.sh/v1/nodeclaims. An explicit view replaces the CRD printer-column
+# fallback, so TYPE and NODE are declared here again. READY is added for row
+# coloring. `o` jumps to the claimed node (built in for NodeClaims).
+[views."karpenter.sh/v1/nodeclaims"]
+
+[[views."karpenter.sh/v1/nodeclaims".columns]]
+name = "TYPE"
+path = "/metadata/labels/node.kubernetes.io~1instance-type"
+
+[[views."karpenter.sh/v1/nodeclaims".columns]]
+name = "NODE"
+path = "/status/nodeName"
+
+[[views."karpenter.sh/v1/nodeclaims".columns]]
+name = "CORES"
+path = "/status/capacity/cpu"
+type = "quantity"
+
+[[views."karpenter.sh/v1/nodeclaims".columns]]
+name = "RAM"
+path = "/status/capacity/memory"
+type = "quantity"
+
+[[views."karpenter.sh/v1/nodeclaims".columns]]
+name = "MAX PODS"
+path = "/status/capacity/pods"
+type = "number"
+
+[[views."karpenter.sh/v1/nodeclaims".columns]]
+name = "READY"
+path = "Ready"
+type = "condition"
+
+[[views."karpenter.sh/v1/nodeclaims".columns]]
+name = "NODECLASS"
+path = "/spec/nodeClassRef/name"
+wide = true
+
+[[views."karpenter.sh/v1/nodeclaims".columns]]
+name = "NODEPOOL"
+path = "/metadata/labels/karpenter.sh~1nodepool"
+wide = true
+
+[[views."karpenter.sh/v1/nodeclaims".columns]]
+name = "CAPACITY"
+path = "/metadata/labels/karpenter.sh~1capacity-type"
+wide = true
+
+# external-secrets.io/v1/externalsecrets. Same printer-column caveat, so the
+# CRD's own columns are declared again. The k9s STATUS column (the Ready
+# condition's reason) is not expressible in a user view; READY covers it.
+[views."external-secrets.io/v1/externalsecrets"]
+sort = "LAST SYNC:asc"
+
+[[views."external-secrets.io/v1/externalsecrets".columns]]
+name = "STORETYPE"
+path = "/spec/secretStoreRef/kind"
+
+[[views."external-secrets.io/v1/externalsecrets".columns]]
+name = "STORE"
+path = "/spec/secretStoreRef/name"
+
+[[views."external-secrets.io/v1/externalsecrets".columns]]
+name = "REFRESH INTERVAL"
+path = "/spec/refreshInterval"
+
+[[views."external-secrets.io/v1/externalsecrets".columns]]
+name = "LAST SYNC"
+path = "/status/refreshTime"
+type = "time"
+
+[[views."external-secrets.io/v1/externalsecrets".columns]]
+name = "READY"
+path = "Ready"
+type = "condition"
+
+# ---------------------------------------------------------------------------
+# Bookmarks (stand-ins for the k9s per-namespace pod views)
+# ---------------------------------------------------------------------------
+# Always in the `:` palette (★).
+
+[[bookmarks]]
+name = "MATLAB pods"
+resource = "pods"
+namespace = "matlab"
+
+[[bookmarks]]
+name = "Python pods"
+resource = "pods"
+namespace = "python"
+
+# ---------------------------------------------------------------------------
+# Plugins (k9s/plugins.yaml)
+# ---------------------------------------------------------------------------
+# A built-in key always wins over a plugin on the same chord, so these moved:
+#   Shift-T taint-node   -> ctrl-t   (T is the timeline)
+#   Shift-U untaint-node -> ctrl-u   (U is uncordon)
+#   Shift-S cert-status  -> ctrl-s   (S is the sort picker)
+#   Shift-I secret-inspect -> ctrl-s (I inverts the sort; scope differs from cert-status)
+# Scopes are exact plurals (customresourcedefinitions, not crds).
+#
+# Placeholders ($NAME, $NAMESPACE, $CONTEXT, $RESOURCE, ...) are string-replaced
+# in every argument, so scripts receive them as positional parameters ($1, $2,
+# ...) and never mention them by name. `bash` is used instead of `shell = true`
+# because that runs `sh -c` and the scripts rely on bash features.
+#
+# Not carried over, because sofka has them built in:
+#   sync-app (Shift-S on ArgoCD apps)             -> `t` on an Application: suspend / resume / sync
+#   external-secret-refresh (Shift-R on ES rows)  -> `r` on an ExternalSecret: force-sync
+
+[[plugins]]
+key = "ctrl-t"
+name = "taint-node"
+scopes = ["nodes"]
+command = "bash"
+args = [
+  "-c",
+  '''
+read -r -p "Enter taint (format key=value:effect, default k9s=true:NoSchedule): " taint
+taint="${taint:-k9s=true:NoSchedule}"
+kubectl --context "$2" taint nodes "$1" "$taint" --overwrite=true
+read -rsn1 -p $'\nPress any key to return to sofka'
+''',
+  "sofka", "$NAME", "$CONTEXT",
+]
+
+[[plugins]]
+key = "ctrl-u"
+name = "untaint-node"
+scopes = ["nodes"]
+command = "bash"
+args = [
+  "-c",
+  '''
+read -r -p "Enter taint to remove (format key=value:effect, default k9s=true:NoSchedule): " taint
+taint="${taint:-k9s=true:NoSchedule}"
+kubectl --context "$2" taint nodes "$1" "${taint}-" --overwrite=true
+read -rsn1 -p $'\nPress any key to return to sofka'
+''',
+  "sofka", "$NAME", "$CONTEXT",
+]
+
+# kubectl evict-pod (krew). Runs detached like the k9s version; with rows
+# marked (`space`) it evicts every marked pod.
+[[plugins]]
+key = "shift-v"
+name = "evict-pod"
+scopes = ["pods"]
+command = "kubectl"
+args = ["evict-pod", "--context", "$CONTEXT", "-n", "$NAMESPACE", "$NAME"]
+dangerous = true
+output = "background"
+
+# cert-manager via cmctl (https://github.com/cert-manager/cmctl). The k9s
+# `|& less` pager becomes sofka's scrollable popup.
+[[plugins]]
+key = "ctrl-s"
+name = "cert-status"
+scopes = ["certificates"]
+command = "cmctl"
+args = ["status", "certificate", "--context", "$CONTEXT", "-n", "$NAMESPACE", "$NAME"]
+mutating = false
+output = "popup"
+
+[[plugins]]
+key = "shift-r"
+name = "cert-renew"
+scopes = ["certificates"]
+command = "cmctl"
+args = ["renew", "--context", "$CONTEXT", "-n", "$NAMESPACE", "$NAME"]
+output = "popup"
+
+[[plugins]]
+key = "ctrl-s"
+name = "secret-inspect"
+scopes = ["secrets"]
+command = "cmctl"
+args = ["inspect", "secret", "--context", "$CONTEXT", "-n", "$NAMESPACE", "$NAME"]
+mutating = false
+output = "popup"
+
+# kubectl crd-wizard (krew). k9s read the kind from the KIND column; sofka has
+# no column placeholder, so it is looked up from the CRD.
+[[plugins]]
+key = "shift-w"
+name = "crd-wizard"
+scopes = ["customresourcedefinitions"]
+command = "bash"
+args = [
+  "-c",
+  '''
+crd_kind="$(kubectl --context "$2" get crd "$1" -o jsonpath='{.spec.names.kind}')"
+kubectl crd-wizard tui --kind "$crd_kind"
+''',
+  "sofka", "$NAME", "$CONTEXT",
+]
+mutating = false
+
+# Apply a resource written in $EDITOR. No scopes = every resource view.
+[[plugins]]
+key = "shift-k"
+name = "resource-creator"
+command = "bash"
+args = [
+  "-c",
+  '''
+set -e
+tmpdir="$(mktemp -d)"
+trap 'rm -rf "$tmpdir"' EXIT
+tmpfile="$tmpdir/resource.yaml"
+${EDITOR:-vim} "$tmpfile"
+kubectl --context "$1" apply -f "$tmpfile" --warnings-as-errors
+read -rsn1 -p $'\nPress any key to return to sofka'
+''',
+  "sofka", "$CONTEXT",
+]
+
+# kubectl node-shell (krew): root shell on the node.
+[[plugins]]
+key = "ctrl-n"
+name = "node-shell"
+scopes = ["nodes"]
+command = "kubectl"
+args = ["node-shell", "$NAME", "--context", "$CONTEXT"]
+
+# HolmesGPT (https://github.com/robusta-dev/holmesgpt). Holmes follows the
+# kubeconfig current-context, so when the row's context differs a throwaway
+# kubeconfig is used instead of switching the user's context.
+[[plugins]]
+key = "shift-h"
+name = "holmesgpt"
+command = "bash"
+args = [
+  "-c",
+  '''
+question="why is $1 of $2 in -n $3 not working as expected"
+current="$(kubectl config current-context 2>/dev/null || true)"
+if [ "$current" = "$4" ]; then
+  holmes ask "$question"
+else
+  tmp_kubeconfig="$(mktemp)"
+  trap 'rm -f "$tmp_kubeconfig"' EXIT
+  kubectl config view --raw > "$tmp_kubeconfig"
+  KUBECONFIG="$tmp_kubeconfig" kubectl config use-context "$4" >/dev/null
+  KUBECONFIG="$tmp_kubeconfig" holmes ask "$question"
+fi
+read -rsn1 -p $'\nPress any key to return to sofka'
+''',
+  "sofka", "$NAME", "$RESOURCE", "$NAMESPACE", "$CONTEXT",
+]
+mutating = false
+
+[[plugins]]
+key = "shift-q"
+name = "interactive-holmesgpt"
+command = "bash"
+args = [
+  "-c",
+  '''
+tmpdir="$(mktemp -d)"
+trap 'rm -rf "$tmpdir"' EXIT
+question_file="$tmpdir/question.txt"
+printf '%s\n' \
+  "# Edit the line below. Lines starting with '#' will be ignored." \
+  "why is $1 of $2 in -n $3 not working as expected" > "$question_file"
+${EDITOR:-nano} "$question_file"
+question="$(grep -v '^#' "$question_file")"
+echo "Running: holmes ask '$question'"
+current="$(kubectl config current-context 2>/dev/null || true)"
+if [ "$current" = "$4" ]; then
+  holmes ask "$question"
+else
+  tmp_kubeconfig="$tmpdir/kubeconfig"
+  kubectl config view --raw > "$tmp_kubeconfig"
+  KUBECONFIG="$tmp_kubeconfig" kubectl config use-context "$4" >/dev/null
+  KUBECONFIG="$tmp_kubeconfig" holmes ask "$question"
+fi
+read -rsn1 -p $'\nPress any key to return to sofka'
+''',
+  "sofka", "$NAME", "$RESOURCE", "$NAMESPACE", "$CONTEXT",
+]
+mutating = false
