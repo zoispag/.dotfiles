@@ -60,9 +60,11 @@ nl = "nodepools"
 
 # v1/pods. NAMESPACE appears automatically in all-namespaces mode, IP and NODE
 # are built-in wide columns, and PF has no equivalent (`:pf` lists forwards).
-# The k9s `v1/pods@matlab` / `v1/pods@python` views cannot be expressed: sofka
-# has no per-namespace views. Their ops.kyos.com annotation columns are wide
-# columns on every pods view instead, and the two namespaces get bookmarks.
+# The k9s `v1/pods@matlab` / `v1/pods@python` views cannot be expressed yet:
+# sofka selects a column layout per kind, not per namespace (feature request:
+# https://github.com/nklmilojevic/sofka/issues/348). Their ops.kyos.com
+# annotation columns are on every pods view instead, showing <none> where the
+# annotations are absent, and the two namespaces get bookmarks.
 [views."v1/pods"]
 
 [[views."v1/pods".columns]]
@@ -160,7 +162,7 @@ type = "condition"
 # ---------------------------------------------------------------------------
 # Bookmarks (stand-ins for the k9s per-namespace pod views)
 # ---------------------------------------------------------------------------
-# Always in the `:` palette (★). Press `w` for the TENANT/MODEL/JOB ID columns.
+# Always in the `:` palette (★).
 
 [[bookmarks]]
 name = "MATLAB pods"
