@@ -72,17 +72,14 @@ path = "/metadata/ownerReferences/0/kind"
 [[views."v1/pods".columns]]
 name = "TENANT"
 path = "/metadata/annotations/ops.kyos.com~1tenant"
-wide = true
 
 [[views."v1/pods".columns]]
 name = "MODEL"
 path = "/metadata/annotations/ops.kyos.com~1model"
-wide = true
 
 [[views."v1/pods".columns]]
 name = "JOB ID"
 path = "/metadata/annotations/ops.kyos.com~1job-id"
-wide = true
 
 # karpenter.sh/v1/nodeclaims. An explicit view replaces the CRD printer-column
 # fallback, so TYPE and NODE are declared here again. READY is added for row
