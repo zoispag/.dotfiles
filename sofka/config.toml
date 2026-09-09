@@ -60,28 +60,56 @@ nl = "nodepools"
 
 # v1/pods. NAMESPACE appears automatically in all-namespaces mode, IP and NODE
 # are built-in wide columns, and PF has no equivalent (`:pf` lists forwards).
-# The k9s `v1/pods@matlab` / `v1/pods@python` views cannot be expressed yet:
-# sofka selects a column layout per kind, not per namespace (feature request:
-# https://github.com/nklmilojevic/sofka/issues/348). Their ops.kyos.com
-# annotation columns are on every pods view instead, showing <none> where the
-# annotations are absent, and the two namespaces get bookmarks.
+# This is the default layout; the `@matlab` / `@python` views below take over
+# when the pods view is set to that one namespace (sofka >= 0.25, sofka#350).
+# A namespaced view does not inherit from this one, so it does not get OWNERKIND.
 [views."v1/pods"]
 
 [[views."v1/pods".columns]]
 name = "OWNERKIND"
 path = "/metadata/ownerReferences/0/kind"
 
-[[views."v1/pods".columns]]
-name = "TENANT"
-path = "/metadata/annotations/ops.kyos.com~1tenant"
+# v1/pods@matlab: the k9s `v1/pods@matlab` view. `replace = true` keeps only the
+# declared columns, in this order; `wide = true` is the k9s `|H`. PF has no
+# equivalent (`:pf` lists forwards).
+[views."v1/pods@matlab"]
+replace = true
+columns = [
+  { name = "NAME", builtin = "NAME" },
+  { name = "READY", builtin = "READY" },
+  { name = "STATUS", builtin = "STATUS" },
+  { name = "TENANT", path = "/metadata/annotations/ops.kyos.com~1tenant" },
+  { name = "MODEL", path = "/metadata/annotations/ops.kyos.com~1model" },
+  { name = "JOB ID", path = "/metadata/annotations/ops.kyos.com~1job-id" },
+  { name = "RESTARTS", builtin = "RESTARTS", wide = true },
+  { name = "IP", builtin = "IP", wide = true },
+  { name = "%CPU/R", metric = "cpu-request-utilization", wide = true },
+  { name = "%CPU/L", metric = "cpu-limit-utilization", wide = true },
+  { name = "%MEM/R", metric = "memory-request-utilization", wide = true },
+  { name = "%MEM/L", metric = "memory-limit-utilization", wide = true },
+  { name = "AGE", builtin = "AGE" },
+]
 
-[[views."v1/pods".columns]]
-name = "MODEL"
-path = "/metadata/annotations/ops.kyos.com~1model"
-
-[[views."v1/pods".columns]]
-name = "JOB ID"
-path = "/metadata/annotations/ops.kyos.com~1job-id"
+# v1/pods@python: the k9s `v1/pods@python` view. `replace = true` keeps only the
+# declared columns, in this order; `wide = true` is the k9s `|H`. PF has no
+# equivalent (`:pf` lists forwards).
+[views."v1/pods@python"]
+replace = true
+columns = [
+  { name = "NAME", builtin = "NAME" },
+  { name = "READY", builtin = "READY" },
+  { name = "STATUS", builtin = "STATUS" },
+  { name = "TENANT", path = "/metadata/annotations/ops.kyos.com~1tenant" },
+  { name = "MODEL", path = "/metadata/annotations/ops.kyos.com~1model" },
+  { name = "JOB ID", path = "/metadata/annotations/ops.kyos.com~1job-id" },
+  { name = "RESTARTS", builtin = "RESTARTS", wide = true },
+  { name = "IP", builtin = "IP", wide = true },
+  { name = "%CPU/R", metric = "cpu-request-utilization", wide = true },
+  { name = "%CPU/L", metric = "cpu-limit-utilization", wide = true },
+  { name = "%MEM/R", metric = "memory-request-utilization", wide = true },
+  { name = "%MEM/L", metric = "memory-limit-utilization", wide = true },
+  { name = "AGE", builtin = "AGE" },
+]
 
 # karpenter.sh/v1/nodeclaims. An explicit view replaces the CRD printer-column
 # fallback, so TYPE and NODE are declared here again. READY is added for row
@@ -160,9 +188,10 @@ path = "Ready"
 type = "condition"
 
 # ---------------------------------------------------------------------------
-# Bookmarks (stand-ins for the k9s per-namespace pod views)
+# Bookmarks
 # ---------------------------------------------------------------------------
-# Always in the `:` palette (★).
+# Always in the `:` palette (★). Opening one sets the namespace, so the
+# matching `v1/pods@<ns>` view above is selected.
 
 [[bookmarks]]
 name = "MATLAB pods"
@@ -307,61 +336,3 @@ name = "node-shell"
 scopes = ["nodes"]
 command = "kubectl"
 args = ["node-shell", "$NAME", "--context", "$CONTEXT"]
-
-# HolmesGPT (https://github.com/robusta-dev/holmesgpt). Holmes follows the
-# kubeconfig current-context, so when the row's context differs a throwaway
-# kubeconfig is used instead of switching the user's context.
-[[plugins]]
-key = "shift-h"
-name = "holmesgpt"
-command = "bash"
-args = [
-  "-c",
-  '''
-question="why is $1 of $2 in -n $3 not working as expected"
-current="$(kubectl config current-context 2>/dev/null || true)"
-if [ "$current" = "$4" ]; then
-  holmes ask "$question"
-else
-  tmp_kubeconfig="$(mktemp)"
-  trap 'rm -f "$tmp_kubeconfig"' EXIT
-  kubectl config view --raw > "$tmp_kubeconfig"
-  KUBECONFIG="$tmp_kubeconfig" kubectl config use-context "$4" >/dev/null
-  KUBECONFIG="$tmp_kubeconfig" holmes ask "$question"
-fi
-read -rsn1 -p $'\nPress any key to return to sofka'
-''',
-  "sofka", "$NAME", "$RESOURCE", "$NAMESPACE", "$CONTEXT",
-]
-mutating = false
-
-[[plugins]]
-key = "shift-q"
-name = "interactive-holmesgpt"
-command = "bash"
-args = [
-  "-c",
-  '''
-tmpdir="$(mktemp -d)"
-trap 'rm -rf "$tmpdir"' EXIT
-question_file="$tmpdir/question.txt"
-printf '%s\n' \
-  "# Edit the line below. Lines starting with '#' will be ignored." \
-  "why is $1 of $2 in -n $3 not working as expected" > "$question_file"
-${EDITOR:-nano} "$question_file"
-question="$(grep -v '^#' "$question_file")"
-echo "Running: holmes ask '$question'"
-current="$(kubectl config current-context 2>/dev/null || true)"
-if [ "$current" = "$4" ]; then
-  holmes ask "$question"
-else
-  tmp_kubeconfig="$tmpdir/kubeconfig"
-  kubectl config view --raw > "$tmp_kubeconfig"
-  KUBECONFIG="$tmp_kubeconfig" kubectl config use-context "$4" >/dev/null
-  KUBECONFIG="$tmp_kubeconfig" holmes ask "$question"
-fi
-read -rsn1 -p $'\nPress any key to return to sofka'
-''',
-  "sofka", "$NAME", "$RESOURCE", "$NAMESPACE", "$CONTEXT",
-]
-mutating = false
