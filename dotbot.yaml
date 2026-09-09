@@ -111,6 +111,11 @@
       force: true
       path: tmux/tmux.conf
 
+    # --- terraform (home-targeted; shared provider cache, see plugin_cache_dir) ---
+    ~/.terraformrc:
+      force: true
+      path: terraform/terraformrc
+
     # --- mackup (repo-root config, unchanged) ---
     ~/.mackup.cfg:
       force: true
@@ -118,6 +123,8 @@
 
 - create:
   - ~/Projects
+  # Terraform only uses plugin_cache_dir if the directory already exists.
+  - ~/.terraform.d/plugin-cache
 
 - if:
     cond: 'test ! $(which brew)'
