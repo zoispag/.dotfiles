@@ -69,6 +69,24 @@
       force: true
       path: opencode/skills
 
+    # --- Claude Code statusline (home-targeted) ---
+    ~/.claude/statusline-command.sh:
+      create: true
+      force: true
+      path: claude/statusline-command.sh
+
+    # --- agent skills (home-targeted; single source of truth for every AI CLI) ---
+    # ~/.agents/skills is the canonical dir; ~/.claude/skills chains onto it so
+    # Claude Code and opencode/others see the same skill set.
+    ~/.agents/skills:
+      create: true
+      force: true
+      path: agents/skills
+    ~/.claude/skills:
+      create: true
+      force: true
+      path: ~/.agents/skills
+
     # --- zed (XDG-targeted, per-file link so app writes don't touch the repo) ---
     ~/.config/zed/settings.json:
       create: true
