@@ -1,0 +1,18 @@
+# sofka aliases (k9s/aliases.yaml). Drop-in merged over ../config.yaml.
+#
+# A target is a plural, a kind, or plural.group; the k9s apiVersion prefix
+# (v1/secrets, snapshot.storage.k8s.io/v1/volumesnapshots) is not accepted.
+aliases:
+  dp: deployments
+  sec: secrets
+  jo: jobs
+  cr: clusterroles
+  crb: clusterrolebindings
+  ro: roles
+  rb: rolebindings
+  np: networkpolicies
+  sn: volumesnapshots.snapshot.storage.k8s.io
+  sm: servicemonitors.monitoring.coreos.com
+  pm: podmonitors.monitoring.coreos.com
+  nc: nodeclaims
+  nl: nodepools

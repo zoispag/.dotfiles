@@ -1,0 +1,12 @@
+# sofka bookmarks (no k9s equivalent). Drop-in merged over ../config.yaml.
+#
+# Always in the `:` palette (★). Opening one sets the namespace, so the
+# matching `v1/pods@<ns>` view in views.yaml is selected. This is a list, so
+# every bookmark must live in this one file.
+bookmarks:
+  - name: MATLAB pods
+    resource: pods
+    namespace: matlab
+  - name: Python pods
+    resource: pods
+    namespace: python

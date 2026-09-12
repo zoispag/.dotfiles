@@ -1,0 +1,40 @@
+# sofka - https://github.com/nklmilojevic/sofka
+#
+# Translated from the k9s setup in ../k9s and split the same way:
+#   config.yaml          base options            (k9s config.yaml)
+#   conf.d/aliases.yaml  aliases                 (k9s aliases.yaml)
+#   conf.d/views.yaml    views                   (k9s views.yaml)
+#   conf.d/plugins.yaml  plugins                 (k9s plugins.yaml)
+#   conf.d/bookmarks.yaml bookmarks              (no k9s equivalent)
+#
+# sofka >= 0.26 merges every *.toml / *.yaml / *.yml in conf.d/ over this file
+# in file-name order (docs/configuration.md#drop-in-files). Mappings merge key
+# by key, but lists (plugins, bookmarks, a view's columns) replace the earlier
+# value, so keep each list in exactly one file. Only one of config.toml /
+# config.yaml / config.yml may exist here.
+#
+# Linked to ~/.config/sofka by dotbot. `:reload` re-reads everything live and
+# `:config` shows the loaded sources plus any warnings.
+
+# k9s had `skin: catppuccin-latte` commented out. sofka auto-detects a dark or
+# light terminal and picks catppuccin-mocha / catppuccin-latte; the skin is
+# built in, so the k9s/skins/ file is not needed. Uncomment to pin it.
+# skin:
+#   name: catppuccin-latte
+
+# k9s logger: tail 100, buffer 5000, sinceSeconds -1 (no lookback).
+logs:
+  tail: 100
+  buffer: 5000
+
+# k9s shellPod (busybox:1.35.0 in `default`) -> the node debug pod that
+# `:debug` starts on a node. CPU/memory limits have no equivalent.
+debug:
+  node_image: busybox:1.35.0
+  node_namespace: default
+
+# k9s thresholds: cpu/memory warn 70, critical 90 (% of request/limit).
+thresholds:
+  utilization:
+    warn: 70
+    critical: 90

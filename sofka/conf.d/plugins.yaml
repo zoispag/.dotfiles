@@ -1,0 +1,124 @@
+# sofka plugins (k9s/plugins.yaml). Drop-in merged over ../config.yaml.
+# `plugins` is a list, so every inline plugin must live in this one file.
+#
+# A built-in key always wins over a plugin on the same chord, so these moved:
+#   Shift-T taint-node   -> ctrl-t   (T is the timeline)
+#   Shift-U untaint-node -> ctrl-u   (U is uncordon)
+#   Shift-S cert-status  -> ctrl-s   (S is the sort picker)
+#   Shift-I secret-inspect -> ctrl-s (I inverts the sort; scope differs from cert-status)
+#   Shift-W crd-wizard    -> ctrl-w   (W is namespace_selected, since sofka 0.26)
+# Scopes are exact plurals (customresourcedefinitions, not crds).
+#
+# Placeholders ($NAME, $NAMESPACE, $CONTEXT, $RESOURCE, ...) are string-replaced
+# in every argument, so scripts receive them as positional parameters ($1, $2,
+# ...) and never mention them by name. `bash` is used instead of `shell: true`
+# because that runs `sh -c` and the scripts rely on bash features.
+#
+# Not carried over, because sofka has them built in:
+#   sync-app (Shift-S on ArgoCD apps)             -> `t` on an Application: suspend / resume / sync
+#   external-secret-refresh (Shift-R on ES rows)  -> `r` on an ExternalSecret: force-sync
+plugins:
+  - key: ctrl-t
+    name: taint-node
+    scopes: [nodes]
+    command: bash
+    args:
+      - -c
+      - |
+        read -r -p "Enter taint (format key=value:effect, default k9s=true:NoSchedule): " taint
+        taint="${taint:-k9s=true:NoSchedule}"
+        kubectl --context "$2" taint nodes "$1" "$taint" --overwrite=true
+        read -rsn1 -p $'\nPress any key to return to sofka'
+      - sofka
+      - $NAME
+      - $CONTEXT
+
+  - key: ctrl-u
+    name: untaint-node
+    scopes: [nodes]
+    command: bash
+    args:
+      - -c
+      - |
+        read -r -p "Enter taint to remove (format key=value:effect, default k9s=true:NoSchedule): " taint
+        taint="${taint:-k9s=true:NoSchedule}"
+        kubectl --context "$2" taint nodes "$1" "${taint}-" --overwrite=true
+        read -rsn1 -p $'\nPress any key to return to sofka'
+      - sofka
+      - $NAME
+      - $CONTEXT
+
+  # kubectl evict-pod (krew). Runs detached like the k9s version; with rows
+  # marked (`space`) it evicts every marked pod.
+  - key: shift-v
+    name: evict-pod
+    scopes: [pods]
+    command: kubectl
+    args: [evict-pod, --context, $CONTEXT, -n, $NAMESPACE, $NAME]
+    dangerous: true
+    output: background
+
+  # cert-manager via cmctl (https://github.com/cert-manager/cmctl). The k9s
+  # `|& less` pager becomes sofka's scrollable popup.
+  - key: ctrl-s
+    name: cert-status
+    scopes: [certificates]
+    command: cmctl
+    args: [status, certificate, --context, $CONTEXT, -n, $NAMESPACE, $NAME]
+    mutating: false
+    output: popup
+
+  - key: shift-r
+    name: cert-renew
+    scopes: [certificates]
+    command: cmctl
+    args: [renew, --context, $CONTEXT, -n, $NAMESPACE, $NAME]
+    output: popup
+
+  - key: ctrl-s
+    name: secret-inspect
+    scopes: [secrets]
+    command: cmctl
+    args: [inspect, secret, --context, $CONTEXT, -n, $NAMESPACE, $NAME]
+    mutating: false
+    output: popup
+
+  # kubectl crd-wizard (krew). k9s read the kind from the KIND column; sofka has
+  # no column placeholder, so it is looked up from the CRD.
+  - key: ctrl-w
+    name: crd-wizard
+    scopes: [customresourcedefinitions]
+    command: bash
+    args:
+      - -c
+      - |
+        crd_kind="$(kubectl --context "$2" get crd "$1" -o jsonpath='{.spec.names.kind}')"
+        kubectl crd-wizard tui --kind "$crd_kind"
+      - sofka
+      - $NAME
+      - $CONTEXT
+    mutating: false
+
+  # Apply a resource written in $EDITOR. No scopes = every resource view.
+  - key: shift-k
+    name: resource-creator
+    command: bash
+    args:
+      - -c
+      - |
+        set -e
+        tmpdir="$(mktemp -d)"
+        trap 'rm -rf "$tmpdir"' EXIT
+        tmpfile="$tmpdir/resource.yaml"
+        ${EDITOR:-vim} "$tmpfile"
+        kubectl --context "$1" apply -f "$tmpfile" --warnings-as-errors
+        read -rsn1 -p $'\nPress any key to return to sofka'
+      - sofka
+      - $CONTEXT
+
+  # kubectl node-shell (krew): root shell on the node.
+  - key: ctrl-n
+    name: node-shell
+    scopes: [nodes]
+    command: kubectl
+    args: [node-shell, $NAME, --context, $CONTEXT]

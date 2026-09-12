@@ -1,0 +1,91 @@
+# sofka views (k9s/views.yaml). Drop-in merged over ../config.yaml.
+#
+# Columns overlay sofka's curated ones: a matching header replaces it in place,
+# new columns land before AGE. `wide: true` is the k9s `|H` (shown after `w`).
+# `path` is a JSON Pointer, so `/` inside a label or annotation key is `~1`.
+views:
+  # v1/pods. NAMESPACE appears automatically in all-namespaces mode, IP and NODE
+  # are built-in wide columns, and PF has no equivalent (`:pf` lists forwards).
+  # This is the default layout; the `@matlab` / `@python` views below take over
+  # when the pods view is set to that one namespace (sofka >= 0.25, sofka#350).
+  # A namespaced view does not inherit from this one, so it does not get OWNERKIND.
+  v1/pods:
+    columns:
+      - name: OWNERKIND
+        path: /metadata/ownerReferences/0/kind
+
+  # v1/pods@matlab: the k9s `v1/pods@matlab` view. `replace: true` keeps only the
+  # declared columns, in this order; `wide: true` is the k9s `|H`. PF has no
+  # equivalent (`:pf` lists forwards). The `&job-pod-columns` anchor is reused
+  # by `v1/pods@python` below, which has the same layout.
+  v1/pods@matlab:
+    replace: true
+    columns: &job-pod-columns
+      - { name: NAME, builtin: NAME }
+      - { name: READY, builtin: READY }
+      - { name: STATUS, builtin: STATUS }
+      - { name: TENANT, path: /metadata/annotations/ops.kyos.com~1tenant }
+      - { name: MODEL, path: /metadata/annotations/ops.kyos.com~1model }
+      - { name: JOB ID, path: /metadata/annotations/ops.kyos.com~1job-id }
+      - { name: RESTARTS, builtin: RESTARTS, wide: true }
+      - { name: IP, builtin: IP, wide: true }
+      - { name: "%CPU/R", metric: cpu-request-utilization, wide: true }
+      - { name: "%CPU/L", metric: cpu-limit-utilization, wide: true }
+      - { name: "%MEM/R", metric: memory-request-utilization, wide: true }
+      - { name: "%MEM/L", metric: memory-limit-utilization, wide: true }
+      - { name: AGE, builtin: AGE }
+
+  # v1/pods@python: the k9s `v1/pods@python` view. Same columns as `@matlab`.
+  v1/pods@python:
+    replace: true
+    columns: *job-pod-columns
+
+  # karpenter.sh/v1/nodeclaims. An explicit view replaces the CRD printer-column
+  # fallback, so TYPE and NODE are declared here again. READY is added for row
+  # coloring. `o` jumps to the claimed node (built in for NodeClaims).
+  karpenter.sh/v1/nodeclaims:
+    columns:
+      - name: TYPE
+        path: /metadata/labels/node.kubernetes.io~1instance-type
+      - name: NODE
+        path: /status/nodeName
+      - name: CORES
+        path: /status/capacity/cpu
+        type: quantity
+      - name: RAM
+        path: /status/capacity/memory
+        type: quantity
+      - name: MAX PODS
+        path: /status/capacity/pods
+        type: number
+      - name: READY
+        path: Ready
+        type: condition
+      - name: NODECLASS
+        path: /spec/nodeClassRef/name
+        wide: true
+      - name: NODEPOOL
+        path: /metadata/labels/karpenter.sh~1nodepool
+        wide: true
+      - name: CAPACITY
+        path: /metadata/labels/karpenter.sh~1capacity-type
+        wide: true
+
+  # external-secrets.io/v1/externalsecrets. Same printer-column caveat, so the
+  # CRD's own columns are declared again. The k9s STATUS column (the Ready
+  # condition's reason) is not expressible in a user view; READY covers it.
+  external-secrets.io/v1/externalsecrets:
+    sort: "LAST SYNC:asc"
+    columns:
+      - name: STORETYPE
+        path: /spec/secretStoreRef/kind
+      - name: STORE
+        path: /spec/secretStoreRef/name
+      - name: REFRESH INTERVAL
+        path: /spec/refreshInterval
+      - name: LAST SYNC
+        path: /status/refreshTime
+        type: time
+      - name: READY
+        path: Ready
+        type: condition
