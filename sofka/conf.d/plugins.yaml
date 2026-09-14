@@ -58,31 +58,6 @@ plugins:
     dangerous: true
     output: background
 
-  # cert-manager via cmctl (https://github.com/cert-manager/cmctl). The k9s
-  # `|& less` pager becomes sofka's scrollable popup.
-  - key: ctrl-s
-    name: cert-status
-    scopes: [certificates]
-    command: cmctl
-    args: [status, certificate, --context, $CONTEXT, -n, $NAMESPACE, $NAME]
-    mutating: false
-    output: popup
-
-  - key: shift-r
-    name: cert-renew
-    scopes: [certificates]
-    command: cmctl
-    args: [renew, --context, $CONTEXT, -n, $NAMESPACE, $NAME]
-    output: popup
-
-  - key: ctrl-s
-    name: secret-inspect
-    scopes: [secrets]
-    command: cmctl
-    args: [inspect, secret, --context, $CONTEXT, -n, $NAMESPACE, $NAME]
-    mutating: false
-    output: popup
-
   # kubectl crd-wizard (krew). k9s read the kind from the KIND column; sofka has
   # no column placeholder, so it is looked up from the CRD.
   - key: ctrl-w

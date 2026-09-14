@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "id": "cert-manager",
+  "package_version": "0.1.1",
+  "catalog_commit": "0d671941614b35ae6e19edb468b8a00a4772f802",
+  "source_commit": "6f9f8be6b73b6ea22901047db8e976dff3e20f94",
+  "artifact_digest": "e6755a4919ac4e426fb1a4fae84acbd4350287d4b3981fca170a6b963aa0dc31",
+  "files": {
+    "LICENSE-APACHE": "9c98519d944bf0b4ad993d088afcc72ad2cffb5ff84ae25c914fbac766c36b65",
+    "LICENSE-MIT": "c15b860d07c553e462ad3a70ccfa6f3aa9b100649c7e5a7f6e5372f4e6660c02",
+    "README.md": "ea84b1303ffeb7c39b3dc7bbd413d73e1792e1e8f384aa198aaef7a06b86275c",
+    "adapter": "42a6df2f40c92e53afc242ebd5d61fa2ec6aa5dca50f579c175095c4a3bf729f",
+    "plugin.toml": "5a27be905fef6a3d724efec843ae595aa229d7135016464b20498b6308db3f2d"
+  }
+}
