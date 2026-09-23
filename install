@@ -19,5 +19,4 @@ git submodule update --init --recursive
 	-d "${BASEDIR}" \
 	--plugin-dir .dotbot/dotbot-brew \
 	--plugin-dir .dotbot/dotbot-if \
-	--plugin-dir .dotbot/dotbot-krew \
 	-c "${CONFIG}" "${@}"

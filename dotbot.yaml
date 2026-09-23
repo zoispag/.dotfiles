@@ -191,8 +191,3 @@
 
 # - brewfile:
   # - Brewfile
-
-# Runs after brewfile so kubectl + krew (installed via Homebrew) already exist;
-# the krewfile plugin guards on them and does not bootstrap.
-- krewfile:
-  - Krewfile

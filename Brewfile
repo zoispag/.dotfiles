@@ -1,30 +1,31 @@
-tap "1password/tap"
-tap "anomalyco/tap"
-tap "armosec/kubescape"
-tap "aws/tap"
-tap "buo/cask-upgrade"
-tap "dailybothq/tap"
-tap "darksworm/tap"
-tap "deggja/netfetch", "https://github.com/deggja/netfetch"
-tap "dunglas/frankenphp"
-tap "fairwindsops/tap"
-tap "github/gh"
-tap "golangci/tap"
-tap "hashicorp/tap"
-tap "homebrew/bundle"
+tap "1password/tap", trusted: true
+tap "anomalyco/tap", trusted: true
+tap "aws/tap", trusted: true
+tap "buo/cask-upgrade", trusted: true
+tap "darksworm/tap", trusted: true
+tap "deggja/netfetch", "https://github.com/deggja/netfetch", trusted: true
+tap "dunglas/frankenphp", trusted: true
+tap "fairwindsops/tap", trusted: true
+tap "github/gh", trusted: true
+tap "go-task/tap", trusted: true
+tap "golangci/tap", trusted: true
+tap "hashicorp/tap", trusted: true
 tap "homebrew/cask"
-tap "homebrew/services"
-tap "kyosenergy/tap"
-tap "minamijoyo/hcledit"
+tap "homebrew/core"
+tap "jesseduffield/lazydocker"
+tap "kubescape/tap", "https://github.com/kubescape/homebrew-tap.git", trusted: true
+tap "kyosenergy/tap", trusted: true
+tap "minamijoyo/hcledit", trusted: true
+tap "modem-dev/tap", trusted: true
 tap "nklmilojevic/sofka"
-tap "oven-sh/bun"
-tap "pulumi/tap"
-tap "robusta-dev/holmesgpt"
-tap "shivammathur/php"
+tap "oven-sh/bun", trusted: true
+tap "pulumi/tap", trusted: true
+tap "robusta-dev/holmesgpt", trusted: true
+tap "shivammathur/php", trusted: true
 tap "stablyai/orca", trusted: true
-tap "teamookla/speedtest"
-tap "threatcl/repo"
-tap "yt-dlp/taps"
+tap "teamookla/speedtest", trusted: true
+tap "threatcl/repo", trusted: true
+tap "yt-dlp/taps", trusted: true
 tap "zoispag/tap"
 
 # Run your GitHub Actions locally
@@ -277,6 +278,10 @@ brew "python@3.11"
 brew "python@3.9"
 # Search tool like grep and The Silver Searcher
 brew "ripgrep"
+# CLI proxy to minimize LLM token consumption
+brew "rtk"
+# Rust toolchain installer
+brew "rustup"
 # Command-line tool for the Amazon S3 service
 brew "s3cmd"
 # Terminal multiplexer with VT100/ANSI terminal emulation
@@ -321,6 +326,8 @@ brew "tree"
 brew "unbound"
 # Extremely fast Python package installer and resolver, written in Rust
 brew "uv"
+# Helm-like configuration values loader with support for various sources
+brew "vals"
 # Video processing framework with simplicity in mind
 brew "vapoursynth"
 # Disaster recovery for Kubernetes resources and persistent volumes
@@ -355,7 +362,7 @@ brew "zoxide"
 # The AI coding agent built for the terminal.
 brew "anomalyco/tap/opencode-v2"
 # Kubernetes misconfiguration testing
-brew "armosec/kubescape/kubescape-cli"
+brew "kubescape/tap/kubescape-cli"
 # eks-node-viewer is a tool for visualizing dynamic node usage within an EKS cluster.
 brew "aws/tap/eks-node-viewer"
 # dailybot command line tool
@@ -392,6 +399,10 @@ brew "robusta-dev/holmesgpt/holmesgpt"
 brew "teamookla/speedtest/speedtest"
 # Documenting your Threat Models with HCL
 brew "threatcl/repo/threatcl"
+# A simple terminal UI for docker, written in Go
+brew "jesseduffield/lazydocker/lazydocker", trusted: true
+# Desktop-inspired terminal diff viewer for agent-authored changesets
+brew "modem-dev/tap/hunk"
 
 # Password manager that keeps all passwords secure behind one password
 cask "1password"
@@ -401,6 +412,22 @@ cask "1password-cli"
 cask "airbuddy"
 # Application uninstaller
 cask "appcleaner"
+# Browse, search and analyse your past AI coding sessions
+cask "agentsview"
+# Open source IDE for exploring and testing APIs
+cask "bruno"
+# Anthropic's official Claude AI desktop app
+cask "claude"
+# Terminal-based AI coding assistant
+cask "claude-code@latest"
+# Brings the power of Copilot coding agent directly to your terminal
+cask "copilot-cli"
+# Terminal emulator that uses platform-native UI and GPU acceleration
+cask "ghostty"
+# A fast, cross-platform build tool inspired by Make, designed for modern workflows.
+cask "go-task/tap/go-task", trusted: true
+# Multiplayer code editor
+cask "zed"
 # Ghostty-based terminal with vertical tabs and notifications for AI coding agents
 cask "cmux"
 # Server and cloud storage browser
@@ -444,7 +471,7 @@ cask "karabiner-elements"
 # End-to-end encryption software
 cask "keybase"
 # App to manage software development and track bugs
-cask "linear-linear"
+cask "linear"
 # Markdown editor with live preview and syntax highlighting
 cask "macdown-3000"
 # Provides updates to various Microsoft products
@@ -513,14 +540,12 @@ mas "Bear", id: 1091189122
 mas "Boop", id: 1518425043
 mas "Budget Flow", id: 1640091876
 mas "Dato", id: 1470584107
-mas "Keynote", id: 409183694
-mas "Messenger", id: 1480068668
+mas "Keynote", id: 361285480
 mas "myTuner Radio Pro", id: 808285143
 mas "Nautik", id: 1672838783
-mas "Numbers", id: 409203825
-mas "Pages", id: 409201541
+mas "Numbers", id: 361304891
+mas "Pages", id: 361309726
 mas "Prime Video", id: 545519333
-mas "ReadKit", id: 1615798039
 mas "Say No to Notch", id: 1639306886
 mas "The Unarchiver", id: 425424353
 mas "Windows App", id: 1295203466
@@ -533,7 +558,6 @@ vscode "betajob.modulestf"
 vscode "bierner.markdown-preview-github-styles"
 vscode "bradlc.vscode-tailwindcss"
 vscode "caarlos0.language-prometheus"
-vscode "continue.continue"
 vscode "dannysteenman.iam-actions-snippets"
 vscode "docker.docker"
 vscode "donjayamanne.githistory"
@@ -542,8 +566,6 @@ vscode "editorconfig.editorconfig"
 vscode "exiasr.hadolint"
 vscode "foxundermoon.shell-format"
 vscode "github.codespaces"
-vscode "github.copilot"
-vscode "github.copilot-chat"
 vscode "github.github-vscode-theme"
 vscode "mechatroner.rainbow-csv"
 vscode "github.vscode-github-actions"
@@ -579,7 +601,6 @@ vscode "openai.chatgpt"
 vscode "phplasma.csv-to-table"
 vscode "redhat.vscode-commons"
 vscode "redhat.vscode-yaml"
-vscode "saoudrizwan.claude-dev"
 vscode "sharat.vscode-brewfile"
 vscode "sst-dev.opencode"
 vscode "sumneko.lua"
@@ -592,7 +613,40 @@ vscode "wakatime.vscode-wakatime"
 vscode "yzane.markdown-pdf"
 vscode "yzhang.markdown-all-in-one"
 
+go "github.com/rhysd/actionlint/cmd/actionlint"
+go "github.com/perplexityai/bumblebee/cmd/bumblebee"
+go "sigs.k8s.io/controller-tools/cmd/controller-gen"
 go "github.com/awslabs/amazon-ecr-credential-helper/ecr-login/cli/docker-credential-ecr-login"
+go "golang.org/x/tools/go/analysis/passes/fieldalignment/cmd/fieldalignment"
+go "golang.org/x/tools/cmd/goimports"
+go "github.com/golangci/golangci-lint/v2/cmd/golangci-lint"
+go "github.com/pressly/goose/v3/cmd/goose"
 go "golang.org/x/tools/gopls"
+go "github.com/securego/gosec/v2/cmd/gosec"
+go "golang.org/x/vuln/cmd/govulncheck"
+go "github.com/kyosenergy-engineering/platform-onboard"
 go "github.com/kyosenergy/sso-ecr-login"
 go "honnef.co/go/tools/cmd/staticcheck"
+go "github.com/kyosenergy/trexe"
+
+cargo "cargo-bundle"
+cargo "cargo-nextest"
+cargo "tauri-cli"
+cargo "wgslfmt", source: "https://github.com/wgsl-analyzer/wgsl-analyzer?tag=2025-06-28"
+
+# Browse PVC contents from the command line
+krew "browse-pvc"
+# Explore Kubernetes CR(D)s via a TUI or web interface
+krew "crd-wizard"
+# Show disk usage (like unix df) for persistent volumes
+krew "df-pv"
+# Evict a given pod
+krew "evict-pod"
+# Like `kubectl get all` but really everything
+krew "get-all"
+# Interactive CRUD operations to manage kubeconfig
+krew "kc"
+# A top tool to display workload metrics
+krew "ktop"
+# Spawn a root shell on a node via kubectl
+krew "node-shell"
