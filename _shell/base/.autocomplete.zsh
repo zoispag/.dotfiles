@@ -11,7 +11,7 @@ complete -F __start_velero v
 source <(argocd completion zsh)
 
 # Autocomplete for OpenCode
-source <(opencode completion)
+source <(opencode --completions zsh)
 
 # Completion styling
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
