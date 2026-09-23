@@ -10,3 +10,6 @@
 
 # AI-assisted development
 .sisyphus/
+
+# Work-only Claude Code plugin (private KYOS skills, loaded in place as kyos:*)
+agents/skills/kyos/

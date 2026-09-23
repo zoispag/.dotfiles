@@ -1,0 +1,2661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PR review: annotate diff</title>
+<style>
+  :root{
+    --ink:#1b1f24; --muted:#57606a; --border:#d0d7de; --panel-bg:#f6f8fa;
+    --green-bg:#dafbe1; --green-border:#4ac26b; --green-text:#116329;
+    --red-bg:#ffebe9; --red-border:#ff8182; --red-text:#82071e;
+    --gray-bg:#eaeef2; --gray-text:#6e7781;
+    --amber-bg:#fff8c5; --amber-border:#d4a72c; --accent:#0969da;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;padding:24px 20px 96px;background:#fff;color:var(--ink);
+       font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;line-height:1.55}
+  .wrap{max-width:960px;margin:0 auto}
+  h1{font-size:24px;margin:0 0 6px}
+  h2{font-size:19px;margin:0 0 14px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+  h3{font-size:15px;margin:26px 0 10px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+  p{margin:0 0 14px}
+  .subtitle{color:var(--muted);font-size:14px;margin-bottom:4px}
+  code,.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px}
+
+  /* ---- mode banner ---- */
+  .mode-banner{border:1px solid var(--border);border-left:4px solid var(--accent);
+               background:#ddf4ff;border-radius:6px;padding:10px 16px;margin:0 0 18px;font-size:13.5px}
+  .mode-banner.local{border-left-color:var(--amber-border);background:var(--amber-bg)}
+  .mode-banner b{display:block;margin-bottom:2px;font-size:11px;text-transform:uppercase;letter-spacing:.05em}
+
+  /* ---- narrative panel (reused panel/callout look from html-visual.md) ---- */
+  .panel{border:1px solid var(--border);border-radius:10px;overflow:hidden;background:#fff;margin:0 0 22px}
+  .panel-head{padding:10px 14px;font-weight:600;font-size:13.5px;border-bottom:1px solid var(--border);
+              background:var(--panel-bg);display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
+  .panel-head .toggle{color:var(--muted);font-size:12px;margin-left:auto}
+  .panel-body{padding:14px 16px}
+  .panel.collapsed .panel-body{display:none}
+  .callout{border-left:4px solid var(--accent);background:#ddf4ff;padding:12px 16px;
+           border-radius:6px;margin:18px 0;font-size:14.5px}
+  .callout.tip{border-left-color:var(--green-border);background:var(--green-bg)}
+  .callout b{display:block;margin-bottom:4px;font-size:12px;text-transform:uppercase;letter-spacing:.05em}
+
+  /* ---- diff file blocks ---- */
+  .file-block{border:1px solid var(--border);border-radius:10px;overflow:hidden;margin:0 0 16px;background:#fff}
+  .file-head{display:flex;align-items:center;gap:10px;padding:9px 14px;background:var(--panel-bg);
+             border-bottom:1px solid var(--border);font-size:13px;cursor:pointer;user-select:none}
+  .file-head .fname{font-family:ui-monospace,monospace;font-weight:600;word-break:break-all}
+  .file-head .toggle{color:var(--muted);font-size:12px}
+  .file-head .counts{margin-left:auto;display:flex;gap:8px;align-items:center;font-family:ui-monospace,monospace;font-size:12px}
+  .file-head .adds{color:var(--green-text)} .file-head .dels{color:var(--red-text)}
+  .file-head .status-chip{border:1px solid var(--border);background:#fff;color:var(--muted);
+                          border-radius:999px;padding:1px 8px;font-size:11px;text-transform:capitalize}
+  .file-body{display:block}
+  .file-block.collapsed .file-body{display:none}
+  .file-actions{padding:8px 14px;border-bottom:1px solid var(--border);background:#fff}
+  .btn{font:inherit;font-size:12.5px;font-weight:600;cursor:pointer;border:1px solid var(--border);
+       border-radius:7px;padding:5px 11px;background:var(--panel-bg);color:var(--ink)}
+  .btn:hover{background:var(--gray-bg)}
+  .btn.primary{border-color:var(--green-border);background:var(--green-bg);color:var(--green-text)}
+  .btn.danger{border-color:var(--red-border);background:var(--red-bg);color:var(--red-text)}
+  .btn.small{padding:3px 9px;font-size:11.5px}
+  .no-diff{padding:14px;color:var(--muted);font-size:13px;font-style:italic}
+
+  /* ---- diff lines ---- */
+  .hunk-header{font-family:ui-monospace,monospace;font-size:12px;color:var(--accent);
+               background:#f1f8ff;padding:4px 14px;border-top:1px solid var(--border)}
+  .diff-line{display:flex;font-family:ui-monospace,monospace;font-size:12.5px;line-height:1.5;cursor:pointer}
+  .diff-line:hover{background:#fff8c5aa}
+  .diff-line.selected{background:var(--amber-bg)}
+  .diff-line.add{background:var(--green-bg)} .diff-line.add.selected{background:#c3f0cd}
+  .diff-line.del{background:var(--red-bg)} .diff-line.del.selected{background:#ffd7d5}
+  .diff-line.context{background:#fff}
+  .gutter{flex:0 0 auto;width:44px;text-align:right;padding:0 6px;color:var(--gray-text);
+          user-select:none;border-right:1px solid var(--border)}
+  .marker{flex:0 0 auto;width:18px;text-align:center;color:var(--muted);user-select:none}
+  .ltext{flex:1 1 auto;white-space:pre-wrap;word-break:break-word;padding-right:10px}
+
+  /* ---- annotations (inline) ---- */
+  .anno-list{padding:0 14px}
+  .anno{border:1px solid var(--border);border-radius:8px;margin:8px 0;padding:10px 12px;background:#fff;font-size:13px}
+  .anno .anno-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px;font-size:12px;color:var(--muted)}
+  .anno .anno-body{white-space:pre-wrap;word-break:break-word}
+  .anno .anno-code{font-family:ui-monospace,monospace;font-size:12px;background:var(--panel-bg);
+                   border:1px solid var(--border);border-radius:6px;padding:8px 10px;margin-top:8px;
+                   white-space:pre-wrap;word-break:break-word}
+  .anno .anno-actions{margin-top:8px;display:flex;gap:6px;flex-wrap:wrap}
+  /* Background is supporting material, not the finding: it stays quieter than
+     .anno-body (smaller, muted, panel-tinted) so the eye lands on the body first. */
+  .anno .anno-background{margin-top:8px;border:1px solid var(--border);border-radius:6px;
+                         background:var(--panel-bg);color:var(--muted)}
+  .anno .anno-background > summary{padding:5px 10px;cursor:pointer;user-select:none;
+                                   font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+  .anno .anno-background > summary:hover{color:var(--ink)}
+  .anno .anno-background-text{padding:0 10px 9px;font-size:12.5px;
+                              white-space:pre-wrap;word-break:break-word}
+  /* Overlap notice on an AI draft: purple to tie it to the .gh-* "already on
+     GitHub" vocabulary, quieter than .anno-body so the finding still reads first.
+     It informs triage; it never means the finding was suppressed. */
+  .anno .anno-overlap{margin-top:8px;padding:6px 10px;border-radius:6px;
+                      border:1px solid #8250df;background:#f3f0ff;color:#4c2889;
+                      font-size:12px;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+  .anno .anno-overlap-badge{font-size:10.5px;font-weight:700;text-transform:uppercase;
+                            letter-spacing:.05em;white-space:nowrap}
+  .anno .anno-overlap-text{flex:1 1 220px}
+  .anno .anno-overlap .gh-link{margin:0}
+  .anno.ai{border-style:dashed;border-color:var(--accent);background:#f6faff}
+  .anno.ai.discarded{display:none}
+  .anno.ai.accepted{border-style:solid;border-color:var(--green-border);background:var(--green-bg)}
+  .badge{display:inline-block;padding:1px 9px;border-radius:999px;font-size:11px;
+         font-weight:600;font-family:ui-monospace,monospace;border:1px solid}
+  .badge-ai{background:#ddf4ff;border-color:var(--accent);color:var(--accent)}
+  .badge-user{background:var(--gray-bg);border-color:var(--border);color:var(--gray-text)}
+  .chip{border-radius:6px;padding:1px 8px;font-size:11px;font-weight:600;border:1px solid}
+  .chip.important{background:var(--red-bg);border-color:var(--red-border);color:var(--red-text)}
+  .chip.nit{background:var(--amber-bg);border-color:var(--amber-border);color:#7a5c00}
+  .chip.pre_existing{background:var(--gray-bg);border-color:var(--border);color:var(--gray-text)}
+  .chip.type{background:var(--panel-bg);border-color:var(--border);color:var(--muted)}
+
+  /* ---- existing GitHub activity (read-only) ----
+     A third vocabulary, distinct from .anno (blue/green "this becomes a review
+     comment") and .qa-* (dashed grey "this never leaves the page"): solid
+     purple-grey, because this content is already ON GitHub and nothing the
+     reviewer does here changes it. Critically it never uses the .anno class:
+     renderAnnotations() removes every .anno node when it rebuilds, which would
+     silently delete these cards. */
+  .gh-thread-list{padding:0 14px}
+  .gh-thread{border:1px solid var(--border);border-left:3px solid #8250df;
+             border-radius:0 8px 8px 0;margin:8px 0;background:#fbfaff;font-size:13px}
+  .gh-thread > summary{padding:7px 12px;cursor:pointer;user-select:none;display:flex;
+                       gap:8px;align-items:center;flex-wrap:wrap;font-size:12px;color:var(--muted)}
+  .gh-thread > summary:hover{background:#f3f0ff}
+  .gh-thread.resolved{background:var(--panel-bg);border-left-color:var(--gray-text);opacity:.85}
+  .gh-thread.outdated{border-left-style:dashed}
+  .gh-thread-body{padding:2px 12px 10px}
+  .badge-gh{background:#f3f0ff;border-color:#8250df;color:#6639ba}
+  .chip.gh-resolved{background:var(--green-bg);border-color:var(--green-border);color:var(--green-text)}
+  .chip.gh-open{background:var(--amber-bg);border-color:var(--amber-border);color:#7a5c00}
+  .chip.gh-outdated{background:var(--gray-bg);border-color:var(--border);color:var(--gray-text)}
+  .chip.gh-state{background:#f3f0ff;border-color:#8250df;color:#6639ba}
+  .gh-where{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11.5px}
+  .gh-count{margin-left:auto;font-size:11.5px}
+  .gh-msg{border-top:1px solid var(--border);padding:8px 0 2px;margin:0}
+  .gh-msg:first-child{border-top:0}
+  .gh-who{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap;font-size:11.5px;color:var(--muted)}
+  .gh-who .gh-author{font-weight:600;color:var(--ink)}
+  .gh-body{white-space:pre-wrap;word-break:break-word;margin-top:3px}
+  .gh-note{font-size:11.5px;color:var(--muted);font-style:italic;margin-top:6px}
+  .gh-link{font-size:11.5px}
+  .gh-link a{color:var(--accent);text-decoration:none}
+  .gh-link a:hover{text-decoration:underline}
+  .gh-panel .panel-head .gh-sub{margin-left:8px;font-weight:400;font-size:12px;color:var(--muted)}
+  .gh-section{margin:0 0 14px}
+  .gh-section:last-child{margin-bottom:0}
+  .gh-section h4{margin:0 0 6px;font-size:11px;text-transform:uppercase;
+                 letter-spacing:.05em;color:var(--muted)}
+  .gh-empty{font-size:13px;color:var(--muted);font-style:italic;margin:0}
+  .gh-warn{border:1px solid var(--amber-border);background:var(--amber-bg);color:#7a5c00;
+           border-radius:6px;padding:6px 10px;margin:0 0 10px;font-size:12px}
+  .gh-unavailable{border:1px solid var(--red-border);background:var(--red-bg);color:var(--red-text);
+                  border-radius:6px;padding:6px 10px;margin:0 0 10px;font-size:12px}
+  .gh-review{border:1px solid var(--border);border-radius:8px;padding:8px 12px;
+             margin:6px 0;background:#fff;font-size:13px}
+
+  /* ---- composer ---- */
+  .composer{border:1px solid var(--accent);border-radius:8px;margin:8px 0;padding:12px;background:#f6faff}
+  .composer .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:8px;font-size:12.5px}
+  .composer label{font-weight:600;color:var(--muted)}
+  .composer select,.composer textarea{font:inherit;font-size:13px;border:1px solid var(--border);
+                                       border-radius:7px;padding:6px 9px;background:#fff;color:var(--ink)}
+  .composer textarea{width:100%;min-height:60px;resize:vertical}
+  .composer textarea.code{font-family:ui-monospace,monospace;font-size:12.5px}
+  .composer .anchor-note{font-size:12px;color:var(--muted);font-family:ui-monospace,monospace}
+  .composer .actions{display:flex;gap:8px;margin-top:6px}
+
+  /* ---- live Q&A (ask the agent) ----
+     Deliberately NOT the .composer / .anno vocabulary: those are blue-accented
+     "this becomes a review comment" surfaces. Questions never reach GitHub, so
+     every Q&A surface is grey/dashed and carries its own label. Same tokens,
+     different voice. */
+  .qa-panel .panel-head .qa-sub{margin-left:8px;font-weight:400;font-size:12px;color:var(--muted)}
+  .qa-status-block{margin:0 0 18px}
+  .qa-status-line{font-size:12.5px;color:var(--muted);margin:0 0 8px}
+  .qa-empty{font-size:13px;color:var(--muted);font-style:italic;margin:0 0 8px}
+  /* Host for inline line-range threads: sits between two .diff-line rows, so it
+     borrows .anno-list's gutter to line up with annotation cards on the same row. */
+  .qa-thread-list{padding:0 14px}
+  .qa-thread{border-left:3px dashed var(--gray-text);background:var(--panel-bg);
+             border-radius:0 6px 6px 0;padding:8px 12px;margin:8px 0}
+  .qa-thread .qa-target{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+                        font-size:11.5px;color:var(--muted);margin-bottom:6px}
+  /* Inline threads have no panel subtitle above them to say "this never ships",
+     so each one carries the same promise in one quiet line. It repeats down the
+     diff, so it stays lowercase and unboxed. */
+  .qa-thread .qa-note{font-size:11px;color:var(--muted);margin-bottom:4px}
+  .qa-msg{margin:6px 0;font-size:12.5px}
+  .qa-label{display:block;font-size:11px;font-weight:600;text-transform:uppercase;
+            letter-spacing:.05em;color:var(--muted)}
+  .qa-text{white-space:pre-wrap;word-break:break-word;color:var(--ink)}
+  .qa-text.qa-muted{color:var(--muted);font-style:italic}
+  /* Who is speaking, without importing chat bubbles: an 11px "YOU" against an 11px
+     "AGENT" was the only difference between the two roles, which reads as one voice.
+     The answer steps in and carries a solid accent rail; the question stays flush
+     against the thread edge with a hairline one, so the alternation is visible from
+     the shape alone. Indent is margin on the answer only - .qa-thread already owns a
+     dashed rail and 12px of padding, and shifting the question too would fight it.
+     No tinted blocks and no avatars: this page stays documentary. */
+  .qa-q{padding-left:9px;border-left:2px solid var(--border)}
+  .qa-a{margin-left:16px;padding-left:9px;border-left:2px solid var(--accent)}
+  .qa-q > .qa-label{color:var(--gray-text)}
+  .qa-a > .qa-label{font-weight:700;color:var(--accent)}
+  .qa-pending{font-size:12px;color:var(--muted);font-style:italic;margin:6px 0}
+  .qa-notice{border:1px solid var(--amber-border);background:var(--amber-bg);color:#7a5c00;
+             border-radius:6px;padding:6px 10px;margin:6px 0;font-size:12px}
+  .qa-error{border:1px solid var(--red-border);background:var(--red-bg);color:var(--red-text);
+            border-radius:6px;padding:6px 10px;margin:6px 0;font-size:12px;
+            display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .qa-composer{border:1px dashed var(--gray-text);border-radius:8px;margin:8px 0;
+               padding:10px 12px;background:var(--panel-bg)}
+  .qa-composer .qa-composer-label{margin-bottom:6px;font-size:11px;font-weight:600;
+                                  text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+  .qa-composer textarea{font:inherit;font-size:13px;width:100%;min-height:56px;resize:vertical;
+                        border:1px solid var(--border);border-radius:7px;padding:6px 9px;
+                        background:#fff;color:var(--ink)}
+  .qa-composer .qa-count{margin-top:2px;text-align:right;font-size:11px;color:var(--muted)}
+  .qa-composer .actions{display:flex;gap:8px;margin-top:6px}
+  .qa-mic-btn.recording{border-color:var(--red-border);background:var(--red-bg);color:var(--red-text)}
+  /* Read-aloud is started from an answer that can sit thousands of pixels down the
+     diff, so the control that ends it cannot live in the page flow: fixed, it is
+     wherever the reviewer already is. Bottom offset is the 96px the body already
+     reserves for the sticky footer plus a gap (and 180px + a gap once the footer
+     wraps - see the media query at the end of this sheet), and z-index is one step
+     above the footer's so the two overlays cannot bury each other. Rounded like the
+     .badge/.status-chip vocabulary: this is an overlay, not a button in a row. */
+  .qa-stop-speaking-btn{position:fixed;right:20px;bottom:108px;z-index:21;
+                        border-radius:999px;border-color:var(--muted)}
+  .btn:disabled{opacity:.5;cursor:default}
+  .btn:disabled:hover{background:var(--panel-bg)}
+
+  /* ---- overflow ---- */
+  .overflow{border:1px dashed var(--border);border-radius:10px;padding:14px 16px;margin:0 0 16px;background:var(--panel-bg)}
+  .overflow h3{margin-top:0}
+  .overflow ul{margin:0;padding-left:18px} .overflow li{font-size:13px;margin:4px 0}
+  .overflow a{color:var(--accent);text-decoration:none} .overflow a:hover{text-decoration:underline}
+  .overflow .of-counts{font-family:ui-monospace,monospace;font-size:11.5px;color:var(--muted);margin-left:6px}
+
+  /* ---- sticky footer ---- */
+  .footer{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--border);
+          padding:12px 20px;z-index:20;box-shadow:0 -2px 8px rgba(27,31,36,.06)}
+  .footer .inner{max-width:960px;margin:0 auto;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  .footer .counts-line{font-size:13px;color:var(--muted)}
+  .footer .counts-line b{color:var(--ink)}
+  .footer .general{flex:1 1 260px;min-width:220px}
+  .footer .general textarea{width:100%;min-height:40px;resize:vertical;font:inherit;font-size:13px;
+                            border:1px solid var(--border);border-radius:7px;padding:6px 9px}
+  .footer .footer-btns{display:flex;gap:8px;margin-left:auto}
+  .footer button{font:inherit;font-size:13px;font-weight:700;cursor:pointer;border-radius:8px;padding:9px 16px}
+  #submit-btn{border:1px solid var(--green-border);background:var(--green-bg);color:var(--green-text)}
+  #download-btn,#copy-fixlist-btn{border:1px solid var(--border);background:var(--panel-bg);color:var(--ink)}
+  #submit-btn:disabled{opacity:.6;cursor:default}
+  /* 180px, not 140px: three footer buttons wrap onto their own row on narrow
+     screens, and the taller footer would otherwise clip the end of the diff.
+     The fixed stop-speaking pill rides on the same allowance: it is parked one gap
+     above whatever height the footer is reserved here, so it never lands on the
+     general-comment box. */
+  @media (max-width:600px){body{padding:16px 12px 180px}.footer .footer-btns{margin-left:0;width:100%}
+                           .qa-stop-speaking-btn{bottom:192px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="subtitle">Pull request · reviewer mode</div>
+  <h1 id="page-title">PR review</h1>
+
+  <div id="mode-banner" class="mode-banner"></div>
+
+  <section class="panel" id="narrative-panel">
+    <div class="panel-head" data-toggle="narrative-panel">
+      <span>Narrative: why this change exists</span>
+      <span class="toggle">▾ collapse</span>
+    </div>
+    <div class="panel-body">
+      <div id="narrative">__NARRATIVE_HTML__</div>
+    </div>
+  </section>
+
+  <div id="activity"></div>
+
+  <h2>Diff</h2>
+  <div id="files"></div>
+  <div id="overflow"></div>
+
+</div>
+
+<div class="footer">
+  <div class="inner">
+    <div class="counts-line" id="counts-line">
+      <b id="c-user">0</b> comments · <b id="c-ai">0 of 0</b> AI drafts accepted · <span id="c-overlap-wrap" hidden><b id="c-overlap">0</b> already discussed · </span><b id="c-warn">0</b> warnings
+    </div>
+    <div class="general">
+      <textarea id="general-comment" placeholder="General review comment (optional)…"></textarea>
+    </div>
+    <div class="footer-btns">
+      <button id="download-btn" type="button">⬇ Download annotations</button>
+      <button id="copy-fixlist-btn" type="button">📋 Copy fix-list</button>
+      <button id="submit-btn" type="button">Submit review</button>
+    </div>
+  </div>
+</div>
+
+<!--
+  ============================ INJECTION POINTS ============================
+  The agent replaces exactly two markers when it builds a page from this
+  template (each marker appears once, and only once, in this file):
+    1. The REVIEW-DATA marker inside the script#review-data tag below: the T1
+       "Diff JSON contract" object (references/annotation-schema.md §2).
+       Escape "</" as "<\/" in the dumped JSON (json.dumps(...).replace("</",
+       "<\\/")): a diff containing "</script>" would otherwise close that
+       script element at HTML-parse time and truncate the data
+       (references/reviewer-ui.md §1).
+    2. The NARRATIVE-HTML marker inside div#narrative above: the pre-rendered
+       narrative HTML fragment.
+  ========================================================================
+
+  sample data
+  -----------
+  To test this template standalone (no agent, no server):
+    1. Copy this file:  cp assets/review-template.html /tmp/review-standalone.html
+    2. In the copy, overwrite the REVIEW-DATA marker (the placeholder text inside
+       the script#review-data tag) with the T1 worked-example Diff JSON from
+       references/annotation-schema.md §2 ("Worked example: diff JSON").
+    3. Overwrite the NARRATIVE-HTML marker (inside div#narrative) with any HTML
+       fragment, e.g. the narrativeHtml string from that same §2 example.
+    4. Serve the folder and open the copy in a browser:
+         cd /tmp && python3 -m http.server 8000
+         then visit  127.0.0.1:8000/review-standalone.html
+
+  The §2 example renders two files (src/utils/formatDate.js and
+  src/utils/formatDate.test.js), one overflow file, and one AI draft (a-2) that
+  appears inline with an "AI draft" badge, a dashed border, an "important"
+  severity chip, and Accept / Edit / Discard buttons. It starts EXCLUDED
+  (accepted:false) so the footer reads "0 of 1 AI drafts accepted" until you
+  click Accept.
+-->
+<script id="review-data" type="application/json">__REVIEW_DATA__</script>
+
+<script>
+(function () {
+  "use strict";
+
+  var DATA;
+  try {
+    DATA = JSON.parse(document.getElementById("review-data").textContent);
+  } catch (e) {
+    DATA = null;
+  }
+  if (!DATA || typeof DATA !== "object") {
+    DATA = {
+      mode: "local", repo: null, prNumber: null, prUrl: null,
+      branch: "unknown-branch", headRefOid: null,
+      files: [], overflowFiles: [], aiAnnotations: []
+    };
+  }
+  var files = Array.isArray(DATA.files) ? DATA.files : [];
+  var overflowFiles = Array.isArray(DATA.overflowFiles) ? DATA.overflowFiles : [];
+
+  var isLive = !!document.querySelector('meta[name="pr-review-live"]');
+
+  // ---- live Q&A session plumbing (annotation-schema.md §5) ----
+  // The channel needs BOTH halves: the live marker (a server is serving this page)
+  // and a sessionNonce in the diff JSON (that server was started with --session-dir
+  // /--nonce). Without a nonce every POST /ask would 404 or 409, so the affordances
+  // must not exist at all. qaEnabled is therefore the single gate for every Q&A
+  // surface, and it can only ever be true on an isLive page.
+  var sessionNonce = typeof DATA.sessionNonce === "string" && DATA.sessionNonce ? DATA.sessionNonce : null;
+  var qaEnabled = isLive && sessionNonce !== null;
+  var MAX_QUESTION_CHARS = 4000;   // §5.6; server answers 413 above this
+  var MAX_PENDING = 5;             // §5.6; Ask affordances disable at this many
+  var POLL_INTERVAL_MS = 2000;     // §5.5 "the page polls this endpoint periodically"
+  var SLOW_ANSWER_MS = 180000;     // 3 minutes → non-blocking "no response yet" notice
+  var POLL_FAILURES_BEFORE_END = 3;
+  var qaQuestions = [];            // in ask order; each entry is a question + its answer
+  var qaByQid = {};
+  // qids whose question text was dictated, in whole or in part. Client-side only:
+  // the wire payload and the question files on disk are unchanged by dictation.
+  var voiceQids = new Set();
+  // Speech-out state. It lives here, never in the DOM: renderQa() rebuilds every Q&A
+  // node on each poll tick, so anything parked in an element is lost every ~2s.
+  var speechQueue = [];            // pending chunks, FIFO, spoken one at a time
+  var speechUtterance = null;      // strong ref: a collected utterance stops mid-word
+  var speechSpeaking = false;      // "the queue is running", the Stop control's source
+  var speechRun = 0;               // bumped on cancel; stale end/error handlers no-op
+  var speechOwnerQid = null;       // qid whose answer the queue belongs to, or null.
+                                   // The per-answer toggle reads its label off this:
+                                   // the buttons themselves are rebuilt every tick.
+  var speechVoice = null;          // best voice found, or null for "browser default"
+  var speechVoicePicked = false;   // true once a non-empty voice list was actually scored
+  var speechVoiceBound = false;    // the voiceschanged listener is registered once
+  var qaCounter = 0;
+  var qaState = "active";          // "active" | "ended" (server gone) | "stale" (409)
+  var qaPollTimer = null;
+  var qaPollFailures = 0;
+  var qaPanel = null;              // fallback host for threads that cannot be anchored
+  var qaPanelBody = null;
+  var qaStatusHost = null;         // session status/notices, independent of that panel
+  var submitted = false;
+
+  // Reviewer-namespaced key ONLY; must never collide with author mode's "pr-review:<branch>".
+  //
+  // `reviewRunId` scopes the draft to ONE page build. Without it the key is just
+  // repo/PR, so a second review of the same PR rehydrates the first run's draft:
+  // annotations anchored to a diff that has since moved, and worse, the saved
+  // aiState for id "ai-1" silently reapplying to whatever "ai-1" means this time,
+  // so a finding could load pre-accepted or pre-discarded on its own. Existing
+  // GitHub activity makes this visible rather than causing it (comments you
+  // already posted now render beside a stale draft of themselves), so it is fixed
+  // here. Pages built without a reviewRunId keep the old key and the old
+  // behaviour.
+  var reviewRunId = typeof DATA.reviewRunId === "string" && DATA.reviewRunId
+    ? DATA.reviewRunId : null;
+  var STORE_KEY;
+  if (DATA.mode === "pr" && DATA.repo != null && DATA.prNumber != null) {
+    STORE_KEY = "pr-review:reviewer:" + DATA.repo + "/" + DATA.prNumber;
+  } else {
+    STORE_KEY = "pr-review:reviewer:local:" + (DATA.branch || "unknown-branch");
+  }
+  if (reviewRunId) STORE_KEY += ":" + reviewRunId;
+
+  var userAnnotations = [];
+  var aiAnnotations = [];
+  var generalComment = "";
+  var idCounter = 1;
+  var AI_COPY_FIELDS = ["severity", "reasoning", "disproof", "background"];
+
+  // ---- existing GitHub review activity (annotation-schema.md §2a) ----
+  // READ-ONLY, and kept in its own variable for one specific reason: buildPayload()
+  // serializes userAnnotations and aiAnnotations, so anything NOT in those two
+  // arrays cannot be submitted. That is the whole guarantee that previous GitHub
+  // comments are never re-posted as new ones. Never push these into either array,
+  // never give them an `accepted` field, and never write them to localStorage
+  // (they are a server-side snapshot, re-fetched on every page build).
+  var activity = (DATA.existingActivity && typeof DATA.existingActivity === "object")
+    ? DATA.existingActivity : null;
+
+  function activityList(key) {
+    return activity && Array.isArray(activity[key]) ? activity[key] : [];
+  }
+
+  // A thread anchors inline only when GitHub still reports a CURRENT line for it.
+  // `originalLine` is deliberately not consulted: it is where the comment used to
+  // point, and using it would attach old feedback to whatever code now occupies
+  // that number. Outdated and file-level threads go to the panel instead.
+  function threadIsInlineable(t) {
+    return t.subjectType !== "FILE" && !t.isOutdated &&
+      t.filePath != null && t.line != null && t.side != null;
+  }
+
+  function seedFromData() {
+    (DATA.aiAnnotations || []).forEach(function (a) {
+      // AI drafts default EXCLUDED (accepted:false) unless the injected data set it true.
+      var annotation = {
+        id: a.id != null ? a.id : nextId(),
+        scope: a.scope, type: a.type, filePath: a.filePath,
+        lineStart: a.lineStart, lineEnd: a.lineEnd, side: a.side,
+        body: a.body || "", suggestedCode: a.suggestedCode,
+        origin: "ai", accepted: a.accepted === true,
+        _discarded: false
+      };
+      AI_COPY_FIELDS.forEach(function (field) { annotation[field] = a[field]; });
+      aiAnnotations.push(annotation);
+    });
+  }
+
+  function nextId() { return "u-" + (idCounter++); }
+
+  function loadDraft() {
+    var raw;
+    try { raw = localStorage.getItem(STORE_KEY); } catch (e) { raw = null; }
+    if (!raw) return;
+    var saved;
+    try { saved = JSON.parse(raw); } catch (e) { return; }
+    if (!saved || typeof saved !== "object") return;
+    if (Array.isArray(saved.userAnnotations)) userAnnotations = saved.userAnnotations;
+    if (typeof saved.generalComment === "string") generalComment = saved.generalComment;
+    if (saved.aiState && typeof saved.aiState === "object") {
+      aiAnnotations.forEach(function (a) {
+        var st = saved.aiState[a.id];
+        if (st) {
+          if (typeof st.accepted === "boolean") a.accepted = st.accepted;
+          if (typeof st._discarded === "boolean") a._discarded = st._discarded;
+          if (typeof st.body === "string") a.body = st.body;
+          if (typeof st.suggestedCode === "string") a.suggestedCode = st.suggestedCode;
+        }
+      });
+    }
+    if (typeof saved.idCounter === "number" && saved.idCounter > idCounter) {
+      idCounter = saved.idCounter;
+    }
+  }
+
+  function saveDraft() {
+    var aiState = {};
+    aiAnnotations.forEach(function (a) {
+      aiState[a.id] = {
+        accepted: a.accepted, _discarded: a._discarded,
+        body: a.body, suggestedCode: a.suggestedCode
+      };
+    });
+    var payload = {
+      userAnnotations: userAnnotations,
+      aiState: aiState,
+      generalComment: generalComment,
+      idCounter: idCounter
+    };
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(payload)); } catch (e) {}
+  }
+
+  function el(tag, cls, text) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text != null) n.textContent = text;
+    return n;
+  }
+  function fileKey(name) { return "file:" + name; }
+
+  function renderBanner() {
+    var b = document.getElementById("mode-banner");
+    var title = document.getElementById("page-title");
+    if (DATA.mode === "pr") {
+      b.className = "mode-banner";
+      b.innerHTML = "<b>PR mode</b>Submitting creates a PENDING review on GitHub. You finalize the verdict there.";
+      var label = (DATA.repo || "") + (DATA.prNumber != null ? " #" + DATA.prNumber : "");
+      title.textContent = "Review " + (label.trim() || "pull request");
+    } else {
+      b.className = "mode-banner local";
+      b.innerHTML = "<b>Local mode</b>Annotations return to the agent as a fix-list. Nothing is posted.";
+      title.textContent = "Review branch " + (DATA.branch || "");
+    }
+  }
+
+  var filesRoot = document.getElementById("files");
+
+  function renderFiles() {
+    filesRoot.innerHTML = "";
+    if (!files.length) {
+      filesRoot.appendChild(el("p", "no-diff", "No files to render."));
+      return;
+    }
+    files.forEach(function (f) { filesRoot.appendChild(renderFile(f)); });
+  }
+
+  function renderFile(f) {
+    var block = el("div", "file-block");
+    block.dataset.file = f.filename;
+
+    var head = el("div", "file-head");
+    head.appendChild(el("span", "toggle", "▾"));
+    head.appendChild(el("span", "fname", f.filename));
+    var counts = el("span", "counts");
+    counts.appendChild(el("span", "status-chip", f.status || "modified"));
+    counts.appendChild(el("span", "adds", "+" + (f.additions || 0)));
+    counts.appendChild(el("span", "dels", "-" + (f.deletions || 0)));
+    head.appendChild(counts);
+    head.addEventListener("click", function (ev) {
+      block.classList.toggle("collapsed");
+      head.querySelector(".toggle").textContent = block.classList.contains("collapsed") ? "▸" : "▾";
+    });
+    block.appendChild(head);
+
+    var body = el("div", "file-body");
+    var actions = el("div", "file-actions");
+    var fileBtn = el("button", "btn small", "+ File-level comment");
+    fileBtn.addEventListener("click", function () { openComposer(body, null, f.filename, null); });
+    actions.appendChild(fileBtn);
+    body.appendChild(actions);
+
+    if (f.truncated || !Array.isArray(f.hunks) || !f.hunks.length) {
+      body.appendChild(el("div", "no-diff", "No diff to render (binary, too large, or rename-only)."));
+    } else {
+      f.hunks.forEach(function (h) { body.appendChild(renderHunk(f, h)); });
+    }
+    var anchor = el("div", "anno-list");
+    anchor.dataset.fileAnchor = f.filename;
+    body.appendChild(anchor);
+
+    block.appendChild(body);
+    return block;
+  }
+
+  var selection = null; // { fileEl, filename, side, lines:[{line,text,el}] }
+
+  function renderHunk(f, h) {
+    var frag = document.createDocumentFragment();
+    frag.appendChild(el("div", "hunk-header", h.header || ""));
+    (h.lines || []).forEach(function (ln) {
+      var row = el("div", "diff-line " + (ln.kind || "context"));
+      var side = ln.kind === "del" ? "LEFT" : "RIGHT";
+      var num = ln.kind === "del" ? ln.oldLine : ln.newLine;
+      row.dataset.filename = f.filename;
+      row.dataset.side = side;
+      row.dataset.line = num == null ? "" : String(num);
+
+      var gOld = el("span", "gutter", ln.oldLine == null ? "" : String(ln.oldLine));
+      var gNew = el("span", "gutter", ln.newLine == null ? "" : String(ln.newLine));
+      var marker = el("span", "marker", ln.kind === "add" ? "+" : ln.kind === "del" ? "-" : " ");
+      var text = el("span", "ltext", ln.text != null ? ln.text : "");
+      row.appendChild(gOld); row.appendChild(gNew); row.appendChild(marker); row.appendChild(text);
+
+      row.addEventListener("mousedown", function (ev) { beginSelect(f, row, ev); });
+      row.addEventListener("mouseenter", function (ev) { extendSelect(f, row, ev); });
+      row.addEventListener("mouseup", function (ev) { endSelect(f, row); });
+      frag.appendChild(row);
+    });
+    return frag;
+  }
+
+  var dragging = false;
+  function clearSelectionEls() {
+    Array.prototype.forEach.call(document.querySelectorAll(".diff-line.selected"),
+      function (n) { n.classList.remove("selected"); });
+  }
+  function beginSelect(f, row, ev) {
+    if (row.dataset.line === "") return; // no anchorable number
+    dragging = true;
+    clearSelectionEls();
+    selection = { filename: f.filename, side: row.dataset.side, rows: [row] };
+    row.classList.add("selected");
+  }
+  function extendSelect(f, row, ev) {
+    if (!dragging || !selection) return;
+    if (f.filename !== selection.filename) return;
+    if (row.dataset.side !== selection.side) return; // stay on one side
+    if (row.dataset.line === "") return;
+    if (selection.rows.indexOf(row) === -1) {
+      selection.rows.push(row);
+      row.classList.add("selected");
+    }
+  }
+  function endSelect(f, row) {
+    if (!dragging) {
+      if (row.dataset.line === "") return;
+      clearSelectionEls();
+      selection = { filename: f.filename, side: row.dataset.side, rows: [row] };
+      row.classList.add("selected");
+    }
+    dragging = false;
+    if (!selection || !selection.rows.length) return;
+    openComposerForSelection();
+  }
+
+  function selectionLineRange() {
+    var nums = selection.rows.map(function (r) { return parseInt(r.dataset.line, 10); })
+      .filter(function (n) { return !isNaN(n); }).sort(function (a, b) { return a - b; });
+    return { start: nums[0], end: nums[nums.length - 1] };
+  }
+  function selectionText() {
+    return selection.rows
+      .slice()
+      .sort(function (a, b) { return parseInt(a.dataset.line, 10) - parseInt(b.dataset.line, 10); })
+      .map(function (r) { return r.querySelector(".ltext").textContent; })
+      .join("\n");
+  }
+
+  function openComposerForSelection() {
+    var range = selectionLineRange();
+    var lastRow = selection.rows[selection.rows.length - 1];
+    openComposer(
+      lastRow.parentNode === filesRoot ? lastRow : findFileBody(selection.filename),
+      { start: range.start, end: range.end, side: selection.side, seedText: selectionText() },
+      selection.filename,
+      lastRow
+    );
+  }
+
+  function findFileBody(filename) {
+    var block = filesRoot.querySelector('.file-block[data-file="' + cssEscape(filename) + '"]');
+    return block ? block.querySelector(".file-body") : filesRoot;
+  }
+  function cssEscape(s) { return String(s).replace(/["\\]/g, "\\$&"); }
+  function openComposer(container, lineInfo, filename, insertAfter, editing) {
+    var existing = document.querySelector(".composer");
+    if (existing) existing.remove();
+
+    var c = el("div", "composer");
+
+    var scope = lineInfo ? "line" : "file";
+    var row1 = el("div", "row");
+    var typeLabel = el("label", null, "Type");
+    var typeSel = document.createElement("select");
+    ["comment", "suggestion", "concern"].forEach(function (t) {
+      var o = document.createElement("option"); o.value = t; o.textContent = t; typeSel.appendChild(o);
+    });
+    row1.appendChild(typeLabel); row1.appendChild(typeSel);
+
+    var anchorNote = el("span", "anchor-note");
+    if (lineInfo) {
+      var rangeStr = lineInfo.start === lineInfo.end ? String(lineInfo.start)
+        : lineInfo.start + "-" + lineInfo.end;
+      anchorNote.textContent = filename + " : line " + rangeStr + " (" + lineInfo.side + ")";
+    } else {
+      anchorNote.textContent = filename + " : file-level comment";
+    }
+    row1.appendChild(anchorNote);
+    c.appendChild(row1);
+
+    var ta = document.createElement("textarea");
+    ta.placeholder = "Your comment (markdown)…";
+    c.appendChild(ta);
+
+    var codeTa = document.createElement("textarea");
+    codeTa.className = "code";
+    codeTa.placeholder = "Suggested replacement code…";
+    codeTa.style.display = "none";
+    if (lineInfo && lineInfo.seedText != null) codeTa.value = lineInfo.seedText;
+    c.appendChild(codeTa);
+
+    typeSel.addEventListener("change", function () {
+      codeTa.style.display = typeSel.value === "suggestion" ? "block" : "none";
+    });
+    if (editing) {
+      typeSel.value = editing.type || "comment";
+      ta.value = editing.body || "";
+      if (editing.type === "suggestion") {
+        codeTa.style.display = "block";
+        codeTa.value = editing.suggestedCode || "";
+      }
+    }
+
+    var actions = el("div", "actions");
+    var saveBtn = el("button", "btn primary small", editing ? "Save" : "Add comment");
+    var cancelBtn = el("button", "btn small", "Cancel");
+    actions.appendChild(saveBtn); actions.appendChild(cancelBtn);
+    // Same selection, second destination: instead of becoming a review comment,
+    // this line range becomes a question to the agent. Live-and-nonce only, and
+    // only for line ranges, because §5.3's "lines" target needs a line range.
+    if (qaEnabled && lineInfo && !editing) {
+      // Sitting in the same actions row as "Add comment", "Ask about this" read as
+      // that textarea's submit button. It names the other destination instead now, so
+      // the row offers a choice of where the text goes rather than two ways to send it.
+      var askLinesBtn = el("button", "btn small qa-ask-lines-btn", "Ask the agent instead");
+      askLinesBtn.title = "Send this to the agent as a question. It never becomes a review comment.";
+      askLinesBtn.addEventListener("click", function () {
+        var parent = c.parentNode;
+        var anchor = c.nextSibling;
+        c.remove();
+        clearSelectionEls();
+        openQaComposer({
+          target: {
+            type: "lines", filePath: filename,
+            lineStart: lineInfo.start, lineEnd: lineInfo.end, side: lineInfo.side
+          },
+          threadId: null,
+          parentQid: null,
+          container: parent,
+          insertBefore: anchor,
+          label: "Ask the agent about " + anchorNote.textContent,
+          seedText: ta.value
+        });
+      });
+      actions.appendChild(askLinesBtn);
+    }
+    c.appendChild(actions);
+
+    cancelBtn.addEventListener("click", function () { c.remove(); clearSelectionEls(); });
+
+    saveBtn.addEventListener("click", function () {
+      var body = ta.value.trim();
+      if (!body && typeSel.value !== "suggestion") { ta.focus(); return; }
+      var type = typeSel.value;
+      var suggestedCode = type === "suggestion" ? codeTa.value : undefined;
+
+      if (editing && editing.origin === "ai") {
+        // Editing an AI draft: update it in place and mark accepted.
+        editing.type = type;
+        editing.body = body;
+        editing.suggestedCode = suggestedCode;
+        editing.accepted = true;
+        editing._discarded = false;
+      } else if (editing) {
+        editing.type = type;
+        editing.body = body;
+        editing.suggestedCode = suggestedCode;
+      } else {
+        var anno = {
+          id: nextId(),
+          scope: scope,
+          type: type,
+          filePath: filename,
+          lineStart: lineInfo ? lineInfo.start : null,
+          lineEnd: lineInfo ? lineInfo.end : null,
+          side: lineInfo ? lineInfo.side : null,
+          body: body,
+          origin: "user",
+          accepted: true
+        };
+        if (type === "suggestion") anno.suggestedCode = suggestedCode;
+        userAnnotations.push(anno);
+      }
+      c.remove();
+      clearSelectionEls();
+      saveDraft();
+      renderAnnotations();
+      renderCounts();
+    });
+
+    if (insertAfter && insertAfter.parentNode) {
+      insertAfter.parentNode.insertBefore(c, insertAfter.nextSibling);
+    } else {
+      container.appendChild(c);
+    }
+    ta.focus();
+  }
+
+  function renderAnnotations() {
+    Array.prototype.forEach.call(document.querySelectorAll(".anno"), function (n) { n.remove(); });
+
+    var all = aiAnnotations.concat(userAnnotations);
+    all.forEach(function (a) {
+      if (a.origin === "ai" && a._discarded) return;
+      var node = buildAnnoNode(a);
+      placeAnno(a, node);
+    });
+    // Cards were just rebuilt, so any thread hanging under one went with them.
+    if (qaEnabled) { renderAnnotationThreads(); updateAskAvailability(); }
+  }
+
+  function placeAnno(a, node) {
+    if (a.scope === "general") return; // general lives in footer only
+    var container = findAnnoContainer(a);
+    if (container) container.appendChild(node);
+  }
+
+  // ---- shared line anchoring ----
+  // ONE row lookup behind every "put this under line N of file F" placement:
+  // annotation cards, inline Q&A threads, and the unanchored-warning count. Kept
+  // in one place so the three can never disagree about what "anchorable" means.
+  function findFileBlock(filePath) {
+    if (!filePath) return null;
+    return filesRoot.querySelector('.file-block[data-file="' + cssEscape(filePath) + '"]');
+  }
+
+  function findDiffRow(filePath, side, line) {
+    var block = findFileBlock(filePath);
+    if (!block || line == null) return null;
+    var rows = block.querySelectorAll('.diff-line[data-side="' + side + '"]');
+    for (var i = 0; i < rows.length; i++) {
+      if (parseInt(rows[i].dataset.line, 10) === line) return rows[i];
+    }
+    return null;
+  }
+
+  function anchorKey(filePath, side, line) {
+    return filePath + "\u241f" + side + "\u241f" + line;   // unit separator: never in a path
+  }
+
+  // Three different collections can hang under one diff row, and their order is
+  // NOT cosmetic: existing GitHub activity is the context the reviewer is reacting
+  // to, so it must sit above their own draft. Reading a reply before the comment it
+  // answers makes the thread nonsense. Ordering used to fall out of whichever
+  // renderer happened to run first, which flipped depending on triage clicks and
+  // Q&A polls; this list makes it explicit instead.
+  var ROW_HOST_ORDER = ["gh-thread-list", "anno-list", "qa-thread-list"];
+
+  // Where a new host belongs among the hosts already under this row: immediately
+  // before the first sibling that outranks it, else immediately after the row.
+  function rowHostSlot(row, cls) {
+    var rank = ROW_HOST_ORDER.indexOf(cls);
+    var node = row.nextSibling;
+    while (node && node.nodeType === 1) {
+      var otherRank = ROW_HOST_ORDER.indexOf(node.className);
+      if (otherRank === -1 || otherRank > rank) break;
+      node = node.nextSibling;
+    }
+    return node;
+  }
+
+  // Stable holder under a diff row: looked up by key FIRST, created only
+  // if missing. A fresh holder per call would strand one empty div per render pass,
+  // and both render paths re-run (renderQa on every ~2s poll, renderAnnotations on
+  // every triage click).
+  function ensureRowHost(row, cls, attr, key) {
+    var parent = row.parentNode;
+    var host = parent.querySelector("." + cls + "[data-" + attr + '="' + cssEscape(key) + '"]');
+    if (host) return host;
+    host = el("div", cls);
+    host.setAttribute("data-" + attr, key);
+    parent.insertBefore(host, rowHostSlot(row, cls));
+    return host;
+  }
+
+  function findAnnoContainer(a) {
+    var block = findFileBlock(a.filePath);
+    if (!block) return null;
+    if (a.scope === "line" && a.lineStart != null) {
+      var row = findDiffRow(a.filePath, a.side, a.lineEnd);
+      if (row) {
+        return ensureRowHost(row, "anno-list", "line-anchor",
+          anchorKey(a.filePath, a.side, a.lineEnd));
+      }
+    }
+    return block.querySelector('.anno-list[data-file-anchor="' + cssEscape(a.filePath) + '"]');
+  }
+
+  function buildAnnoNode(a) {
+    var cls = "anno " + (a.origin === "ai" ? "ai" : "user");
+    if (a.origin === "ai" && a.accepted) cls += " accepted";
+    var n = el("div", cls);
+    n.dataset.annoId = a.id;
+
+    var meta = el("div", "anno-meta");
+    if (a.origin === "ai") {
+      meta.appendChild(badge("badge badge-ai", "AI draft"));
+      if (a.severity) meta.appendChild(chip("chip " + a.severity, a.severity));
+    } else {
+      meta.appendChild(badge("badge badge-user", "you"));
+    }
+    meta.appendChild(chip("chip type", a.type));
+    if (a.scope === "line" && a.lineStart != null) {
+      var rangeStr = a.lineStart === a.lineEnd ? String(a.lineStart) : a.lineStart + "-" + a.lineEnd;
+      meta.appendChild(el("span", null, "line " + rangeStr + " (" + a.side + ")"));
+    } else if (a.scope === "file") {
+      meta.appendChild(el("span", null, "file-level"));
+    }
+    n.appendChild(meta);
+
+    n.appendChild(el("div", "anno-body", a.body || ""));
+    if (a.type === "suggestion" && a.suggestedCode != null) {
+      n.appendChild(el("div", "anno-code", a.suggestedCode));
+    }
+    // AI drafts only. A user annotation was typed by the reviewer moments ago with
+    // the existing thread rendered directly above it, so repeating the fact back at
+    // them is nagging; an AI draft is the one that needs a triage decision.
+    if (a.origin === "ai") {
+      var overlap = overlappingThreads(a);
+      if (overlap.length) n.appendChild(buildOverlapNote(a, overlap));
+    }
+    if (a.origin === "ai" && a.reasoning) {
+      var r = el("div", "anno-meta");
+      r.appendChild(el("em", null, "Why flagged: " + a.reasoning));
+      n.appendChild(r);
+    }
+    if (a.origin === "ai" && a.disproof) {
+      var dp = el("div", "anno-meta");
+      dp.appendChild(el("em", null, "Prove this wrong: " + a.disproof));
+      n.appendChild(dp);
+    }
+    if (a.origin === "ai" && a.background) {
+      n.appendChild(buildBackgroundBlock(a.background));
+    }
+
+    var actions = el("div", "anno-actions");
+    if (a.origin === "ai") {
+      var acceptBtn = el("button", "btn small primary", a.accepted ? "✓ Accepted" : "Accept");
+      acceptBtn.addEventListener("click", function () {
+        a.accepted = !a.accepted;
+        saveDraft(); renderAnnotations(); renderCounts();
+      });
+      var editBtn = el("button", "btn small", "Edit");
+      editBtn.addEventListener("click", function () {
+        openComposer(n.parentNode, annoLineInfo(a), a.filePath, n, a);
+      });
+      var discardBtn = el("button", "btn small danger", "Discard");
+      discardBtn.addEventListener("click", function () {
+        a._discarded = true; a.accepted = false;
+        saveDraft(); renderAnnotations(); renderCounts();
+      });
+      actions.appendChild(acceptBtn); actions.appendChild(editBtn); actions.appendChild(discardBtn);
+      if (qaEnabled) {
+        // Live-and-nonce only (qaEnabled implies isLive, matching #submit-btn):
+        // both affordances need the review server's Q&A channel, so the
+        // no-python3 download-only page must not offer them. Deliberately NOT
+        // gated on DATA.mode, unlike #copy-fixlist-btn: both modes consume
+        // background (`pr` ships it to GitHub inside a collapsed <details>,
+        // `local` prints a "Background:" paragraph in the fix-list).
+        var askBtn = el("button", "btn small qa-ask-btn", "Ask");
+        askBtn.addEventListener("click", function () {
+          openQaComposer({
+            target: { type: "annotation", annotationId: a.id },
+            threadId: null,
+            parentQid: null,
+            container: n,
+            label: "Ask the agent about this finding",
+            afterClose: function () { renderQa(); }
+          });
+        });
+        actions.appendChild(askBtn);
+        if (!a.background) {
+          // The `!a.background` guard is what removes this button once an answer
+          // to a background-request lands: attachAnswers() writes answer.background
+          // onto the annotation and re-renders, so the collapsed <details> above
+          // appears in the same pass that this button disappears.
+          var bgBtn = el("button", "btn small request-background-btn", "Request background");
+          bgBtn.addEventListener("click", function () {
+            requestBackground(a, bgBtn, n);
+          });
+          actions.appendChild(bgBtn);
+        }
+      }
+    } else {
+      var uEdit = el("button", "btn small", "Edit");
+      uEdit.addEventListener("click", function () {
+        openComposer(n.parentNode, annoLineInfo(a), a.filePath, n, a);
+      });
+      var uDel = el("button", "btn small danger", "Delete");
+      uDel.addEventListener("click", function () {
+        var idx = userAnnotations.indexOf(a);
+        if (idx !== -1) userAnnotations.splice(idx, 1);
+        saveDraft(); renderAnnotations(); renderCounts();
+      });
+      actions.appendChild(uEdit); actions.appendChild(uDel);
+    }
+    n.appendChild(actions);
+    return n;
+  }
+
+  function annoLineInfo(a) {
+    if (a.scope !== "line") return null;
+    return { start: a.lineStart, end: a.lineEnd, side: a.side, seedText: a.suggestedCode };
+  }
+
+  // Supporting context for an AI finding (annotation-schema.md §1), never the
+  // finding itself: a real <details> element with no `open` attribute, so it is
+  // collapsed until the reader asks for it. Built node-by-node and filled with
+  // textContent (via el()) so an agent-authored string cannot inject markup.
+  function buildBackgroundBlock(text) {
+    var d = document.createElement("details");
+    d.className = "anno-background";
+    d.appendChild(el("summary", null, "Background"));
+    d.appendChild(el("div", "anno-background-text", text));
+    return d;
+  }
+
+  function badge(cls, txt) { return el("span", cls, txt); }
+  function chip(cls, txt) { return el("span", cls, txt); }
+
+  function renderOverflow() {
+    var root = document.getElementById("overflow");
+    root.innerHTML = "";
+    if (!overflowFiles.length) return;
+    var box = el("div", "overflow");
+    box.appendChild(el("h3", null, overflowFiles.length + " more file" +
+      (overflowFiles.length === 1 ? "" : "s") + " (view on GitHub)"));
+    var ul = document.createElement("ul");
+    overflowFiles.forEach(function (of) {
+      var li = document.createElement("li");
+      if (of.url) {
+        var a = document.createElement("a");
+        a.href = of.url; a.textContent = of.filename;
+        a.target = "_blank"; a.rel = "noopener noreferrer";
+        li.appendChild(a);
+      } else {
+        li.appendChild(el("span", "mono", of.filename));
+      }
+      li.appendChild(el("span", "of-counts",
+        "  +" + (of.additions || 0) + " -" + (of.deletions || 0)));
+      ul.appendChild(li);
+    });
+    box.appendChild(ul);
+    root.appendChild(box);
+  }
+
+  // ---- existing GitHub activity: rendering ----
+  // Every string below reaches the DOM through el()/textContent. These bodies are
+  // written by anyone with access to the PR, so innerHTML here would be a stored
+  // XSS sink, and none of this content is ever treated as an instruction.
+
+  // Defence in depth against a hand-built page: existing_activity.py already
+  // allowlists the URL's host, so the job left here is rejecting non-https
+  // schemes (javascript:, data:) before anything reaches an href.
+  function ghSafeUrl(url) {
+    return (typeof url === "string" && url.indexOf("https://") === 0) ? url : null;
+  }
+
+  function ghLink(url, label) {
+    var wrap = el("div", "gh-link");
+    var safe = ghSafeUrl(url);
+    if (!safe) return wrap;
+    var a = document.createElement("a");
+    a.href = safe;
+    a.textContent = label;
+    a.target = "_blank";
+    a.rel = "noopener noreferrer";
+    wrap.appendChild(a);
+    return wrap;
+  }
+
+  // ---- overlap between AI findings and existing threads ----
+  // SURFACING ONLY, never suppression. The finding is still seeded, still rendered,
+  // and still submittable; all this adds is the fact that a thread already covers
+  // these lines, so the reviewer triages with that in view instead of discovering
+  // the duplicate after posting. Letting an existing comment cancel a finding the
+  // diff supports would hand suppression to anyone who can comment on the PR, which
+  // is the failure SKILL.md "The PR itself is third-party content" exists to stop.
+  //
+  // Computed on the fly, never stored: nothing here touches the annotation object,
+  // saveDraft(), stripInternal(), or buildPayload(), so it cannot reach localStorage
+  // or a GitHub payload.
+  //
+  // Matching uses CURRENT lines only. An outdated thread has no current line (the
+  // originalLine rule in annotation-schema.md §2a), so it cannot honestly be
+  // positioned against a finding and is deliberately not matched; it stays visible
+  // in the activity panel instead.
+  function threadCurrentRange(t) {
+    if (t.line == null) return null;
+    var lo = (t.startLine != null && t.startLine < t.line) ? t.startLine : t.line;
+    return { lo: lo, hi: t.line };
+  }
+
+  function overlappingThreads(a) {
+    if (!activity || a.filePath == null || a.scope === "general") return [];
+    return activityList("threads").filter(function (t) {
+      if (t.filePath !== a.filePath) return false;
+      // A file-level finding pairs with a file-level thread; a line finding pairs
+      // with a line thread. Crossing the two produces a claim neither supports
+      // ("discusses these lines" about a whole-file note), so it is left out.
+      if (a.scope === "file") return t.subjectType === "FILE";
+      if (a.scope !== "line" || a.lineStart == null) return false;
+      if (t.subjectType === "FILE" || t.side !== a.side) return false;
+      var range = threadCurrentRange(t);
+      if (!range) return false;
+      var lo = Math.min(a.lineStart, a.lineEnd);
+      var hi = Math.max(a.lineStart, a.lineEnd);
+      return range.lo <= hi && lo <= range.hi;
+    });
+  }
+
+  function overlapAuthors(threads) {
+    var authors = [];
+    threads.forEach(function (t) {
+      (t.comments || []).forEach(function (c) {
+        if (c.author && authors.indexOf(c.author) === -1) authors.push(c.author);
+      });
+    });
+    return authors;
+  }
+
+  function buildOverlapNote(a, threads) {
+    var wrap = el("div", "anno-overlap");
+    wrap.appendChild(el("span", "anno-overlap-badge", "Already discussed"));
+
+    var open = 0;
+    var resolved = 0;
+    threads.forEach(function (t) { if (t.isResolved) resolved++; else open++; });
+    var bits = [];
+    if (open) bits.push(open + (open === 1 ? " open thread" : " open threads"));
+    if (resolved) bits.push(resolved + (resolved === 1 ? " resolved thread" : " resolved threads"));
+
+    var text = bits.join(" and ") +
+      (a.scope === "file" ? " on this file" : " on these lines");
+    var authors = overlapAuthors(threads);
+    if (authors.length) {
+      text += " (" + authors.slice(0, 3).join(", ") +
+        (authors.length > 3 ? ", +" + (authors.length - 3) + " more" : "") + ")";
+    }
+    text += ". Read it before you decide - this finding is still yours to accept or discard.";
+    wrap.appendChild(el("span", "anno-overlap-text", text));
+
+    if (threads[0] && threads[0].url) {
+      wrap.appendChild(ghLink(threads[0].url, "Open the thread"));
+    }
+    return wrap;
+  }
+
+  function ghWhereLabel(t) {
+    var path = t.filePath || "(unknown file)";
+    if (t.subjectType === "FILE") return path + " : file-level";
+    if (t.line != null) {
+      var range = (t.startLine != null && t.startLine !== t.line)
+        ? t.startLine + "-" + t.line : String(t.line);
+      return path + " : line " + range + (t.side ? " (" + t.side + ")" : "");
+    }
+    if (t.originalLine != null) return path + " : was line " + t.originalLine;
+    return path;
+  }
+
+  function buildGhComment(c) {
+    var msg = el("div", "gh-msg");
+    var who = el("div", "gh-who");
+    who.appendChild(el("span", "gh-author", c.author || "unknown user"));
+    if (c.createdAt) who.appendChild(el("span", null, c.createdAt));
+    if (c.authorAssociation) {
+      who.appendChild(el("span", "chip gh-state", String(c.authorAssociation).toLowerCase()));
+    }
+    msg.appendChild(who);
+    msg.appendChild(el("div", "gh-body", c.body || ""));
+    if (c.bodyTruncated) {
+      msg.appendChild(el("div", "gh-note", "This comment was shortened to fit."));
+    }
+    if (c.url) msg.appendChild(ghLink(c.url, "View on GitHub"));
+    return msg;
+  }
+
+  function buildGhThreadNode(t, opts) {
+    opts = opts || {};
+    var cls = "gh-thread";
+    if (t.isResolved) cls += " resolved";
+    if (t.isOutdated) cls += " outdated";
+    var wrap = el("details", cls);
+    // Resolved threads start collapsed. An unresolved thread stays OPEN even when
+    // it is outdated: "the code moved" is not "somebody handled this", and
+    // collapsing it by default would hide still-open feedback.
+    if (!t.isResolved) wrap.open = true;
+
+    var summary = el("summary", "gh-summary");
+    summary.appendChild(el("span", "badge badge-gh", "Existing on GitHub"));
+    if (t.isResolved) {
+      summary.appendChild(el("span", "chip gh-resolved",
+        t.resolvedBy ? "resolved by " + t.resolvedBy : "resolved"));
+    } else {
+      summary.appendChild(el("span", "chip gh-open", "unresolved"));
+    }
+    if (t.isOutdated) summary.appendChild(el("span", "chip gh-outdated", "outdated"));
+    if (opts.showWhere) summary.appendChild(el("span", "gh-where", ghWhereLabel(t)));
+    var count = (t.comments || []).length;
+    summary.appendChild(el("span", "gh-count",
+      count + (count === 1 ? " comment" : " comments")));
+    wrap.appendChild(summary);
+
+    var body = el("div", "gh-thread-body");
+    (t.comments || []).forEach(function (c) { body.appendChild(buildGhComment(c)); });
+    if (t.commentsOmitted) {
+      body.appendChild(el("div", "gh-note", t.commentsOmitted +
+        (t.commentsOmitted === 1 ? " earlier reply is" : " earlier replies are") +
+        " not shown here. Open the thread on GitHub to read them."));
+    }
+    if (t.isOutdated) {
+      body.appendChild(el("div", "gh-note",
+        "The code this thread pointed at has changed, so it is not shown next to " +
+        "the diff." + (t.originalLine != null
+          ? " It was on line " + t.originalLine + "." : "")));
+    }
+    wrap.appendChild(body);
+    return wrap;
+  }
+
+  // Anchorable threads render under the line they are about. Anything that cannot
+  // be placed is returned so the panel can show it: an existing comment must never
+  // silently vanish just because the diff moved underneath it.
+  function renderExistingThreadsInline() {
+    Array.prototype.forEach.call(
+      document.querySelectorAll(".gh-thread-list > .gh-thread"),
+      function (n) { n.remove(); });
+    var unplaced = [];
+    activityList("threads").forEach(function (t) {
+      if (!threadIsInlineable(t)) { unplaced.push(t); return; }
+      var row = findDiffRow(t.filePath, t.side, t.line);
+      if (!row) { unplaced.push(t); return; }
+      var host = ensureRowHost(row, "gh-thread-list", "gh-anchor",
+        anchorKey(t.filePath, t.side, t.line));
+      host.appendChild(buildGhThreadNode(t, { showWhere: false }));
+    });
+    Array.prototype.forEach.call(document.querySelectorAll(".gh-thread-list"),
+      function (h) { if (!h.childElementCount) h.remove(); });
+    return unplaced;
+  }
+
+  function ghReviewNode(r) {
+    var node = el("div", "gh-review");
+    var who = el("div", "gh-who");
+    who.appendChild(el("span", "gh-author", r.author || "unknown user"));
+    if (r.state) {
+      who.appendChild(el("span", "chip gh-state",
+        String(r.state).toLowerCase().replace(/_/g, " ")));
+    }
+    if (r.submittedAt) who.appendChild(el("span", null, r.submittedAt));
+    node.appendChild(who);
+    if (r.body) node.appendChild(el("div", "gh-body", r.body));
+    if (r.url) node.appendChild(ghLink(r.url, "View on GitHub"));
+    return node;
+  }
+
+  function ghSection(title, nodes) {
+    if (!nodes.length) return null;
+    var section = el("div", "gh-section");
+    section.appendChild(el("h4", null, title));
+    nodes.forEach(function (n) { section.appendChild(n); });
+    return section;
+  }
+
+  function renderExistingActivity() {
+    var root = document.getElementById("activity");
+    if (!root) return;
+    clearNode(root);
+    // Local-branch mode has no PR, so there is nothing to read. `activity` is also
+    // null on a page built before this feature existed, which must keep working.
+    if (!activity || DATA.mode !== "pr") return;
+
+    var unplaced = renderExistingThreadsInline();
+    var threads = activityList("threads");
+    var reviews = activityList("reviews");
+    var issues = activityList("issueComments");
+    var inlineCount = threads.length - unplaced.length;
+    var truncation = activity.truncation || {};
+    var omitted = (truncation.threadsOmitted || 0) + (truncation.commentsOmitted || 0) +
+      (truncation.reviewsOmitted || 0) + (truncation.issueCommentsOmitted || 0);
+    var hasContent = threads.length || reviews.length || issues.length;
+
+    if (!hasContent && activity.status === "complete") {
+      root.appendChild(el("p", "gh-empty",
+        "No previous review activity on this PR."));
+      return;
+    }
+
+    var panel = el("section", "panel gh-panel");
+    panel.id = "activity-panel";
+    var head = el("div", "panel-head");
+    head.appendChild(el("span", null, "Previous review activity on GitHub"));
+    var parts = [];
+    if (reviews.length) parts.push(reviews.length + (reviews.length === 1 ? " review" : " reviews"));
+    if (threads.length) parts.push(threads.length + (threads.length === 1 ? " thread" : " threads"));
+    if (issues.length) parts.push(issues.length + (issues.length === 1 ? " comment" : " comments"));
+    if (parts.length) head.appendChild(el("span", "gh-sub", parts.join(" · ")));
+    var toggle = el("span", "toggle", "▾ collapse");
+    head.appendChild(toggle);
+    head.addEventListener("click", function () {
+      panel.classList.toggle("collapsed");
+      toggle.textContent = panel.classList.contains("collapsed")
+        ? "▸ expand" : "▾ collapse";
+    });
+    panel.appendChild(head);
+
+    var body = el("div", "panel-body");
+
+    if (activity.status === "unavailable") {
+      body.appendChild(el("div", "gh-unavailable",
+        "Could not read this PR's existing review activity" +
+        (activity.reason ? ": " + activity.reason : "") +
+        ". Previous comments may exist that are not shown here."));
+    } else if (activity.status === "partial") {
+      body.appendChild(el("div", "gh-warn",
+        "Only part of this PR's review activity could be read" +
+        (activity.reason ? ": " + activity.reason : "") +
+        ". Treat this list as incomplete."));
+    }
+    if (omitted) {
+      body.appendChild(el("div", "gh-warn",
+        "This PR has more activity than fits on one page, so " + omitted +
+        " item(s) were left out. Unresolved threads were kept first."));
+    }
+
+    var snapshot = "Read from GitHub" +
+      (activity.fetchedAt ? " at " + activity.fetchedAt : "") +
+      ". This is a snapshot and does not update while the page is open.";
+    body.appendChild(el("div", "gh-note", snapshot));
+
+    if (inlineCount > 0) {
+      body.appendChild(el("div", "gh-note", inlineCount +
+        (inlineCount === 1 ? " thread is" : " threads are") +
+        " shown inline, next to the lines they are about."));
+    }
+
+    var sections = [
+      ghSection("Reviews", reviews.map(ghReviewNode)),
+      ghSection("Threads not shown inline", unplaced.map(function (t) {
+        return buildGhThreadNode(t, { showWhere: true });
+      })),
+      ghSection("PR conversation", issues.map(function (c) {
+        var node = el("div", "gh-review");
+        node.appendChild(buildGhComment(c));
+        return node;
+      }))
+    ];
+    sections.forEach(function (s) { if (s) body.appendChild(s); });
+
+    panel.appendChild(body);
+    root.appendChild(panel);
+  }
+
+  function renderCounts() {
+    var userCount = userAnnotations.length;
+    var aiTotal = aiAnnotations.filter(function (a) { return !a._discarded; }).length;
+    var aiAccepted = aiAnnotations.filter(function (a) { return a.accepted && !a._discarded; }).length;
+    var warnings = countUnanchored();
+    document.getElementById("c-user").textContent = String(userCount);
+    document.getElementById("c-ai").textContent = aiAccepted + " of " + aiTotal;
+    document.getElementById("c-warn").textContent = String(warnings);
+
+    // Live, because discarding a draft changes it. Hidden entirely at zero so a PR
+    // with no prior discussion gets the footer it had before this feature.
+    var overlapping = aiAnnotations.filter(function (a) {
+      return !a._discarded && overlappingThreads(a).length;
+    }).length;
+    document.getElementById("c-overlap").textContent = String(overlapping);
+    document.getElementById("c-overlap-wrap").hidden = !overlapping;
+  }
+
+  function countUnanchored() {
+    var all = userAnnotations.concat(aiAnnotations.filter(function (a) { return !a._discarded; }));
+    var n = 0;
+    all.forEach(function (a) {
+      if (a.scope !== "line" || a.filePath == null) return;
+      if (!findDiffRow(a.filePath, a.side, a.lineEnd)) n++;
+    });
+    return n;
+  }
+
+  function buildPayload() {
+    // Every annotation in current state: user-authored + AI drafts (accepted flag
+    // reflects triage). Discarded AI drafts are excluded entirely. Filtering to
+    // accepted:true happens downstream in build_review.py, not here.
+    var annotations = [];
+    userAnnotations.forEach(function (a) { annotations.push(stripInternal(a)); });
+    aiAnnotations.forEach(function (a) { if (!a._discarded) annotations.push(stripInternal(a)); });
+    var payload = {
+      kind: "review-annotations",
+      mode: DATA.mode,
+      repo: DATA.repo != null ? DATA.repo : null,
+      prNumber: DATA.prNumber != null ? DATA.prNumber : null,
+      branch: DATA.branch,
+      generalComment: generalComment,
+      annotations: annotations
+    };
+    // Both extras are Q&A-only, so a page without the live Q&A channel (fallback,
+    // or a server started without --session-dir) produces byte-identical output to
+    // before: no nonce, no transcript key.
+    if (qaEnabled) {
+      payload.nonce = sessionNonce;   // §5.2: /submit is nonce-checked in Q&A mode
+      if (qaQuestions.length) payload.transcript = buildTranscript();
+    }
+    return payload;
+  }
+
+  function stripInternal(a) {
+    var out = {
+      id: a.id, scope: a.scope, type: a.type, filePath: a.filePath,
+      lineStart: a.lineStart != null ? a.lineStart : null,
+      lineEnd: a.lineEnd != null ? a.lineEnd : null,
+      side: a.side != null ? a.side : null,
+      body: a.body || "", origin: a.origin, accepted: a.accepted === true
+    };
+    if (a.type === "suggestion" && a.suggestedCode != null) out.suggestedCode = a.suggestedCode;
+    if (a.origin === "ai") {
+      if (a.severity != null) out.severity = a.severity;
+      if (a.reasoning != null) out.reasoning = a.reasoning;
+      if (a.disproof != null) out.disproof = a.disproof;
+      if (a.background != null) out.background = a.background;
+    }
+    return out;
+  }
+
+  // Label for the AI falsification step (annotation-schema.md §1, `disproof`) in
+  // rendered Markdown. Kept identical to DISPROOF_LABEL in scripts/build_review.py
+  // so the local fix-list and a posted GitHub comment read the same way.
+  var DISPROOF_LABEL = "**Smallest check that would prove this wrong:**";
+
+  // Prefix for the AI `background` paragraph in the fix-list (annotation-schema.md
+  // §4): plain text, immediately after the body and before any suggestion fence.
+  var BACKGROUND_LABEL = "Background:";
+
+  // Local-mode fix-list: the Markdown the agent would render from a submitted
+  // payload, built client-side so the user can paste it somewhere directly
+  // (chat, an issue, a scratch file) without a round-trip through the server.
+  // Format is annotation-schema.md §4 verbatim, with ONE deliberate omission:
+  // the mandatory handoff paragraph. That paragraph is the agent's guard against
+  // "fixing" unconfirmed findings, so it belongs on the agent's printed copy of
+  // the file; pasting it into a GitHub comment would only confuse the author.
+  function buildFixlistMarkdown() {
+    var today = new Date().toISOString().split("T")[0];
+    var branch = DATA.branch || "unknown";
+
+    // buildPayload() deliberately does NOT filter by acceptance (that happens
+    // downstream in build_review.py), so the filter lives here instead:
+    // both user annotations and AI drafts must have accepted === true;
+    // AI drafts additionally must not be discarded.
+    var accepted = [];
+    userAnnotations.forEach(function (a) {
+      if (a.accepted === true) accepted.push(a);
+    });
+    aiAnnotations.forEach(function (a) {
+      if (a.accepted === true && !a._discarded) accepted.push(a);
+    });
+
+    var lines = [];
+    lines.push("# Review fix-list: " + branch);
+    lines.push("");
+    lines.push("Generated " + today + ". Local branch review, nothing posted to GitHub.");
+    lines.push("");
+
+    var byFile = {};
+    var fileOrder = [];
+    accepted.forEach(function (a) {
+      if (a.scope === "general") return;
+      if (!a.filePath) return;
+      if (!byFile[a.filePath]) { byFile[a.filePath] = []; fileOrder.push(a.filePath); }
+      byFile[a.filePath].push(a);
+    });
+
+    fileOrder.forEach(function (fp) {
+      lines.push("## " + fp);
+      lines.push("");
+      byFile[fp].forEach(function (a) {
+        if (a.scope === "line" && a.lineStart != null) {
+          var rangeStr = a.lineStart === a.lineEnd
+            ? String(a.lineStart) : a.lineStart + "-" + a.lineEnd;
+          var isSuggestion = a.type === "suggestion";
+          lines.push("### Lines " + rangeStr + " (" + a.side + ")" +
+            (isSuggestion ? ": suggestion" : ""));
+          lines.push("");
+          lines.push(a.body || "");
+          lines.push("");
+          if (a.origin === "ai" && a.background) {
+            lines.push(BACKGROUND_LABEL + " " + a.background);
+            lines.push("");
+          }
+          if (a.origin === "ai" && a.disproof) {
+            lines.push(DISPROOF_LABEL + " " + a.disproof);
+            lines.push("");
+          }
+          if (isSuggestion && a.suggestedCode != null) {
+            lines.push("```suggestion");
+            lines.push(a.suggestedCode);
+            lines.push("```");
+            lines.push("");
+          }
+        } else if (a.scope === "file") {
+          lines.push("### File-level");
+          lines.push("");
+          lines.push(a.body || "");
+          lines.push("");
+          if (a.origin === "ai" && a.background) {
+            lines.push(BACKGROUND_LABEL + " " + a.background);
+            lines.push("");
+          }
+          if (a.origin === "ai" && a.disproof) {
+            lines.push(DISPROOF_LABEL + " " + a.disproof);
+            lines.push("");
+          }
+        }
+      });
+    });
+
+    var generalAnnotations = accepted.filter(function (a) { return a.scope === "general"; });
+    var hasGeneral = generalAnnotations.length > 0 || !!(generalComment && generalComment.trim());
+    if (hasGeneral) {
+      lines.push("## General");
+      lines.push("");
+      generalAnnotations.forEach(function (a) { lines.push(a.body || ""); lines.push(""); });
+      if (generalComment && generalComment.trim()) {
+        lines.push(generalComment.trim());
+        lines.push("");
+      }
+      lines.push("---");
+      lines.push("");
+    }
+
+    return lines.join("\n");
+  }
+
+  // =====================================================================
+  //  Live Q&A: ask the agent about a finding or a line range
+  //  Protocol: references/annotation-schema.md §5. Every function below is
+  //  dead code unless qaEnabled; nothing here runs, renders, or listens on a
+  //  fallback (file://, no-server) page.
+  //  Security: question and answer bodies are untrusted free text and are
+  //  ALWAYS placed with el()/textContent. No raw-HTML-string DOM sink exists in this
+  //  section, and no markdown/HTML rendering of answers (§5.8).
+  // =====================================================================
+
+  function clearNode(n) { while (n.firstChild) n.removeChild(n.firstChild); }
+
+  function pendingQuestions() {
+    return qaQuestions.filter(function (q) { return !q.answered; });
+  }
+
+  function canAsk() {
+    return qaEnabled && qaState === "active" && pendingQuestions().length < MAX_PENDING;
+  }
+
+  function askBlockedReason() {
+    if (qaState === "stale") return "This page belongs to an older review session.";
+    if (qaState === "ended") return "The review session has ended.";
+    if (pendingQuestions().length >= MAX_PENDING) {
+      return "Waiting on " + MAX_PENDING + " questions already. Ask again once one is answered.";
+    }
+    return "";
+  }
+
+  // §5.3: qid is `<sessionNonce>-q<counter>`, counter starting at 1. The server
+  // validates it with re.fullmatch(f"{nonce}-q[0-9]+", qid) and rejects anything
+  // else with 400, so this format is a hard contract, not a convention.
+  function nextQid() { qaCounter += 1; return sessionNonce + "-q" + qaCounter; }
+
+  function makeQuestion(spec) {
+    var q = {
+      qid: nextQid(),
+      nonce: sessionNonce,
+      kind: spec.kind,
+      target: spec.target,
+      threadId: spec.threadId,
+      parentQid: spec.parentQid != null ? spec.parentQid : null,
+      body: spec.body || "",
+      askedAt: new Date().toISOString(),
+      askedAtMs: Date.now(),
+      answer: null,
+      answered: false
+    };
+    if (!q.threadId) q.threadId = q.qid;   // a top-level question starts its own thread
+    return q;
+  }
+
+  function questionWire(q) {
+    return {
+      qid: q.qid, nonce: q.nonce, kind: q.kind, target: q.target,
+      threadId: q.threadId, parentQid: q.parentQid, body: q.body, askedAt: q.askedAt
+    };
+  }
+
+  // One POST, no auto-retry: callers surface the rejection with a single Retry
+  // button so a dead server can never turn into a request loop.
+  function postQuestion(q) {
+    return fetch("/ask", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(questionWire(q))
+    }).then(
+      function (res) {
+        if (res.status === 409) {
+          endQaSession("stale");
+          throw new Error("Stale session: the server rejected this page's nonce.");
+        }
+        if (res.status === 413) {
+          throw new Error("That question is too long (limit " + MAX_QUESTION_CHARS + " characters).");
+        }
+        if (!res.ok) throw new Error("The server rejected the question (HTTP " + res.status + ").");
+        return true;
+      },
+      function () { throw new Error("Could not reach the review server."); }
+    );
+  }
+
+  function registerQuestion(q) {
+    qaQuestions.push(q);
+    qaByQid[q.qid] = q;
+    ensurePolling();
+  }
+
+  function showQaError(host, message, onRetry) {
+    clearNode(host);
+    var box = el("div", "qa-error");
+    box.appendChild(el("span", null, message));
+    if (onRetry) {
+      var retry = el("button", "btn small", "Retry");
+      retry.addEventListener("click", onRetry);
+      box.appendChild(retry);
+    }
+    host.appendChild(box);
+  }
+
+  function closeQaComposer() {
+    abortQaDictation();
+    var open = document.querySelector(".qa-composer");
+    if (open) open.remove();
+  }
+
+  // Shared by both speech directions. A region-carrying tag is preferred because a
+  // bare primary subtag ("en") leaves the engine to guess a locale, while "en-US"
+  // names one; navigator.language reflects the person, document lang only the page.
+  function qaSpeechLang() {
+    var tags = [];
+    if (typeof navigator === "object" && navigator && typeof navigator.language === "string") {
+      tags.push(navigator.language.trim());
+    }
+    var docLang = document.documentElement.lang;
+    if (typeof docLang === "string") tags.push(docLang.trim());
+    tags = tags.filter(function (t) { return !!t; }).map(function (t) { return t.replace(/_/g, "-"); });
+    for (var i = 0; i < tags.length; i++) {
+      if (tags[i].indexOf("-") > 0) return tags[i];
+    }
+    return tags.length ? tags[0] : "en-US";
+  }
+
+  // ---- push-to-talk dictation (Web Speech API) ----
+  // Chrome/Edge/Safari only. When the constructor is missing (Firefox) no mic
+  // affordance is created at all, so that composer is the one that shipped before
+  // this feature existed. One recognizer, one live session; the composer that
+  // started it owns qaDictation, and every teardown path clears that ownership so
+  // a stray late event can never write into a removed textarea.
+  var SpeechRecognitionCtor = window.SpeechRecognition || window.webkitSpeechRecognition || null;
+  var qaRecognition = null;
+  var qaDictating = false;
+  var qaDictation = null;   // { onFinal, onFailure, onIdle } of the owning composer
+
+  var QA_MIC_ERRORS = {
+    "not-allowed": "Microphone permission was denied. Allow microphone access for this page, or type the question instead.",
+    "service-not-allowed": "The browser blocked its speech service for this page. Allow microphone access, or type the question instead.",
+    "no-speech": "No speech was detected. Press the mic and speak, or type the question instead.",
+    "audio-capture": "No microphone was found. Connect one, or type the question instead.",
+    // Chromium collapses every speech-backend failure onto this one code, including
+    // "this build ships the API with no service behind it", so it cannot be reported
+    // as a connectivity problem: that misdirects everyone on a fork without a backend.
+    "network": "Speech recognition is unavailable in this browser. This usually means the browser ships the API without a working speech service rather than a problem with your microphone or connection - Chrome, Edge and Safari normally work. Type the question instead.",
+    "aborted": "Dictation stopped before anything was transcribed."
+  };
+
+  function qaMicErrorMessage(code) {
+    if (code && QA_MIC_ERRORS[code]) return QA_MIC_ERRORS[code];
+    return "Dictation failed (" + (code || "unknown error") + "). Type the question instead.";
+  }
+
+  function ensureQaRecognition() {
+    if (qaRecognition) return qaRecognition;
+    var r = new SpeechRecognitionCtor();
+    r.lang = qaSpeechLang();
+    r.interimResults = false;   // final transcripts only: the reviewer edits text, not a stream
+    r.continuous = false;       // push-to-talk, never an open conversation channel
+    r.onresult = function (ev) {
+      var session = qaDictation;
+      if (!session || !ev || !ev.results) return;
+      var text = "";
+      for (var i = ev.resultIndex || 0; i < ev.results.length; i++) {
+        if (ev.results[i].isFinal) text += ev.results[i][0].transcript;
+      }
+      text = text.trim();
+      if (text) session.onFinal(text);
+    };
+    r.onerror = function (ev) {
+      var session = qaDictation;
+      if (session) session.onFailure(qaMicErrorMessage(ev && ev.error));
+    };
+    r.onend = function () {
+      qaDictating = false;
+      if (qaDictation) qaDictation.onIdle();
+    };
+    qaRecognition = r;
+    return r;
+  }
+
+  function stopQaDictation() {
+    if (!qaRecognition || !qaDictating) return;
+    try { qaRecognition.stop(); } catch (e) {}   // onend returns the button to idle
+  }
+
+  // Called on every composer teardown path. Guarded and idempotent: without it a
+  // removed composer would leave the browser's recording indicator lit.
+  function abortQaDictation() {
+    var session = qaDictation;
+    qaDictation = null;
+    if (qaRecognition && qaDictating) {
+      qaDictating = false;
+      try { qaRecognition.abort(); } catch (e) {}
+    }
+    if (session) session.onIdle();
+  }
+
+  function openQaComposer(opts) {
+    closeQaComposer();
+    var c = el("div", "qa-composer");
+    c.appendChild(el("div", "qa-composer-label", opts.label));
+
+    var ta = document.createElement("textarea");
+    ta.maxLength = MAX_QUESTION_CHARS;   // client-side half of the §5.6 cap
+    ta.placeholder = "What would you like the agent to look into?";
+    c.appendChild(ta);
+
+    var count = el("div", "qa-count", "0 / " + MAX_QUESTION_CHARS);
+    ta.addEventListener("input", function () {
+      count.textContent = ta.value.length + " / " + MAX_QUESTION_CHARS;
+    });
+    c.appendChild(count);
+
+    // Carried over from a composer the reviewer had already typed into, so the text
+    // survives the switch of destination instead of being thrown away with the box it
+    // was typed in. Cap and counter are applied by hand for the same reason
+    // appendTranscript() does it: assigning .value fires no "input" and ignores
+    // maxLength. Note what is NOT carried: `dictated` stays false, because text that
+    // was typed did not come from the microphone.
+    if (typeof opts.seedText === "string" && opts.seedText) {
+      ta.value = opts.seedText.slice(0, MAX_QUESTION_CHARS);
+      count.textContent = ta.value.length + " / " + MAX_QUESTION_CHARS;
+    }
+
+    var actions = el("div", "actions");
+    var sendBtn = el("button", "btn primary small", "Send question");
+    var cancelBtn = el("button", "btn small", "Cancel");
+    actions.appendChild(sendBtn); actions.appendChild(cancelBtn);
+    c.appendChild(actions);
+
+    var status = el("div", "qa-status");
+    c.appendChild(status);
+
+    var micBtn = null;
+    var dictated = false;   // any part of this question came from speech
+    if (SpeechRecognitionCtor) {
+      micBtn = el("button", "btn small qa-mic-btn", "🎤 Dictate");
+      micBtn.type = "button";
+      micBtn.title = "Dictate the question, then edit it before sending";
+      actions.insertBefore(micBtn, cancelBtn);
+
+      var recording = false;
+      var setRecording = function (on) {
+        recording = on;
+        if (on) micBtn.classList.add("recording"); else micBtn.classList.remove("recording");
+        micBtn.textContent = on ? "🎤 Stop" : "🎤 Dictate";
+      };
+      var appendTranscript = function (text) {
+        dictated = true;
+        var base = ta.value.replace(/\s+$/, "");
+        var merged = base ? base + " " + text : text;
+        // Programmatic assignment neither fires "input" nor honours maxLength, so the
+        // §5.6 cap and the counter are both applied by hand here.
+        ta.value = merged.slice(0, MAX_QUESTION_CHARS);
+        count.textContent = ta.value.length + " / " + MAX_QUESTION_CHARS;
+        ta.focus();
+      };
+      micBtn.addEventListener("click", function () {
+        if (recording) { stopQaDictation(); return; }
+        clearNode(status);
+        var r = ensureQaRecognition();
+        qaDictation = {
+          onFinal: appendTranscript,
+          onFailure: function (message) {
+            clearNode(status);
+            status.appendChild(el("div", "qa-notice", message));
+          },
+          onIdle: function () { setRecording(false); }
+        };
+        try {
+          r.start();
+        } catch (e) {
+          // InvalidStateError: the previous session has not finished winding down.
+          qaDictation = null;
+          status.appendChild(el("div", "qa-notice", "Dictation is still starting. Try again in a moment."));
+          return;
+        }
+        qaDictating = true;
+        setRecording(true);
+      });
+    }
+
+    cancelBtn.addEventListener("click", function () {
+      abortQaDictation();
+      c.remove();
+      if (opts.afterClose) opts.afterClose();
+    });
+
+    function attempt(q) {
+      sendBtn.disabled = true; cancelBtn.disabled = true;
+      if (micBtn) micBtn.disabled = true;
+      abortQaDictation();   // the send is committed; nothing may still be listening
+      clearNode(status);
+      status.appendChild(el("div", "qa-pending", "Sending…"));
+      postQuestion(q).then(function () {
+        c.remove();
+        registerQuestion(q);
+        renderQa();
+      }).catch(function (err) {
+        sendBtn.disabled = false; cancelBtn.disabled = false;
+        if (micBtn) micBtn.disabled = false;
+        showQaError(status, err.message, function () { attempt(q); });
+      });
+    }
+
+    sendBtn.addEventListener("click", function () {
+      var body = ta.value.trim();
+      if (!body) { ta.focus(); return; }
+      if (body.length > MAX_QUESTION_CHARS) body = body.slice(0, MAX_QUESTION_CHARS);
+      if (!canAsk()) { showQaError(status, askBlockedReason(), null); return; }
+      var q = makeQuestion({
+        kind: "question", target: opts.target,
+        threadId: opts.threadId, parentQid: opts.parentQid, body: body
+      });
+      if (dictated) voiceQids.add(q.qid);
+      attempt(q);
+    });
+
+    if (opts.insertBefore && opts.container) {
+      opts.container.insertBefore(c, opts.insertBefore);
+    } else {
+      opts.container.appendChild(c);
+    }
+    ta.focus();
+    // focus() alone parks the caret in front of seeded text; the next keystroke
+    // belongs after it. Guarded because setSelectionRange throws on a detached node.
+    if (ta.value) {
+      try { ta.setSelectionRange(ta.value.length, ta.value.length); } catch (e) {}
+    }
+    return c;
+  }
+
+  // §5.3 background-request: same channel, empty body, annotation target.
+  function requestBackground(a, btn, card) {
+    if (!canAsk()) return;
+    var q = makeQuestion({
+      kind: "background-request",
+      target: { type: "annotation", annotationId: a.id },
+      threadId: null, parentQid: null, body: ""
+    });
+    var status = el("div", "qa-status");
+    card.appendChild(status);
+    btn.disabled = true;
+    var original = btn.textContent;
+    btn.textContent = "Requesting…";
+    postQuestion(q).then(function () {
+      status.remove();
+      registerQuestion(q);
+      renderQa();
+    }).catch(function (err) {
+      btn.disabled = false;
+      btn.textContent = original;
+      showQaError(status, err.message, function () {
+        status.remove();
+        requestBackground(a, btn, card);
+      });
+    });
+  }
+
+  // ---- thread rendering (all text via el()/textContent) ----
+
+  function threadIdsOf(list) {
+    var seen = {}, order = [];
+    list.forEach(function (q) {
+      if (!seen[q.threadId]) { seen[q.threadId] = true; order.push(q.threadId); }
+    });
+    return order;
+  }
+
+  function formatElapsed(ms) {
+    var secs = Math.max(0, Math.round(ms / 1000));
+    if (secs < 60) return secs + "s";
+    return Math.floor(secs / 60) + "m " + (secs % 60) + "s";
+  }
+
+  function targetLabel(t) {
+    if (!t) return "";
+    if (t.type === "lines") {
+      var range = t.lineStart === t.lineEnd ? String(t.lineStart) : t.lineStart + "-" + t.lineEnd;
+      return t.filePath + " : line " + range + " (" + t.side + ")";
+    }
+    return "finding " + t.annotationId;
+  }
+
+  // ---- speaking answers (speechSynthesis) ----
+
+  // MDN caps one utterance at 32,767 chars, and Chrome can stall on a long one after
+  // ~15s, so answers are split into chunks and chained.
+  var SPEECH_CHUNK_CHARS = 2000;
+
+  // Deliberately not a markdown parser: the only goal is to keep the two things that
+  // are actively hostile to listen to - code blocks and URLs - out of the audio, and
+  // to hand back pieces small enough to survive the chunk cap. Prose is spoken as
+  // written; the rendered text path is untouched.
+  function toSpeechText(body) {
+    if (typeof body !== "string") return [];
+    var text = body
+      .replace(/```[\s\S]*?```/g, " ")     // fenced code blocks
+      .replace(/```[\s\S]*$/, " ")         // an unclosed fence: drop its tail too
+      .replace(/`+/g, " ")                 // inline backticks
+      .replace(/\bhttps?:\/\/\S+/gi, " ")  // URLs, unreadable when spelled out loud
+      .replace(/\bwww\.\S+/gi, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+    if (!text) return [];
+    var chunks = [];
+    var current = "";
+    (text.match(/[^.!?]+[.!?]*\s*/g) || [text]).forEach(function (raw) {
+      var piece = raw.trim();
+      if (!piece) return;
+      if (!current) current = piece;
+      else if (current.length + 1 + piece.length <= SPEECH_CHUNK_CHARS) current += " " + piece;
+      else { chunks.push(current); current = piece; }
+    });
+    if (current) chunks.push(current);
+    // One sentence longer than the cap still has to break somewhere: at a space.
+    var out = [];
+    chunks.forEach(function (chunk) {
+      while (chunk.length > SPEECH_CHUNK_CHARS) {
+        var cut = chunk.lastIndexOf(" ", SPEECH_CHUNK_CHARS);
+        if (cut <= 0) cut = SPEECH_CHUNK_CHARS;
+        out.push(chunk.slice(0, cut));
+        chunk = chunk.slice(cut).replace(/^\s+/, "");
+      }
+      if (chunk) out.push(chunk);
+    });
+    return out;
+  }
+
+  // macOS installs these as ordinary English voices and a "first voice whose lang
+  // matches" heuristic picks them cheerfully. They are novelty effects, not speech.
+  var SPEECH_NOVELTY_VOICES = /\b(?:zarvox|bubbles|bad news|good news|boing|cellos|jester|organ|trinoids|wobble|whisper|albert|fred|deranged|hysterical|bahh|bells|superstar|junior|grandma|grandpa|eddy|flo|reed|rocko|sandy|shelley|kathy|ralph)\b/i;
+  // The only reliable signal for "this one does not sound like 1994" is the name.
+  var SPEECH_QUALITY_VOICES = /premium|enhanced|natural|neural/i;
+
+  function normalizeLangTag(tag) {
+    return typeof tag === "string" ? tag.replace(/_/g, "-").toLowerCase() : "";
+  }
+
+  // Picks the least robotic voice the browser will admit to having, or null to leave
+  // utterance.voice unset (i.e. exactly the pre-existing behaviour). Deliberately not
+  // user-configurable: there is no voice picker, this is the whole decision.
+  function qaPickVoice(voices, wantedLang) {
+    if (!voices || !voices.length) return null;
+    var wanted = normalizeLangTag(wantedLang) || "en-us";
+    var wantedPrimary = wanted.split("-")[0];
+    var best = null;
+    var bestScore = 0;
+    for (var i = 0; i < voices.length; i++) {
+      var v = voices[i];
+      if (!v || typeof v.name !== "string" || !v.name) continue;
+      if (SPEECH_NOVELTY_VOICES.test(v.name)) continue;
+      var lang = normalizeLangTag(v.lang);
+      var score;
+      if (lang && lang === wanted) score = 100;                                  // same locale
+      else if (wantedPrimary && lang.split("-")[0] === wantedPrimary) score = 40; // same language
+      else continue;                                     // another language: never spoken
+      // A name-based quality guess must not outrank an actual locale match.
+      if (SPEECH_QUALITY_VOICES.test(v.name)) score += 20;
+      // Chrome's network voices; this page is an offline-capable local tool, so a
+      // remote synthesiser is a dependency it should not acquire for read-aloud.
+      if (v.localService === false) score -= 30;
+      if (v.default) score += 1;   // Safari reports it for everything: tie-break only
+      // Strictly greater, so equal scores keep the earlier voice: stable by index.
+      if (!best || score > bestScore) { best = v; bestScore = score; }
+    }
+    return best;
+  }
+
+  // Resolved lazily, never at load: getVoices() is empty until the engine has built
+  // its list. An empty list is not cached, so a later utterance can still find one.
+  function pickedSpeechVoice(lang) {
+    if (speechVoicePicked) return speechVoice;
+    var synth = window.speechSynthesis;
+    // The API is feature-detected per call, not captured: getVoices() is absent on
+    // stand-ins for speechSynthesis and reading it blindly would throw.
+    if (!synth || typeof synth.getVoices !== "function") return null;
+    var voices;
+    try { voices = synth.getVoices(); } catch (e) { return null; }
+    if (!voices || !voices.length) return null;
+    speechVoice = qaPickVoice(voices, lang);
+    speechVoicePicked = true;
+    return speechVoice;
+  }
+
+  // voiceschanged only drops the cache; nothing is re-spoken and no queue is touched.
+  function bindSpeechVoiceRefresh() {
+    if (speechVoiceBound) return;
+    var synth = window.speechSynthesis;
+    if (!synth || typeof synth.addEventListener !== "function") return;
+    speechVoiceBound = true;
+    try {
+      synth.addEventListener("voiceschanged", function () {
+        speechVoice = null;
+        speechVoicePicked = false;
+      });
+    } catch (e) { /* best effort: a stale pick is still better than a throw */ }
+  }
+
+  function speechSupported() {
+    return !!(window.speechSynthesis && window.SpeechSynthesisUtterance);
+  }
+
+  // Every path that silences the page comes through here - the pill, Esc, a second
+  // click on a playing answer, endQaSession(), pagehide - so releasing ownership and
+  // repainting the controls belongs here too, before the early return: a browser with
+  // no speechSynthesis at all still has to leave the labels in their idle state.
+  function stopSpeaking() {
+    speechQueue.length = 0;
+    speechUtterance = null;
+    speechSpeaking = false;
+    speechOwnerQid = null;
+    speechRun += 1;   // whatever the cancelled utterance fires next is now stale
+    syncReadAloudButtons();
+    renderSpeechStopPill();
+    if (!window.speechSynthesis) return;
+    try { window.speechSynthesis.cancel(); } catch (e) {}
+  }
+
+  // The one control that is not anchored to any answer. It replaces the stop button
+  // that used to render into qaStatusHost under the mode banner: that host is the top
+  // of a page which is mostly diff, so audio started from a line far down had no
+  // reachable off switch. Created on demand and removed on the way out rather than
+  // hidden, so a browser without speechSynthesis never holds a dead control.
+  var speechStopPill = null;
+
+  function renderSpeechStopPill() {
+    if (!(speechSpeaking && speechSupported())) {
+      if (speechStopPill) { speechStopPill.remove(); speechStopPill = null; }
+      return;
+    }
+    if (speechStopPill) return;
+    speechStopPill = el("button", "btn small qa-stop-speaking-btn", "⏹ Stop speaking");
+    speechStopPill.type = "button";
+    speechStopPill.title = "Stop reading aloud (Esc)";
+    speechStopPill.addEventListener("click", function () {
+      stopSpeaking();
+      renderQaStatus();
+    });
+    document.body.appendChild(speechStopPill);
+  }
+
+  // A toggle's label is a function of speechOwnerQid, computed here and nowhere else.
+  // dataset.qid is the button's only durable identity; anything remembered on the
+  // element is gone the next time renderQa() rebuilds the thread.
+  function applyReadAloudState(btn) {
+    var qid = btn.dataset.qid;
+    var mine = !!(speechSpeaking && qid && qid === speechOwnerQid);
+    btn.textContent = mine ? "⏹ Stop" : "🔊 Read aloud";
+    btn.title = mine ? "Stop reading this answer aloud" : "Read this answer aloud";
+    btn.setAttribute("aria-pressed", mine ? "true" : "false");
+  }
+
+  // Patched in place on every speech transition. renderQaStatus() rebuilds only the
+  // status block and would leave a stale "⏹ Stop" sitting on an answer that finished
+  // a minute ago; a full renderQa() would fix the labels and destroy any composer the
+  // reviewer is typing into, which is the worse trade.
+  function syncReadAloudButtons() {
+    Array.prototype.forEach.call(document.querySelectorAll(".qa-read-btn"), applyReadAloudState);
+  }
+
+  function speakNext() {
+    if (!speechSupported()) { stopSpeaking(); return; }
+    var text = speechQueue.shift();
+    if (text == null) {
+      speechSpeaking = false;
+      speechUtterance = null;
+      speechOwnerQid = null;
+      renderQaStatus();   // the Stop control is state-derived: it goes away here
+      syncReadAloudButtons();   // and so is the toggle, which that call does not touch
+      return;
+    }
+    var run = speechRun;
+    var u = new SpeechSynthesisUtterance(text);
+    var lang = qaSpeechLang();
+    u.lang = lang;   // a hint the engine can use even when no voice object is set
+    bindSpeechVoiceRefresh();
+    var voice = pickedSpeechVoice(lang);
+    // Left unset when nothing suitable exists, which is the OS default: no regression.
+    // Guarded because the setter is typed: a patched getVoices() (an extension, a
+    // test stand-in) can hand back an object the IDL attribute refuses.
+    if (voice) { try { u.voice = voice; } catch (e) {} }
+    var advance = function () {
+      if (run !== speechRun) return;   // cancelled: do not resume a dead queue
+      speechUtterance = null;
+      speakNext();
+    };
+    u.onend = advance;
+    u.onerror = advance;
+    speechUtterance = u;
+    try {
+      window.speechSynthesis.speak(u);
+    } catch (e) {
+      // Blocked (no user activation) or unavailable. Silent by design: the
+      // read-aloud button is the guaranteed path.
+      stopSpeaking();
+    }
+  }
+
+  function enqueueSpeech(chunks, qid) {
+    if (!speechSupported() || !chunks || !chunks.length) return;
+    chunks.forEach(function (c) { speechQueue.push(c); });
+    if (speechSpeaking) return;   // the running chain will pick these up in order
+    speechSpeaking = true;
+    // Only the enqueue that actually starts the queue claims it. When two answers land
+    // in one poll tick the second joins a chain that is already talking, and moving
+    // the token would put "⏹ Stop" on an answer nobody has heard a word of yet.
+    speechOwnerQid = typeof qid === "string" ? qid : null;
+    syncReadAloudButtons();
+    renderSpeechStopPill();
+    speakNext();
+  }
+
+  function buildQuestionNode(q) {
+    var msg = el("div", "qa-msg qa-q");
+    msg.appendChild(el("span", "qa-label", "You"));
+    if (q.kind === "background-request") {
+      msg.appendChild(el("div", "qa-text qa-muted", "Requested background for this finding."));
+    } else {
+      msg.appendChild(el("div", "qa-text", q.body));
+    }
+    return msg;
+  }
+
+  // The guaranteed route to audio. Auto-speak needs user activation and the browser
+  // may refuse it; a click never is refused. On EVERY answer that has text, and absent
+  // only where the API itself is - so no dead control ships to Firefox. An answer that
+  // sanitizes down to nothing (all code) still gets the button: enqueueSpeech() no-ops
+  // on an empty chunk list, so the click stops any current speech and says nothing,
+  // which beats a button that is there on some answers and not others.
+  function appendReadAloudButton(msg, body, qid) {
+    if (!speechSupported()) return;
+    var chunks = toSpeechText(body);
+    var host = el("div", "qa-actions");
+    var btn = el("button", "btn small qa-read-btn");
+    btn.type = "button";
+    if (typeof qid === "string" && qid) btn.dataset.qid = qid;
+    // Label and aria-pressed come from state, not from a default: this node may well
+    // be built by the very poll tick that started reading this answer aloud, in which
+    // case it has to appear already showing "⏹ Stop".
+    applyReadAloudState(btn);
+    btn.addEventListener("click", function () {
+      // Reading this answer already? Then the button means stop, and stopping is the
+      // whole action - re-enqueueing here is what used to restart it from the top.
+      // Any other answer still jumps the queue, so stopSpeaking() stays first.
+      var mine = speechSpeaking && speechOwnerQid === qid;
+      stopSpeaking();        // an explicit click jumps the queue
+      if (!mine) enqueueSpeech(chunks, qid);
+      renderQaStatus();      // surface the session line now, not on the next tick
+    });
+    host.appendChild(btn);
+    msg.appendChild(host);
+  }
+
+  function buildAnswerNode(q) {
+    var msg = el("div", "qa-msg qa-a");
+    msg.appendChild(el("span", "qa-label", "Agent"));
+    if (q.answer) {
+      msg.appendChild(el("div", "qa-text", q.answer));
+      appendReadAloudButton(msg, q.answer, q.qid);
+    } else if (q.kind === "background-request") {
+      msg.appendChild(el("div", "qa-text qa-muted", "Background added to this finding."));
+    } else {
+      msg.appendChild(el("div", "qa-text qa-muted", "(no answer text)"));
+    }
+    return msg;
+  }
+
+  function buildPendingNode(q) {
+    var frag = document.createDocumentFragment();
+    frag.appendChild(el("div", "qa-pending", "Waiting for the agent… " + formatElapsed(Date.now() - q.askedAtMs)));
+    if (Date.now() - q.askedAtMs >= SLOW_ANSWER_MS) {
+      frag.appendChild(el("div", "qa-notice",
+        "No response yet - the agent may have stopped. You can still Submit or Download."));
+    }
+    return frag;
+  }
+
+  function buildThreadNode(threadId, list, opts) {
+    var wrap = el("div", "qa-thread");
+    wrap.dataset.threadId = threadId;
+    if (opts && opts.showTarget) {
+      var chainTarget = list.length ? list[0].target : null;
+      wrap.appendChild(el("div", "qa-target", targetLabel(chainTarget)));
+    }
+    if (opts && opts.note) wrap.appendChild(el("div", "qa-note", opts.note));
+    // Follow-ups open in the host, not inside this wrap: a re-render rebuilds every
+    // wrap, and a composer parented to one would be destroyed mid-typing.
+    var composerHost = (opts && opts.composerHost) ? opts.composerHost : wrap;
+    var chain = list.filter(function (q) { return q.threadId === threadId; });
+    chain.forEach(function (q, i) {
+      wrap.appendChild(buildQuestionNode(q));
+      if (q.answered) {
+        wrap.appendChild(buildAnswerNode(q));
+        if (i === chain.length - 1) {
+          var followBtn = el("button", "btn small qa-followup-btn", "Follow up");
+          var host = el("div", "qa-actions");
+          followBtn.addEventListener("click", function () {
+            openQaComposer({
+              target: q.target, threadId: threadId, parentQid: q.qid,
+              container: composerHost, label: "Follow up on this thread",
+              afterClose: function () { renderQa(); }
+            });
+          });
+          host.appendChild(followBtn);
+          wrap.appendChild(host);
+        }
+      } else {
+        wrap.appendChild(buildPendingNode(q));
+      }
+    });
+    return wrap;
+  }
+
+  function renderAnnotationThreads() {
+    Array.prototype.forEach.call(document.querySelectorAll(".anno .qa-thread"),
+      function (n) { n.remove(); });
+    if (!qaEnabled) return;
+    var byAnno = {};
+    qaQuestions.forEach(function (q) {
+      if (!q.target || q.target.type !== "annotation") return;
+      if (!byAnno[q.target.annotationId]) byAnno[q.target.annotationId] = [];
+      byAnno[q.target.annotationId].push(q);
+    });
+    Object.keys(byAnno).forEach(function (annoId) {
+      var card = document.querySelector('.anno[data-anno-id="' + cssEscape(annoId) + '"]');
+      if (!card) return;
+      var list = byAnno[annoId];
+      // Keep an open composer last so a thread arriving mid-typing cannot jump over it.
+      var openComposerNode = card.querySelector(".qa-composer");
+      threadIdsOf(list).forEach(function (tid) {
+        var node = buildThreadNode(tid, list, { showTarget: false });
+        if (openComposerNode) card.insertBefore(node, openComposerNode);
+        else card.appendChild(node);
+      });
+    });
+  }
+
+  // The one line that keeps an inline thread from reading like a review comment.
+  // The dashed grey vocabulary carries most of it; this says it out loud.
+  var QA_INLINE_NOTE = "question to the agent · not part of your review";
+
+  function lineQuestions() {
+    return qaQuestions.filter(function (q) { return q.target && q.target.type === "lines"; });
+  }
+
+  // A line question is anchorable when its file block is rendered AND a .diff-line
+  // row for its lineEnd/side exists. Anchorable → the thread renders inline, in the
+  // slot the composer occupied, next to the code it is about. Un-anchorable (the
+  // file went to overflowFiles, or the line falls outside every rendered hunk) →
+  // the fallback panel, so a Q&A pair can never silently vanish.
+  // Returns the thread ids that could not be placed.
+  function renderLineThreads(list) {
+    // These threads are siblings of .diff-line rows, NOT children of .anno cards,
+    // so renderAnnotations() does not clear them and nothing else will: this pass
+    // owns their whole lifetime. Rebuild from scratch every time, then drop hosts
+    // left holding nothing, so repeat calls converge instead of accumulating.
+    Array.prototype.forEach.call(document.querySelectorAll(".qa-thread-list > .qa-thread"),
+      function (n) { n.remove(); });
+    var unplaced = [];
+    threadIdsOf(list).forEach(function (tid) {
+      var chain = list.filter(function (q) { return q.threadId === tid; });
+      var t = chain.length ? chain[0].target : null;
+      var row = t ? findDiffRow(t.filePath, t.side, t.lineEnd) : null;
+      if (!row) { unplaced.push(tid); return; }
+      var host = ensureRowHost(row, "qa-thread-list", "qa-anchor",
+        anchorKey(t.filePath, t.side, t.lineEnd));
+      // No qa-target label: the thread is sitting on the lines it names.
+      var node = buildThreadNode(tid, list,
+        { showTarget: false, note: QA_INLINE_NOTE, composerHost: host });
+      var openComposerNode = host.querySelector(".qa-composer");
+      if (openComposerNode) host.insertBefore(node, openComposerNode);
+      else host.appendChild(node);
+    });
+    Array.prototype.forEach.call(document.querySelectorAll(".qa-thread-list"),
+      function (h) { if (!h.childElementCount) h.remove(); });
+    return unplaced;
+  }
+
+  // Session-level state (terminal states, the pending lockout) used to live in the
+  // questions panel. That panel now hides itself whenever it is empty, so this
+  // moved out to stay visible on its own.
+  function buildQaStatusHost() {
+    qaStatusHost = el("div", "qa-status-block");
+    qaStatusHost.id = "qa-session-status";
+    qaStatusHost.style.display = "none";
+    var banner = document.getElementById("mode-banner");
+    banner.parentNode.insertBefore(qaStatusHost, banner.nextSibling);
+  }
+
+  function renderQaStatus() {
+    if (!qaStatusHost) return;
+    clearNode(qaStatusHost);
+    var pending = pendingQuestions().length;
+    if (qaQuestions.length) {
+      qaStatusHost.appendChild(el("div", "qa-status-line",
+        qaQuestions.length + " question" + (qaQuestions.length === 1 ? "" : "s") +
+        " asked · " + pending + " waiting"));
+    }
+    if (qaState === "stale") {
+      qaStatusHost.appendChild(el("div", "qa-notice",
+        "Stale session. This page was opened for an earlier review run, so the server " +
+        "refused it. Asking is disabled. Use \u201cDownload annotations\u201d to save your review."));
+    } else if (qaState === "ended") {
+      qaStatusHost.appendChild(el("div", "qa-notice",
+        "Session ended. The review server stopped responding (timeout, submit elsewhere, " +
+        "or crash). Asking is disabled and answers will no longer arrive. Your annotations " +
+        "are intact - use \u201cDownload annotations\u201d to hand them back."));
+    } else if (pending >= MAX_PENDING) {
+      qaStatusHost.appendChild(el("div", "qa-notice",
+        "Waiting on " + MAX_PENDING + " questions. Asking is paused until one is answered."));
+    }
+    qaStatusHost.style.display = qaStatusHost.childElementCount ? "" : "none";
+    // The stop control no longer renders into this host - it is fixed to the viewport
+    // now - but it is still driven from here, so it stays derived from speechSpeaking
+    // on the same every-tick pass that rebuilds everything else above.
+    renderSpeechStopPill();
+  }
+
+  // Fallback host only: threads whose lines are not on this page. Empty is the
+  // normal case, and an empty panel would just be a scrap of UI to scroll past.
+  function buildQaPanel() {
+    if (!qaEnabled) return;
+    buildQaStatusHost();
+    qaPanel = el("section", "panel qa-panel");
+    qaPanel.id = "qa-panel";
+    qaPanel.style.display = "none";
+    var head = el("div", "panel-head");
+    head.appendChild(el("span", null, "Questions the diff can't show"));
+    head.appendChild(el("span", "qa-sub", "not part of your review · never posted to GitHub"));
+    head.appendChild(el("span", "toggle", "▾ collapse"));
+    head.addEventListener("click", function () {
+      qaPanel.classList.toggle("collapsed");
+      head.querySelector(".toggle").textContent =
+        qaPanel.classList.contains("collapsed") ? "▸ expand" : "▾ collapse";
+    });
+    qaPanel.appendChild(head);
+    qaPanelBody = el("div", "panel-body");
+    qaPanel.appendChild(qaPanelBody);
+    document.querySelector(".wrap").appendChild(qaPanel);
+  }
+
+  function renderFallbackPanel(unplaced, list) {
+    if (!qaEnabled || !qaPanel || !qaPanelBody) return;
+    // Detach (not destroy) an open composer so its typed text survives a re-render.
+    var keep = qaPanelBody.querySelector(".qa-composer");
+    if (keep) keep.remove();
+    clearNode(qaPanelBody);
+    if (!unplaced.length && !keep) {
+      qaPanel.style.display = "none";
+      return;
+    }
+    qaPanel.style.display = "";
+    qaPanelBody.appendChild(el("p", "qa-empty",
+      "These questions point at lines this page does not render - the file is in the " +
+      "overflow list, or the line falls outside every hunk shown - so they cannot sit " +
+      "next to the code."));
+    unplaced.forEach(function (tid) {
+      qaPanelBody.appendChild(buildThreadNode(tid, list,
+        { showTarget: true, composerHost: qaPanelBody }));
+    });
+    if (keep) qaPanelBody.appendChild(keep);
+  }
+
+  function updateAskAvailability() {
+    if (!qaEnabled) return;
+    var allowed = canAsk();
+    var reason = allowed ? "" : askBlockedReason();
+    Array.prototype.forEach.call(
+      document.querySelectorAll(".qa-ask-btn, .qa-ask-lines-btn, .qa-followup-btn, .request-background-btn"),
+      function (b) { b.disabled = !allowed; b.title = reason; });
+  }
+
+  function renderQa() {
+    if (!qaEnabled) return;
+    renderAnnotationThreads();
+    var lines = lineQuestions();
+    renderFallbackPanel(renderLineThreads(lines), lines);
+    renderQaStatus();
+    updateAskAvailability();
+  }
+
+  // ---- polling (§5.5): GET /answers every ~2s while anything is pending ----
+
+  function ensurePolling() {
+    if (!qaEnabled) return;
+    var wanted = qaState === "active" && pendingQuestions().length > 0;
+    if (wanted && qaPollTimer === null) {
+      qaPollTimer = setInterval(pollAnswers, POLL_INTERVAL_MS);
+    } else if (!wanted && qaPollTimer !== null) {
+      clearInterval(qaPollTimer); qaPollTimer = null;
+    }
+  }
+
+  function pollAnswers() {
+    fetch("/answers", { cache: "no-store" }).then(function (res) {
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      return res.json();
+    }).then(function (data) {
+      qaPollFailures = 0;
+      attachAnswers(data && Array.isArray(data.answers) ? data.answers : []);
+    }).catch(function () {
+      qaPollFailures += 1;
+      if (qaPollFailures >= POLL_FAILURES_BEFORE_END) endQaSession("ended");
+      else renderQa();   // keep the elapsed counters ticking through a blip
+    });
+  }
+
+  function attachAnswers(answers) {
+    var gotAnswer = false;
+    var gotBackground = false;
+    var speakQids = [];
+    answers.forEach(function (ans) {
+      if (!ans || typeof ans.qid !== "string") return;
+      var q = qaByQid[ans.qid];
+      if (!q || q.answered) return;
+      q.answered = true;
+      q.answer = typeof ans.body === "string" ? ans.body : "";
+      gotAnswer = true;
+      // Only answers to dictated questions speak themselves, and only on this first
+      // transition to answered - the guard above is what keeps a re-poll from
+      // repeating them. A background-request answer has no body to speak.
+      if (q.answer && q.kind !== "background-request" && voiceQids.has(q.qid)) {
+        speakQids.push(q.qid);
+      }
+      if (q.kind === "background-request" && typeof ans.background === "string" && ans.background) {
+        var target = null;
+        aiAnnotations.forEach(function (a) { if (a.id === q.target.annotationId) target = a; });
+        // Flows straight into stripInternal() → submit payload → GitHub <details>.
+        if (target) { target.background = ans.background; gotBackground = true; }
+      }
+    });
+    if (speakQids.length) {
+      // qaQuestions is in ask order, so walking it is askedAt order without a sort:
+      // two answers landing in one tick queue up, they never talk over each other.
+      qaQuestions.forEach(function (q) {
+        if (speakQids.indexOf(q.qid) !== -1) enqueueSpeech(toSpeechText(q.answer), q.qid);
+      });
+    }
+    if (gotBackground) renderAnnotations();   // details block appears, button goes away
+    if (gotAnswer || !gotBackground) renderQa();
+    ensurePolling();
+  }
+
+  function endQaSession(reason) {
+    if (qaState !== "active") return;
+    qaState = reason === "stale" ? "stale" : "ended";
+    if (qaPollTimer !== null) { clearInterval(qaPollTimer); qaPollTimer = null; }
+    abortQaDictation();
+    stopSpeaking();   // no voice outliving the session it belongs to
+    closeQaComposer();
+    // Re-show the no-server fallback path: whatever happened to the session, the
+    // reviewer must still be able to save their decisions.
+    if (downloadBtn) downloadBtn.style.display = "";
+    renderQa();
+  }
+
+  function buildTranscript() {
+    // annotation-schema.md §3/§5.9. NEVER posted to GitHub, never in the fix-list;
+    // it exists so the agent can see what was asked alongside the decisions.
+    return qaQuestions.map(function (q) {
+      return {
+        qid: q.qid,
+        threadId: q.threadId,
+        target: q.target,
+        body: q.body,
+        answer: q.answered ? (q.answer != null ? q.answer : "") : null,
+        answered: q.answered === true
+      };
+    });
+  }
+
+  function hasUnsavedWork() {
+    if (userAnnotations.length) return true;
+    if (qaQuestions.length) return true;
+    if (generalComment && generalComment.trim()) return true;
+    return aiAnnotations.some(function (a) { return a.accepted || a._discarded; });
+  }
+
+  function onBeforeUnload(ev) {
+    if (submitted || !hasUnsavedWork()) return;
+    ev.preventDefault();
+    ev.returnValue = "";
+    return "";
+  }
+
+  var submitBtn = document.getElementById("submit-btn");
+  var downloadBtn = document.getElementById("download-btn");
+  var copyFixlistBtn = document.getElementById("copy-fixlist-btn");
+  if (!isLive) submitBtn.style.display = "none"; // no server → download only
+  // PR mode has no fix-list: accepted comments go to GitHub as a pending review.
+  if (DATA.mode !== "local") copyFixlistBtn.style.display = "none";
+
+  copyFixlistBtn.addEventListener("click", function () {
+    var md = buildFixlistMarkdown();
+    var btn = this;
+    var original = btn.textContent;
+
+    // writeText must be called synchronously in the click handler: Safari ties
+    // clipboard access to transient activation, which an intervening await drops.
+    var p = navigator.clipboard
+      ? navigator.clipboard.writeText(md)
+      : Promise.reject(new Error("no clipboard API"));
+    p.then(function () {
+      btn.textContent = "✓ Copied";
+      setTimeout(function () { btn.textContent = original; }, 2000);
+    }).catch(function () {
+      // Off-screen, NOT display:none; hidden elements can't be selected.
+      var ta = document.createElement("textarea");
+      ta.value = md;
+      ta.style.cssText = "position:fixed;left:-9999px;top:0";
+      document.body.appendChild(ta);
+      ta.select();
+      try {
+        document.execCommand("copy");
+        btn.textContent = "✓ Copied";
+      } catch (e) {
+        btn.textContent = "Copy failed";
+      }
+      setTimeout(function () {
+        btn.textContent = original;
+        document.body.removeChild(ta);
+      }, 2000);
+    });
+  });
+
+  submitBtn.addEventListener("click", function () {
+    var waiting = qaEnabled ? pendingQuestions().length : 0;
+    if (waiting > 0 && !window.confirm(
+        "You have " + waiting + " unanswered question" + (waiting === 1 ? "" : "s") +
+        ". Submit anyway?")) {
+      return;
+    }
+    var payload = buildPayload();
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Sending…";
+    fetch("/submit", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    }).then(function (res) {
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      submitted = true;   // review is in the agent's hands: no beforeunload nag
+      if (qaPollTimer !== null) { clearInterval(qaPollTimer); qaPollTimer = null; }
+      submitBtn.textContent = "✓ Sent. You can close this tab";
+    }).catch(function () {
+      // Server gone? Fall back to a download so the review isn't lost.
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Submit review";
+      download(payload);
+    });
+  });
+
+  downloadBtn.addEventListener("click", function () { download(buildPayload()); });
+
+  function download(payload) {
+    var blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "pr-annotations.json";
+    document.body.appendChild(a); a.click(); a.remove();
+  }
+
+  var generalTa = document.getElementById("general-comment");
+  generalTa.addEventListener("input", function () {
+    generalComment = generalTa.value; saveDraft();
+  });
+
+  Array.prototype.forEach.call(document.querySelectorAll("[data-toggle]"), function (h) {
+    h.addEventListener("click", function () {
+      var panel = document.getElementById(h.dataset.toggle);
+      panel.classList.toggle("collapsed");
+      var t = h.querySelector(".toggle");
+      if (t) t.textContent = panel.classList.contains("collapsed") ? "▸ expand" : "▾ collapse";
+    });
+  });
+
+  seedFromData();
+  loadDraft();
+  renderBanner();
+  renderFiles();
+  renderOverflow();
+  // After renderFiles (it anchors into rendered diff rows) and before
+  // renderAnnotations only for readability: ROW_HOST_ORDER, not call order, is
+  // what decides whether existing threads sit above the reviewer's drafts.
+  renderExistingActivity();
+  if (qaEnabled) buildQaPanel();   // before renderAnnotations: threads need a host
+  renderAnnotations();
+  generalTa.value = generalComment;
+  renderCounts();
+  if (qaEnabled) {
+    renderQa();
+    // Live-Q&A only, deliberately: questions are the one piece of page state with
+    // no localStorage backing (annotations and the general comment are drafted
+    // through saveDraft()), and the fallback page must behave exactly as before.
+    window.addEventListener("beforeunload", onBeforeUnload);
+    // Leaving or backgrounding the page must not leave a voice running behind it.
+    window.addEventListener("pagehide", function () { stopSpeaking(); });
+    // Esc is the reflex for "make it stop", and it is the one route to silence that
+    // needs neither the mouse nor knowing where the pill is. It acts only while
+    // something is actually being read, and it neither preventDefault()s nor stops
+    // propagation, so an Esc meant for a composer, a native autocomplete, or the
+    // browser's own find bar still reaches it.
+    document.addEventListener("keydown", function (ev) {
+      if (ev.key !== "Escape" || !speechSpeaking) return;
+      stopSpeaking();
+      renderQaStatus();
+    });
+  }
+})();
+</script>
+</body>
+</html>
