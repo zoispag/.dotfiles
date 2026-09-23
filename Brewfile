@@ -25,6 +25,7 @@ tap "stablyai/orca", trusted: true
 tap "teamookla/speedtest"
 tap "threatcl/repo"
 tap "yt-dlp/taps"
+tap "zoispag/tap"
 
 # Run your GitHub Actions locally
 brew "act"
@@ -457,6 +458,8 @@ cask "nordlayer"
 # Knowledge base that works on top of a local folder of plain text Markdown files
 cask "obsidian"
 # Menu bar app that supervises, monitors, and auto-updates the OmniRoute AI router
+cask "zoispag/tap/omniroute-tray", trusted: true
+# IDE for orchestrating AI coding agents across terminals and worktrees
 cask "stablyai/orca/orca", trusted: true
 # VPN client for secure internet access and private browsing
 cask "postman"
@@ -490,6 +493,8 @@ cask "tinkerwell"
 cask "transmission"
 # File transfer application
 cask "transmit"
+# Resolve ref+ secret references in dotenv files via helmfile/vals
+cask "zoispag/tap/valsenv", trusted: true
 # VPN client for secure internet access and private browsing
 cask "visual-studio-code"
 # Desktop client for WhatsApp
