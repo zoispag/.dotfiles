@@ -21,6 +21,7 @@ tap "oven-sh/bun"
 tap "pulumi/tap"
 tap "robusta-dev/holmesgpt"
 tap "shivammathur/php"
+tap "stablyai/orca", trusted: true
 tap "teamookla/speedtest"
 tap "threatcl/repo"
 tap "yt-dlp/taps"
@@ -455,6 +456,8 @@ cask "microsoft-teams"
 cask "nordlayer"
 # Knowledge base that works on top of a local folder of plain text Markdown files
 cask "obsidian"
+# Menu bar app that supervises, monitors, and auto-updates the OmniRoute AI router
+cask "stablyai/orca/orca", trusted: true
 # VPN client for secure internet access and private browsing
 cask "postman"
 # Command-line shell and scripting language
