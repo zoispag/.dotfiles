@@ -1,92 +1,159 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "autoupdate": true,
-  "plugin": [
-    "oh-my-openagent@latest",
-    "opencode-wakatime@latest",
-    "@riskihajar/opencode-omniroute-auth@latest",
-    "opencode-plan-canvas-plugin@latest",
-    "./plugin/protect-sensitive-files.js"
+  "update": "auto",
+  "permissions": [
+    { "action": "read", "resource": "*.env", "effect": "deny" },
+    { "action": "read", "resource": "*.env.*", "effect": "deny" },
+    { "action": "read", "resource": "*env.local", "effect": "deny" },
+    { "action": "read", "resource": "*env.production", "effect": "deny" },
+    { "action": "read", "resource": "*env.staging", "effect": "deny" },
+    { "action": "read", "resource": "*env.development", "effect": "deny" },
+    { "action": "read", "resource": "*.key", "effect": "deny" },
+    { "action": "read", "resource": "*.pem", "effect": "deny" },
+    { "action": "read", "resource": "*.p12", "effect": "deny" },
+    { "action": "read", "resource": "*.pfx", "effect": "deny" },
+    { "action": "read", "resource": "*.crt", "effect": "deny" },
+    { "action": "read", "resource": "*.cer", "effect": "deny" },
+    { "action": "read", "resource": "*.der", "effect": "deny" },
+    { "action": "read", "resource": "*privatekey*", "effect": "deny" },
+    { "action": "read", "resource": "*private_key*", "effect": "deny" },
+    { "action": "read", "resource": "*private-key*", "effect": "deny" },
+    { "action": "read", "resource": "*id_rsa*", "effect": "deny" },
+    { "action": "read", "resource": "*id_ed25519*", "effect": "deny" },
+    { "action": "read", "resource": "*id_ecdsa*", "effect": "deny" },
+    { "action": "read", "resource": "*id_dsa*", "effect": "deny" },
+    { "action": "read", "resource": "*.ssh/config", "effect": "deny" },
+    { "action": "read", "resource": "*known_hosts", "effect": "deny" },
+    { "action": "read", "resource": "*authorized_keys", "effect": "deny" },
+    { "action": "read", "resource": "*.npmrc", "effect": "deny" },
+    { "action": "read", "resource": "*.pypirc", "effect": "deny" },
+    { "action": "read", "resource": "*.netrc", "effect": "deny" },
+    { "action": "read", "resource": "*.aws/credentials", "effect": "deny" },
+    { "action": "read", "resource": "*.aws/config", "effect": "deny" },
+    { "action": "read", "resource": "*.docker/config.json", "effect": "deny" },
+    { "action": "read", "resource": "*auth.json", "effect": "deny" },
+    { "action": "read", "resource": "*database.yml", "effect": "deny" },
+    { "action": "read", "resource": "*database.json", "effect": "deny" },
+    { "action": "read", "resource": "*.pgpass", "effect": "deny" },
+    { "action": "read", "resource": "*.my.cnf", "effect": "deny" },
+    { "action": "read", "resource": "*db.config*", "effect": "deny" },
+    { "action": "read", "resource": "*.git-credentials", "effect": "deny" },
+    { "action": "edit", "resource": "*.env", "effect": "deny" },
+    { "action": "edit", "resource": "*.env.*", "effect": "deny" },
+    { "action": "edit", "resource": "*env.local", "effect": "deny" },
+    { "action": "edit", "resource": "*env.production", "effect": "deny" },
+    { "action": "edit", "resource": "*env.staging", "effect": "deny" },
+    { "action": "edit", "resource": "*env.development", "effect": "deny" },
+    { "action": "edit", "resource": "*.key", "effect": "deny" },
+    { "action": "edit", "resource": "*.pem", "effect": "deny" },
+    { "action": "edit", "resource": "*.p12", "effect": "deny" },
+    { "action": "edit", "resource": "*.pfx", "effect": "deny" },
+    { "action": "edit", "resource": "*.crt", "effect": "deny" },
+    { "action": "edit", "resource": "*.cer", "effect": "deny" },
+    { "action": "edit", "resource": "*.der", "effect": "deny" },
+    { "action": "edit", "resource": "*privatekey*", "effect": "deny" },
+    { "action": "edit", "resource": "*private_key*", "effect": "deny" },
+    { "action": "edit", "resource": "*private-key*", "effect": "deny" },
+    { "action": "edit", "resource": "*id_rsa*", "effect": "deny" },
+    { "action": "edit", "resource": "*id_ed25519*", "effect": "deny" },
+    { "action": "edit", "resource": "*id_ecdsa*", "effect": "deny" },
+    { "action": "edit", "resource": "*id_dsa*", "effect": "deny" },
+    { "action": "edit", "resource": "*.ssh/config", "effect": "deny" },
+    { "action": "edit", "resource": "*known_hosts", "effect": "deny" },
+    { "action": "edit", "resource": "*authorized_keys", "effect": "deny" },
+    { "action": "edit", "resource": "*.npmrc", "effect": "deny" },
+    { "action": "edit", "resource": "*.pypirc", "effect": "deny" },
+    { "action": "edit", "resource": "*.netrc", "effect": "deny" },
+    { "action": "edit", "resource": "*.aws/credentials", "effect": "deny" },
+    { "action": "edit", "resource": "*.aws/config", "effect": "deny" },
+    { "action": "edit", "resource": "*.docker/config.json", "effect": "deny" },
+    { "action": "edit", "resource": "*auth.json", "effect": "deny" },
+    { "action": "edit", "resource": "*database.yml", "effect": "deny" },
+    { "action": "edit", "resource": "*database.json", "effect": "deny" },
+    { "action": "edit", "resource": "*.pgpass", "effect": "deny" },
+    { "action": "edit", "resource": "*.my.cnf", "effect": "deny" },
+    { "action": "edit", "resource": "*db.config*", "effect": "deny" },
+    { "action": "edit", "resource": "*.git-credentials", "effect": "deny" },
+    { "action": "read", "resource": "*.example", "effect": "allow" },
+    { "action": "read", "resource": "*.template", "effect": "allow" },
+    { "action": "read", "resource": "*.sample", "effect": "allow" },
+    { "action": "read", "resource": "*.dist", "effect": "allow" },
+    { "action": "read", "resource": "*.default", "effect": "allow" },
+    { "action": "read", "resource": "*README*", "effect": "allow" },
+    { "action": "read", "resource": "*EXAMPLE*", "effect": "allow" },
+    { "action": "edit", "resource": "*.example", "effect": "allow" },
+    { "action": "edit", "resource": "*.template", "effect": "allow" },
+    { "action": "edit", "resource": "*.sample", "effect": "allow" },
+    { "action": "edit", "resource": "*.dist", "effect": "allow" },
+    { "action": "edit", "resource": "*.default", "effect": "allow" },
+    { "action": "edit", "resource": "*README*", "effect": "allow" },
+    { "action": "edit", "resource": "*EXAMPLE*", "effect": "allow" }
   ],
-  "provider": {
-    "omniroute": {
-      "options": {
-        "baseURL": "http://localhost:20128/v1",
-        "apiMode": "chat",
-        "stripOpenCodeSystemPrompt": false
-      }
-    }
-  },
-  "experimental": {
-    "disable_paste_summary": true
-  },
   "mcp": {
-    "vanta": {
-      "type": "remote",
-      "url": "https://mcp.eu.vanta.com/mcp"
-    },
-    "github": {
-      "type": "remote",
-      "url": "https://api.githubcopilot.com/mcp/",
-      "oauth": false,
-      "headers": {
-        "Authorization": "Bearer {env:GITHUB_TOKEN}"
+    "servers": {
+      "vanta": {
+        "type": "remote",
+        "url": "https://mcp.eu.vanta.com/mcp"
+      },
+      "github": {
+        "type": "remote",
+        "url": "https://api.githubcopilot.com/mcp/",
+        "oauth": false,
+        "headers": {
+          "Authorization": "Bearer {env:GITHUB_TOKEN}"
+        }
+      },
+      "linear": {
+        "type": "remote",
+        "url": "https://mcp.linear.app/mcp"
+      },
+      "grafana_cloud": {
+        "type": "local",
+        "command": ["uvx", "mcp-grafana"],
+        "environment": {
+          "GRAFANA_URL": "{env:GRAFANA_CLOUD_URL}",
+          "GRAFANA_SERVICE_ACCOUNT_TOKEN": "{env:GRAFANA_CLOUD_SERVICE_ACCOUNT_TOKEN}"
+        }
+      },
+      "grafana_k8s": {
+        "type": "local",
+        "command": ["uvx", "mcp-grafana"],
+        "environment": {
+          "GRAFANA_URL": "{env:GRAFANA_K8S_URL}",
+          "GRAFANA_SERVICE_ACCOUNT_TOKEN": "{env:GRAFANA_K8S_SERVICE_ACCOUNT_TOKEN}"
+        }
+      },
+      "argocd": {
+        "type": "local",
+        "command": ["npx", "argocd-mcp@latest", "stdio"],
+        "environment": {
+          "ARGOCD_BASE_URL": "{env:ARGOCD_BASE_URL}",
+          "ARGOCD_API_TOKEN": "{env:ARGOCD_API_TOKEN}"
+        }
+      },
+      "slack": {
+        "type": "local",
+        "command": ["npx", "-y", "slack-mcp-server@latest", "--transport", "stdio"],
+        "environment": {
+          "SLACK_MCP_XOXP_TOKEN": "{env:SLACK_MCP_XOXP_TOKEN}"
+        }
+      },
+      "zammad": {
+        "type": "local",
+        // TEMPORARY: fork pending upstream PR basher83/Zammad-MCP#310 (prompt ticket_id
+        // annotated int, so FastMCP rejects opencode's "$1" placeholder with PromptError).
+        // Revert to git+https://github.com/basher83/zammad-mcp.git once #310 lands.
+        "command": [
+          "uvx",
+          "--from",
+          "git+https://github.com/zoispag/Zammad-MCP.git@fix/prompt-string-arguments",
+          "mcp-zammad"
+        ],
+        "environment": {
+          "ZAMMAD_URL": "{env:ZAMMAD_URL}",
+          "ZAMMAD_HTTP_TOKEN": "{env:ZAMMAD_HTTP_TOKEN}"
+        }
       }
-    },
-    "linear": {
-      "type": "remote",
-      "url": "https://mcp.linear.app/mcp"
-    },
-    "grafana_cloud": {
-      "type": "local",
-      "command": ["uvx", "mcp-grafana"],
-      "environment": {
-        "GRAFANA_URL": "{env:GRAFANA_CLOUD_URL}",
-        "GRAFANA_SERVICE_ACCOUNT_TOKEN": "{env:GRAFANA_CLOUD_SERVICE_ACCOUNT_TOKEN}"
-      }
-    },
-    "grafana_k8s": {
-      "type": "local",
-      "command": ["uvx", "mcp-grafana"],
-      "environment": {
-        "GRAFANA_URL": "{env:GRAFANA_K8S_URL}",
-        "GRAFANA_SERVICE_ACCOUNT_TOKEN": "{env:GRAFANA_K8S_SERVICE_ACCOUNT_TOKEN}"
-      }
-    },
-    "argocd": {
-      "type": "local",
-      "command": ["npx", "argocd-mcp@latest", "stdio"],
-      "environment": {
-        "ARGOCD_BASE_URL": "{env:ARGOCD_BASE_URL}",
-        "ARGOCD_API_TOKEN": "{env:ARGOCD_API_TOKEN}"
-      }
-    },
-    "slack": {
-      "type": "local",
-      "command": ["npx", "-y", "slack-mcp-server@latest", "--transport", "stdio"],
-      "environment": {
-        "SLACK_MCP_XOXP_TOKEN": "{env:SLACK_MCP_XOXP_TOKEN}"
-      }
-    },
-    "zammad": {
-      "type": "local",
-      // TEMPORARY: fork pending upstream PR basher83/Zammad-MCP#310 (prompt ticket_id
-      // annotated int, so FastMCP rejects opencode's "$1" placeholder with PromptError).
-      // Revert to git+https://github.com/basher83/zammad-mcp.git once #310 lands.
-      "command": [
-        "uvx",
-        "--from",
-        "git+https://github.com/zoispag/Zammad-MCP.git@fix/prompt-string-arguments",
-        "mcp-zammad"
-      ],
-      "environment": {
-        "ZAMMAD_URL": "{env:ZAMMAD_URL}",
-        "ZAMMAD_HTTP_TOKEN": "{env:ZAMMAD_HTTP_TOKEN}"
-      }
-    },
-    "solo": {
-      "type": "local",
-      "command": ["/Applications/Solo.app/Contents/MacOS/mcp"]
     }
   }
 }

@@ -720,9 +720,50 @@ var plugin = async (ctx) => {
   };
   return hooks;
 };
-var index_default = plugin;
+function legacyContext(ctx) {
+  const directory = ctx.location?.directory || process.cwd();
+  const project = ctx.location?.project ?? {};
+  return {
+    directory,
+    worktree: directory,
+    project: {
+      id: project.id,
+      worktree: project.directory || project.canonical || directory,
+      directory: project.directory || directory,
+    },
+    client: ctx,
+  };
+}
+
+var v2 = {
+  id: "wakatime",
+  async setup(ctx) {
+    const hooks = await plugin(legacyContext(ctx));
+    if (hooks?.["chat.message"]) {
+      await ctx.session.hook("prompt", async () => {
+        await hooks["chat.message"]({}, {});
+      });
+    }
+    if (typeof hooks?.event !== "function") return;
+
+    const controller = new AbortController();
+    void (async () => {
+      try {
+        for await (const event of ctx.event.subscribe({ signal: controller.signal })) {
+          await hooks.event({ event });
+        }
+      } catch (error) {
+        if (!controller.signal.aborted) {
+          console.warn("[wakatime] event subscription failed:", error?.message || error);
+        }
+      }
+    })();
+    return () => controller.abort();
+  },
+};
+
 export {
-  index_default as default,
+  v2 as default,
   extractFileChanges,
   plugin
 };

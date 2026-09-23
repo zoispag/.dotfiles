@@ -353,7 +353,7 @@ brew "zlib"
 brew "zoxide"
 
 # The AI coding agent built for the terminal.
-brew "anomalyco/tap/opencode"
+brew "anomalyco/tap/opencode-v2"
 # Kubernetes misconfiguration testing
 brew "armosec/kubescape/kubescape-cli"
 # eks-node-viewer is a tool for visualizing dynamic node usage within an EKS cluster.
