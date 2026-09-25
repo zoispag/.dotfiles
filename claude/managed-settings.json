@@ -1,0 +1,28 @@
+{
+  "extraKnownMarketplaces": {
+    "dotfiles": {
+      "source": {
+        "source": "directory",
+        "path": "/Users/zoispag/.dotfiles/claude/plugins"
+      }
+    },
+    "typesafe-ai": {
+      "source": {
+        "source": "github",
+        "repo": "typesafe-ai/skills"
+      }
+    },
+    "armosec": {
+      "source": {
+        "source": "github",
+        "repo": "armosec/armoctl"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "mcps@dotfiles": true,
+    "vanta@claude-plugins-official": true,
+    "typesafe@typesafe-ai": true,
+    "armoctl@armosec": true
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "name": "dotfiles",
+  "owner": {
+    "name": "Zois Pagoulatos"
+  },
+  "plugins": [
+    {
+      "name": "mcps",
+      "source": "./mcps",
+      "description": "Personal global MCP servers"
+    }
+  ],
+  "description": "Personal Claude Code plugins from ~/.dotfiles"
+}

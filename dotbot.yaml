@@ -162,6 +162,14 @@
     - shell:
       - [chsh -s $(which zsh), Set ZSH as default shell]
 
+# Claude Code managed-settings drop-in lives in a root-owned system dir, so dotbot's
+# link can't create it; sudo only runs (and prompts) when the symlink is missing.
+- if:
+    cond: 'test ! -L "/Library/Application Support/ClaudeCode/managed-settings.d/dotfiles.json"'
+    met:
+    - shell:
+      - ['sudo mkdir -p "/Library/Application Support/ClaudeCode/managed-settings.d" && sudo ln -sfn ~/.dotfiles/claude/managed-settings.json "/Library/Application Support/ClaudeCode/managed-settings.d/dotfiles.json"', Link Claude Code managed settings]
+
 # Run only when no plugins beyond tpm itself are installed yet.
 # tpm's installer needs a running tmux server (reads TMUX_PLUGIN_MANAGER_PATH via
 # run-shell), so bootstrap on an isolated socket that never touches real sessions.

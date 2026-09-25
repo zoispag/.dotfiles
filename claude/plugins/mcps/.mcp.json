@@ -1,0 +1,58 @@
+{
+  "mcpServers": {
+    "linear": {
+      "type": "http",
+      "url": "https://mcp.linear.app/mcp"
+    },
+    "github": {
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp/",
+      "headers": {
+        "Authorization": "Bearer ${GITHUB_TOKEN}"
+      }
+    },
+    "grafana_cloud": {
+      "command": "uvx",
+      "args": [
+        "mcp-grafana"
+      ],
+      "env": {
+        "GRAFANA_URL": "${GRAFANA_CLOUD_URL}",
+        "GRAFANA_SERVICE_ACCOUNT_TOKEN": "${GRAFANA_CLOUD_SERVICE_ACCOUNT_TOKEN}"
+      }
+    },
+    "grafana_k8s": {
+      "command": "uvx",
+      "args": [
+        "mcp-grafana"
+      ],
+      "env": {
+        "GRAFANA_URL": "${GRAFANA_K8S_URL}",
+        "GRAFANA_SERVICE_ACCOUNT_TOKEN": "${GRAFANA_K8S_SERVICE_ACCOUNT_TOKEN}"
+      }
+    },
+    "argocd": {
+      "command": "npx",
+      "args": [
+        "argocd-mcp@latest",
+        "stdio"
+      ],
+      "env": {
+        "ARGOCD_BASE_URL": "${ARGOCD_BASE_URL}",
+        "ARGOCD_API_TOKEN": "${ARGOCD_API_TOKEN}"
+      }
+    },
+    "zammad": {
+      "command": "uvx",
+      "args": [
+        "--from",
+        "git+https://github.com/zoispag/Zammad-MCP.git@fix/prompt-string-arguments",
+        "mcp-zammad"
+      ],
+      "env": {
+        "ZAMMAD_URL": "${ZAMMAD_URL}",
+        "ZAMMAD_HTTP_TOKEN": "${ZAMMAD_HTTP_TOKEN}"
+      }
+    }
+  }
+}

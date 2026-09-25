@@ -1,0 +1,8 @@
+{
+  "name": "mcps",
+  "version": "1.0.1",
+  "description": "Personal global MCP servers (secrets expanded from env vars)",
+  "author": {
+    "name": "Zois Pagoulatos"
+  }
+}
