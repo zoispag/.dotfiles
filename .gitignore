@@ -10,3 +10,6 @@
 
 # AI-assisted development
 .sisyphus/
+
+# opencode plugins written by other apps into the linked plugins dir.
+opencode/plugins/orca-*.js

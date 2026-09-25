@@ -2,7 +2,7 @@
     link:
       relink: true
 
-- clean: ['~']
+- clean: ['~', '~/.config/opencode']
 
 # Layout is grouped by app; the link TARGET decides home (~) vs XDG (~/.config).
 - link:
@@ -48,10 +48,6 @@
       create: true
       force: true
       path: opencode/tui.json
-    ~/.config/opencode/oh-my-openagent.jsonc:
-      create: true
-      force: true
-      path: opencode/oh-my-openagent.jsonc
     ~/.config/opencode/package.json:
       create: true
       force: true
@@ -60,14 +56,11 @@
       create: true
       force: true
       path: opencode/bun.lock
-    ~/.config/opencode/plugin:
+    # Whole dir linked; plugins other apps drop in (e.g. Orca) are git-ignored.
+    ~/.config/opencode/plugins:
       create: true
       force: true
-      path: opencode/plugin
-    ~/.config/opencode/skills:
-      create: true
-      force: true
-      path: opencode/skills
+      path: opencode/plugins
 
     # --- Claude Code statusline (home-targeted) ---
     ~/.claude/statusline-command.sh:
