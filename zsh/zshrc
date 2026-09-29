@@ -15,7 +15,46 @@ export LC_ALL=en_US.UTF-8
 # homebrew #
 ############
 
-eval "$(/opt/homebrew/bin/brew shellenv)"
+# Static equivalent of `eval "$(brew shellenv)"`, which forks ruby-ish brew on every shell
+export HOMEBREW_PREFIX="/opt/homebrew"
+export HOMEBREW_CELLAR="/opt/homebrew/Cellar"
+export HOMEBREW_REPOSITORY="/opt/homebrew"
+path=(/opt/homebrew/bin /opt/homebrew/sbin $path)
+fpath=(/opt/homebrew/share/zsh/site-functions $fpath)
+export INFOPATH="/opt/homebrew/share/info:${INFOPATH:-}"
+
+#########
+# cache #
+#########
+
+ZSH_CACHE_DIR="${XDG_CACHE_HOME:-${HOME}/.cache}/zsh"
+
+# Source the output of `<cmd> <args...>`, cached until the binary's resolved
+# path changes (i.e. on brew upgrade). Clear with `rm -rf $ZSH_CACHE_DIR`.
+_cached_source() {
+  local bin=${commands[$1]:A} cache="${ZSH_CACHE_DIR}/${(j:_:)@}.zsh" first
+  [[ -z $bin ]] && return 1
+  [[ -s $cache ]] && read -r first < $cache
+  if [[ $first != "# $bin" ]]; then
+    mkdir -p ${cache:h}
+    { print -r -- "# $bin"; "$@" } >| $cache.tmp && mv -f $cache.tmp $cache
+  fi
+  source $cache
+}
+
+# Completions that brew doesn't ship in site-functions, generated into fpath
+fpath=("${ZSH_CACHE_DIR}/completions" $fpath)
+_cached_completion() {
+  local bin=${commands[$1]:A} out="${ZSH_CACHE_DIR}/completions/_$1" stamp="${ZSH_CACHE_DIR}/completions/.$1"
+  [[ -z $bin ]] && return 1
+  if [[ ! -s $out || "$(<$stamp 2>/dev/null)" != $bin ]]; then
+    mkdir -p ${out:h}
+    shift
+    "$@" >| $out.tmp && mv -f $out.tmp $out && print -r -- $bin >| $stamp
+    rm -f ~/.zcompdump
+  fi
+}
+_cached_completion opencode opencode --completions zsh
 
 #################
 #  zinit setup  #
@@ -33,24 +72,27 @@ zinit light zsh-users/zsh-completions
 zinit light zsh-users/zsh-syntax-highlighting
 zinit light Aloxaf/fzf-tab
 
-autoload -U +X bashcompinit && bashcompinit
-autoload -U +X compinit && compinit
+# Full compinit (security audit + dump rebuild) at most once a day; otherwise
+# load the dump as-is. Run `rm ~/.zcompdump` to pick up new completions sooner.
+autoload -Uz compinit
+() { if (( $# )); then compinit && touch ~/.zcompdump; else compinit -C; fi } ~/.zcompdump(N.mh+24)
 
 zinit cdreplay -q
 
 # Configure zsh to initialize starship
-eval "$(starship init zsh)"
+_cached_source starship init zsh --print-full-init
 # Configure direnv hook
-eval "$(direnv hook zsh)"
+_cached_source direnv hook zsh
 
 # Shell integrations
-eval "$(fzf --zsh)"
-eval "$(atuin init zsh)"
-eval "$(zoxide init --cmd cd zsh)"
+_cached_source fzf --zsh
+_cached_source atuin init zsh
+_cached_source zoxide init --cmd cd zsh
 
 ###################
 # Source dotfiles #
 ###################
-for file in `find ~/.dotfiles/_shell -name ".*"`; do
+# `oN` = unsorted (directory order), same order `find` used to produce
+for file in ~/.dotfiles/_shell/**/.*(.oN); do
 	source "$file"
 done

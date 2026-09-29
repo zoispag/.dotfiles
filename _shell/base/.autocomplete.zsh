@@ -1,17 +1,7 @@
-# Autocomplete for kubectl
-source <(kubectl completion zsh)
-complete -F __start_kubectl k
+# kubectl, velero and argocd completions come from brew's site-functions
+# (_opencode is generated into fpath by ~/.zshrc). `k` and `v` are aliases,
+# which zsh expands before completing, so they need no extra wiring.
 compdef kubecolor=kubectl
-
-# Autocomplete for velero
-source <(velero completion zsh)
-complete -F __start_velero v
-
-# Autocomplete for ArgoCD
-source <(argocd completion zsh)
-
-# Autocomplete for OpenCode
-source <(opencode --completions zsh)
 
 # Completion styling
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
