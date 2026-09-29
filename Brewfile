@@ -528,6 +528,8 @@ cask "visual-studio-code"
 cask "whatsapp"
 # Live wallpaper app
 cask "wallspace"
+# Rust-based terminal
+cask "warp"
 # VPN client for secure internet access and private browsing
 cask "windscribe"
 # Gecko based web browser

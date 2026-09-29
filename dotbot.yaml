@@ -26,6 +26,11 @@
       create: true
       force: true
       path: ghostty
+    # Per-file link so other state Warp keeps in ~/.warp stays out of the repo.
+    ~/.warp/settings.toml:
+      create: true
+      force: true
+      path: warp/settings.toml
 
     # --- k9s (XDG-targeted) ---
     ~/.config/k9s:
