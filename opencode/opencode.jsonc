@@ -140,13 +140,14 @@
       },
       "zammad": {
         "type": "local",
-        // TEMPORARY: fork pending upstream PR basher83/Zammad-MCP#310 (prompt ticket_id
-        // annotated int, so FastMCP rejects opencode's "$1" placeholder with PromptError).
-        // Revert to git+https://github.com/basher83/zammad-mcp.git once #310 lands.
+        // fastmcp<4: upstream declares fastmcp>=3 unbounded and uvx ignores uv.lock,
+        // so 4.x gets resolved and the server crashes on import (fastmcp.tools.tool).
         "command": [
           "uvx",
+          "--with",
+          "fastmcp<4",
           "--from",
-          "git+https://github.com/zoispag/Zammad-MCP.git@fix/prompt-string-arguments",
+          "git+https://github.com/basher83/zammad-mcp.git",
           "mcp-zammad"
         ],
         "environment": {

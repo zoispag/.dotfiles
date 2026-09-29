@@ -45,8 +45,10 @@
     "zammad": {
       "command": "uvx",
       "args": [
+        "--with",
+        "fastmcp<4",
         "--from",
-        "git+https://github.com/zoispag/Zammad-MCP.git@fix/prompt-string-arguments",
+        "git+https://github.com/basher83/zammad-mcp.git",
         "mcp-zammad"
       ],
       "env": {
