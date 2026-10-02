@@ -22,6 +22,7 @@
   "enabledPlugins": {
     "mcps@dotfiles": true,
     "vanta@claude-plugins-official": true,
+    "sentry@claude-plugins-official": true,
     "typesafe@typesafe-ai": true,
     "armoctl@armosec": true
   }
