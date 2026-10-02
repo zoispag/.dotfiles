@@ -122,6 +122,7 @@ theme = "cyber_wave"
 override_opacity = 95
 override_blur = 8
 left_panel_visibility_across_tabs = true
+zoom_level = 100
 
 [appearance.panes]
 should_dim_inactive_panes = false
@@ -139,6 +140,7 @@ snackbar_enabled = true
 toast_duration_secs = 8
 
 [terminal]
+osc52_clipboard_access = "write_only"
 
 [terminal.input]
 warp_completions_enabled = false
