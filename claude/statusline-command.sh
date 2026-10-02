@@ -1,9 +1,13 @@
 #!/bin/bash
 # Claude Code statusLine
-# Single line, truecolor (24-bit RGB):
-#   {repo} | leaf+branch | 🧠 context 5-block bar+emoji+% | label+5-block bar+emoji+%left (🕐=5h, 🗓️=7d, 🧚=Fable) | cost | velocity | model
+# Two lines, truecolor (24-bit RGB):
+#   Line 1: {repo} | leaf+branch | cost | velocity | model
+#   Line 2: 🧠 context 5-block bar+emoji+% | label+5-block bar+emoji+%left (🕐=5h, 🗓️=7d, 🧚=Fable)
+# Context/limits live on line 2 so a long branch name on line 1 never pushes the model off-screen.
 # Context bar fill = % used (no "used" word shown, just the number). The 3 limit bars' fill = % left (with "left" shown).
-# Colors/emoji for all 4 meters are still driven by usage severity (danger), regardless of which % is displayed.
+# Bars are minimal and single-color: filled=▰ empty=▱, same hue for each bar (light blue for context,
+# light pink for the rate-limit bars), no gradient/background. The % text and emoji are still driven
+# by usage severity (danger), regardless of which % is displayed.
 # "Fable" = the model-scoped weekly quota (the "Fable" row in /usage and claude.ai/settings/usage).
 #  Claude Code's statusLine payload does not forward it, so the script queries the same OAuth usage
 #  endpoint the /usage popup uses, with the keychain token Claude Code already stores, and caches the
@@ -40,23 +44,8 @@ COST_YELLOW="\033[38;2;255;215;0m"
 GREEN_ADD="\033[38;2;0;200;80m"
 RED_DEL="\033[38;2;220;40;20m"
 MAGENTA_MODEL="\033[38;2;255;90;230m"
-GRAY_EMPTY="\033[38;2;60;60;60m"
-
-# --- gradient color for a 0-100 position: green(0,200,80) -> yellow(220,200,0) -> red(220,40,20) ---
-gradient_color() {
-  local p=$1 r g b p2
-  if [ "$p" -le 50 ]; then
-    r=$(( 220 * p / 50 ))
-    g=200
-    b=$(( 80 - (80 * p / 50) ))
-  else
-    p2=$(( p - 50 ))
-    r=220
-    g=$(( 200 - (160 * p2 / 50) ))
-    b=$(( 20 * p2 / 50 ))
-  fi
-  echo "$r $g $b"
-}
+BAR_CTX_COLOR="\033[38;2;110;195;245m"    # single hue for the context bar (light blue)
+BAR_LIMIT_COLOR="\033[38;2;240;140;190m"  # single hue for the rate-limit bars (light pink)
 
 # --- stepped usage-level color (for rate-limit / usage percentages) ---
 level_color() {
@@ -87,23 +76,21 @@ emoji_for() {
   fi
 }
 
-# --- gradient bar of N blocks; fill proportion reflects usage severity (0-100) ---
+# --- minimal single-color bar of N blocks: filled=▰ empty=▱, both in the same hue ---
 render_bar() {
-  local pct=$1 length=$2 filled i p r g b bar
+  local pct=$1 length=$2 color=$3 filled i bar
   filled=$(( (pct * length + 50) / 100 ))
   [ "$filled" -lt 0 ] && filled=0
   [ "$filled" -gt "$length" ] && filled=$length
   bar=""
   for i in $(seq 1 "$length"); do
     if [ "$i" -le "$filled" ]; then
-      p=$(( i * 100 / length ))
-      read -r r g b <<< "$(gradient_color "$p")"
-      bar="${bar}\033[38;2;${r};${g};${b}m\xe2\x96\x88"
+      bar="${bar}\xe2\x96\xb0"
     else
-      bar="${bar}${GRAY_EMPTY}\xe2\x96\x88"
+      bar="${bar}\xe2\x96\xb1"
     fi
   done
-  bar="${bar}${RESET}"
+  bar="${color}${bar}${RESET}"
   printf '%s' "$bar"
 }
 
@@ -115,7 +102,7 @@ if [ -n "$used_pct" ]; then
   [ "$used_int" -lt 0 ] 2>/dev/null && used_int=0
   [ "$used_int" -gt 100 ] 2>/dev/null && used_int=100
 
-  bar=$(render_bar "$used_int" 5)
+  bar=$(render_bar "$used_int" 5 "$BAR_CTX_COLOR")
   emoji=$(emoji_for "$used_int")
   read -r pr pg pb <<< "$(level_color "$used_int")"
   pct_color="\033[1;38;2;${pr};${pg};${pb}m"
@@ -135,7 +122,7 @@ rate_segment() {
   left_int=$(( 100 - used_int ))
   [ "$left_int" -lt 0 ] && left_int=0
 
-  bar=$(render_bar "$left_int" "$length")
+  bar=$(render_bar "$left_int" "$length" "$BAR_LIMIT_COLOR")
   emoji=$(emoji_for "$bar_pct")
   read -r r g b <<< "$(level_color "$bar_pct")"
   color="\033[1;38;2;${r};${g};${b}m"
@@ -208,24 +195,28 @@ fi
 model_segment=$(printf "\xf0\x9f\xa4\x96 %b%s%b" "$MAGENTA_MODEL" "$model" "$RESET")
 
 # --- assemble, skipping empty segments ---
-segments=()
-[ -n "$repo_segment" ] && segments+=("$repo_segment")
-[ -n "$branch_segment" ] && segments+=("$branch_segment")
-[ -n "$context_segment" ] && segments+=("$context_segment")
-[ -n "$five_h_segment" ] && segments+=("$five_h_segment")
-[ -n "$seven_d_segment" ] && segments+=("$seven_d_segment")
-[ -n "$fable_segment" ] && segments+=("$fable_segment")
-[ -n "$cost_segment" ] && segments+=("$cost_segment")
-[ -n "$velocity_segment" ] && segments+=("$velocity_segment")
-segments+=("$model_segment")
+# Line 1: repo, branch, cost, velocity, model
+# Line 2: context + rate-limit meters (with their progress bars), so a long branch
+#         name on line 1 never pushes the model off-screen.
+join_segments() {
+  local line="" seg first=1
+  for seg in "$@"; do
+    [ -z "$seg" ] && continue
+    if [ "$first" -eq 1 ]; then
+      line="$seg"
+      first=0
+    else
+      line=$(printf "%s %b %s" "$line" "$PIPE" "$seg")
+    fi
+  done
+  printf '%s' "$line"
+}
 
-line=""
-for i in "${!segments[@]}"; do
-  if [ "$i" -eq 0 ]; then
-    line="${segments[$i]}"
-  else
-    line=$(printf "%s %b %s" "$line" "$PIPE" "${segments[$i]}")
-  fi
-done
+line1=$(join_segments "$repo_segment" "$branch_segment" "$cost_segment" "$velocity_segment" "$model_segment")
+line2=$(join_segments "$context_segment" "$five_h_segment" "$seven_d_segment" "$fable_segment")
 
-printf "%b\n" "$line"
+if [ -n "$line2" ]; then
+  printf "%b\n%b\n" "$line1" "$line2"
+else
+  printf "%b\n" "$line1"
+fi
