@@ -107,6 +107,10 @@
         "type": "remote",
         "url": "https://mcp.linear.app/mcp"
       },
+      "linear_personal": {
+        "type": "remote",
+        "url": "https://mcp.linear.app/mcp?workspace=zois"
+      },
       "grafana_cloud": {
         "type": "local",
         "command": ["uvx", "mcp-grafana"],

@@ -4,6 +4,10 @@
       "type": "http",
       "url": "https://mcp.linear.app/mcp"
     },
+    "linear_personal": {
+      "type": "http",
+      "url": "https://mcp.linear.app/mcp?workspace=zois"
+    },
     "github": {
       "type": "http",
       "url": "https://api.githubcopilot.com/mcp/",
