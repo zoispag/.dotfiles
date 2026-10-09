@@ -146,6 +146,8 @@ brew "gobject-introspection"
 brew "goreleaser"
 # Terminal based graphical activity monitor inspired by gtop
 brew "gotop"
+# Easiest way to access your cloud
+brew "granted"
 # Command-line tool for generating regular expressions
 brew "grex"
 # Smarter Dockerfile linter to validate best practices
