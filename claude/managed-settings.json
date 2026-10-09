@@ -25,5 +25,34 @@
     "sentry@claude-plugins-official": true,
     "typesafe@typesafe-ai": true,
     "armoctl@armosec": true
-  }
+  },
+  "deniedMcpServers": [
+    {
+      "serverUrl": "https://mcp.asana.com/*"
+    },
+    {
+      "serverUrl": "https://mcp.atlassian.com/*"
+    },
+    {
+      "serverUrl": "https://mcp.notion.com/*"
+    },
+    {
+      "serverUrl": "https://mcp.pagerduty.com/*"
+    },
+    {
+      "serverUrl": "https://mcp.datadoghq.com/*"
+    },
+    {
+      "serverUrl": "https://mcp.vanta.com/*"
+    },
+    {
+      "serverUrl": "https://mcp.aus.vanta.com/*"
+    },
+    {
+      "serverName": "plugin:engineering:gmail"
+    },
+    {
+      "serverName": "plugin:engineering:google calendar"
+    }
+  ]
 }
