@@ -58,6 +58,10 @@ unset (and has no `:-default`) fails to load.
 | `argocd`        | `ARGOCD_BASE_URL`, `ARGOCD_API_TOKEN`                            |
 | `zammad`        | `ZAMMAD_URL`, `ZAMMAD_HTTP_TOKEN`                                |
 
+`kubecost` needs no variables, only a valid `tsh login` to `kyos.teleport.sh` and
+the `mcp-user` Teleport role. It is the hub's Kubecost MCP server, registered as the
+Teleport MCP app `kubecost-mcp` (kyosenergy/gitops `bootstrap/addons/kubecost.yaml`).
+
 ## Notes
 
 - `zammad` temporarily points at a fork pending upstream

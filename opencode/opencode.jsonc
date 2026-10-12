@@ -154,6 +154,10 @@
           "ZAMMAD_URL": "{env:ZAMMAD_URL}",
           "ZAMMAD_HTTP_TOKEN": "{env:ZAMMAD_HTTP_TOKEN}"
         }
+      },
+      "kubecost": {
+        "type": "local",
+        "command": ["tsh", "mcp", "connect", "kubecost-mcp"]
       }
     }
   }

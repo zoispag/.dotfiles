@@ -57,6 +57,14 @@
         "ZAMMAD_URL": "${ZAMMAD_URL}",
         "ZAMMAD_HTTP_TOKEN": "${ZAMMAD_HTTP_TOKEN}"
       }
+    },
+    "kubecost": {
+      "command": "tsh",
+      "args": [
+        "mcp",
+        "connect",
+        "kubecost-mcp"
+      ]
     }
   }
 }
