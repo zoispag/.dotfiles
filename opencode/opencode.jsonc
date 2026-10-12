@@ -158,6 +158,10 @@
       "kubecost": {
         "type": "local",
         "command": ["tsh", "mcp", "connect", "kubecost-mcp"]
+      },
+      "cost-dashboard": {
+        "type": "local",
+        "command": ["tsh", "mcp", "connect", "cost-dashboard"]
       }
     }
   }

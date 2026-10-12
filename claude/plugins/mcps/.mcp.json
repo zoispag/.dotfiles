@@ -65,6 +65,14 @@
         "connect",
         "kubecost-mcp"
       ]
+    },
+    "cost-dashboard": {
+      "command": "tsh",
+      "args": [
+        "mcp",
+        "connect",
+        "cost-dashboard"
+      ]
     }
   }
 }

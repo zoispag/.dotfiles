@@ -61,6 +61,8 @@ unset (and has no `:-default`) fails to load.
 `kubecost` needs no variables, only a valid `tsh login` to `kyos.teleport.sh` and
 the `mcp-user` Teleport role. It is the hub's Kubecost MCP server, registered as the
 Teleport MCP app `kubecost-mcp` (kyosenergy/gitops `bootstrap/addons/kubecost.yaml`).
+`cost-dashboard` works the same way: the Teleport MCP app `cost-dashboard`, served
+read-only by kyosenergy-engineering/cost-dashboard on eu-staging.
 
 ## Notes
 
