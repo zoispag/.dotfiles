@@ -17,6 +17,12 @@
         "source": "github",
         "repo": "armosec/armoctl"
       }
+    },
+    "superpowers-marketplace": {
+      "source": {
+        "source": "github",
+        "repo": "obra/superpowers-marketplace"
+      }
     }
   },
   "enabledPlugins": {
@@ -24,7 +30,8 @@
     "vanta@claude-plugins-official": true,
     "sentry@claude-plugins-official": true,
     "typesafe@typesafe-ai": true,
-    "armoctl@armosec": true
+    "armoctl@armosec": true,
+    "superpowers@superpowers-marketplace": true
   },
   "deniedMcpServers": [
     {

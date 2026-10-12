@@ -29,7 +29,7 @@ enabled plugin that isn't installed yet. `~/.claude/settings.json` stays local a
 uncommitted (it holds machine-specific `autoMode` and hooks).
 
 Enabled plugins: `mcps@dotfiles`, `vanta@claude-plugins-official`,
-`sentry@claude-plugins-official`, `typesafe@typesafe-ai`, `armoctl@armosec`. Slack needs no install: it follows the claude.ai login.
+`sentry@claude-plugins-official`, `typesafe@typesafe-ai`, `armoctl@armosec`, `superpowers@superpowers-marketplace`. Slack needs no install: it follows the claude.ai login.
 
 Restart Claude Code, then check `/mcp`. Linear, Vanta and Sentry use OAuth —
 authenticate them from `/mcp`; the tokens are stored in the keychain, not in this repo.
