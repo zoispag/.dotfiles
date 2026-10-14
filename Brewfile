@@ -178,6 +178,8 @@ brew "jq"
 brew "k6"
 # Kubernetes CLI To Manage Your Clusters In Style!
 brew "k9s"
+# Multi-Stage GitOps Continuous Promotion
+brew "kargo"
 # Run local Kubernetes cluster in Docker
 brew "kind"
 # Network authentication protocol
