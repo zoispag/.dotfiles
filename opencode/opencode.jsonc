@@ -111,6 +111,10 @@
         "type": "remote",
         "url": "https://mcp.linear.app/mcp?workspace=zois"
       },
+      "cloudflare": {
+        "type": "remote",
+        "url": "https://mcp.cloudflare.com/mcp"
+      },
       "grafana_cloud": {
         "type": "local",
         "command": ["uvx", "mcp-grafana"],
