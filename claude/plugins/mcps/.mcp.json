@@ -12,6 +12,10 @@
       "type": "http",
       "url": "https://mcp.cloudflare.com/mcp"
     },
+    "checkly": {
+      "type": "http",
+      "url": "https://api.checklyhq.com/mcp"
+    },
     "github": {
       "type": "http",
       "url": "https://api.githubcopilot.com/mcp/",

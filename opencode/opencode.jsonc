@@ -115,6 +115,10 @@
         "type": "remote",
         "url": "https://mcp.cloudflare.com/mcp"
       },
+      "checkly": {
+        "type": "remote",
+        "url": "https://api.checklyhq.com/mcp"
+      },
       "grafana_cloud": {
         "type": "local",
         "command": ["uvx", "mcp-grafana"],
