@@ -48,6 +48,8 @@ views:
     columns:
       - name: TYPE
         path: /metadata/labels/node.kubernetes.io~1instance-type
+      - name: CAPACITY
+        path: /metadata/labels/karpenter.sh~1capacity-type
       - name: NODE
         path: /status/nodeName
       - name: CORES
@@ -67,9 +69,6 @@ views:
         wide: true
       - name: NODEPOOL
         path: /metadata/labels/karpenter.sh~1nodepool
-        wide: true
-      - name: CAPACITY
-        path: /metadata/labels/karpenter.sh~1capacity-type
         wide: true
 
   # external-secrets.io/v1/externalsecrets. Same printer-column caveat, so the
