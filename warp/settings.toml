@@ -47,7 +47,7 @@ web_search_enabled = true
 write_to_pty = "always_ask"
 
 [agents.third_party]
-should_render_cli_agent_toolbar = false
+should_render_cli_agent_toolbar = true
 
 [privacy]
 crash_reporting_enabled = false
@@ -88,7 +88,7 @@ custom_secret_regex_list = [
 spacing = "normal"
 
 [appearance.vertical_tabs]
-enabled = false
+enabled = true
 display_granularity = "tabs"
 view_mode = "compact"
 tab_item_mode = "summary"
@@ -105,11 +105,12 @@ use_thin_strokes = "on_low_dpi_displays"
 
 [appearance.tabs]
 preserve_active_tab_color = false
+show_indicators_button = true
 
 [appearance.tabs.header_toolbar_chip_selection]
 
 [appearance.tabs.header_toolbar_chip_selection.custom]
-left = []
+left = ["tabs_panel"]
 right = []
 
 [appearance.icon]
