@@ -91,6 +91,32 @@ plugins:
       - sofka
       - $CONTEXT
 
+  # Logs of every container in the pod through zerolog's prettylog, so the JSON
+  # lines of zerolog services (analytical-job-runner) read like logrus output.
+  # Non-JSON lines pass through unchanged. Shown in a sofka popup over the
+  # current view: a snapshot of the last 1000 lines per container (no follow),
+  # without colours (sofka strips escapes), capped at 5,000 lines.
+  # The palette name is not `plogs`: that is a built-in alias of `:vlogs`.
+  - key: ctrl-l
+    name: pretty-logs
+    palette: pretty-logs
+    scopes: [pods]
+    command: bash
+    args:
+      - -c
+      - |
+        kubectl --context "$1" -n "$2" logs "$3" --all-containers --tail=1000 \
+          | prettylog -time-format full
+      - sofka
+      - $CONTEXT
+      - $NAMESPACE
+      - $NAME
+    mutating: false
+    output: popup
+    timeout: 60s
+    requires: [kubectl, prettylog]
+    install: go install github.com/rs/zerolog/cmd/prettylog@latest
+
   # kubectl node-shell (krew): root shell on the node.
   - key: ctrl-n
     name: node-shell
