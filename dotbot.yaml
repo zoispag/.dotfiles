@@ -26,6 +26,10 @@
       create: true
       force: true
       path: ghostty
+    ~/.config/rex:
+      create: true
+      force: true
+      path: rex
     # Per-file link so other state Warp keeps in ~/.warp stays out of the repo.
     ~/.warp/settings.toml:
       create: true
