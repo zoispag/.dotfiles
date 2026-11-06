@@ -163,6 +163,19 @@
           "ZAMMAD_HTTP_TOKEN": "{env:ZAMMAD_HTTP_TOKEN}"
         }
       },
+      "tailscale": {
+        "type": "local",
+        "command": [
+          "npx",
+          "-y",
+          "--package=@hexsleeves/tailscale-mcp-server@1.3.4",
+          "tailscale-mcp-server"
+        ],
+        "environment": {
+          "TAILSCALE_API_KEY": "{env:TAILSCALE_API_KEY}",
+          "TAILSCALE_TAILNET": "{env:TAILSCALE_TAILNET}"
+        }
+      },
       "kubecost": {
         "type": "local",
         "command": ["tsh", "mcp", "connect", "kubecost-mcp"]
