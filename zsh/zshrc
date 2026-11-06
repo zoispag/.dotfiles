@@ -93,6 +93,7 @@ _cached_source zoxide init --cmd cd zsh
 # Source dotfiles #
 ###################
 # `oN` = unsorted (directory order), same order `find` used to produce
-for file in ~/.dotfiles/_shell/**/.*(.oN); do
+# `-.` = regular files, following symlinks (so ~/.dotfiles-private links in _shell/private load)
+for file in ~/.dotfiles/_shell/**/.*(-.oN); do
 	source "$file"
 done

@@ -10,3 +10,6 @@
 
 # AI-assisted development
 .sisyphus/
+
+# Personal shell functions symlinked in from ~/.dotfiles-private by its dotbot.yaml.
+_shell/private/
