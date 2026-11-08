@@ -84,6 +84,10 @@
       create: true
       force: true
       path: agents/skills
+    ~/.agents/.skill-lock.json:
+      create: true
+      force: true
+      path: agents/.skill-lock.json
     ~/.claude/skills:
       create: true
       force: true

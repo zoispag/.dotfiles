@@ -1,0 +1,69 @@
+{
+  "version": 3,
+  "skills": {
+    "publish-to-pages": {
+      "source": "github/awesome-copilot",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/github/awesome-copilot.git",
+      "skillPath": "skills/publish-to-pages/SKILL.md",
+      "skillFolderHash": "f2ae15c06b7b7e8d7b9cf3a417fde9dbe192f535",
+      "installedAt": "2026-05-26T17:17:38.457Z",
+      "updatedAt": "2026-05-26T17:17:38.457Z"
+    },
+    "grill-me": {
+      "source": "mattpocock/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/mattpocock/skills.git",
+      "skillPath": "skills/productivity/grill-me/SKILL.md",
+      "skillFolderHash": "8320e7b87f7b208f50ce165b1dd43d1e93c8e801",
+      "pluginName": "mattpocock-skills",
+      "installedAt": "2026-06-17T21:11:57.213Z",
+      "updatedAt": "2026-06-17T21:11:57.213Z"
+    },
+    "gh-stack": {
+      "source": "github/gh-stack",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/github/gh-stack.git",
+      "skillPath": "skills/gh-stack/SKILL.md",
+      "skillFolderHash": "26320e8be554b0cc1d122c353e8897f0c69739cd",
+      "installedAt": "2026-07-18T13:15:41.782Z",
+      "updatedAt": "2026-07-18T13:15:41.782Z"
+    },
+    "pr-narrative": {
+      "source": "hamedghaderi/PR-Narrative",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/hamedghaderi/PR-Narrative.git",
+      "skillPath": "SKILL.md",
+      "skillFolderHash": "075d31594dc2388c188463387b885ea3df16afa8",
+      "installedAt": "2026-07-22T12:44:41.374Z",
+      "updatedAt": "2026-08-21T12:12:43.529Z"
+    },
+    "security-audit": {
+      "source": "cloudflare/security-audit-skill",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/cloudflare/security-audit-skill.git",
+      "skillPath": "skills/security-audit/SKILL.md",
+      "skillFolderHash": "ccbc33ed119b28c3ef7b44a7e2081ab191ad63af",
+      "installMode": "copy",
+      "installedAt": "2026-11-08T10:23:25.737Z",
+      "updatedAt": "2026-11-08T10:23:25.737Z"
+    }
+  },
+  "dismissed": {
+    "findSkillsPrompt": true
+  },
+  "lastSelectedAgents": [
+    "amp",
+    "cline",
+    "codex",
+    "cursor",
+    "droid",
+    "gemini-cli",
+    "github-copilot",
+    "kilo",
+    "kimi-code-cli",
+    "opencode",
+    "warp",
+    "zed"
+  ]
+}
