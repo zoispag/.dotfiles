@@ -26,6 +26,11 @@
 logs:
   tail: 100
   buffer: 5000
+  # Show JSON log lines (zerolog, zap, slog, logrus) as coloured records:
+  # time, level, message, then key=value. `J` cycles raw / record / indented.
+  json_view: record
+  record_time_format: "%Y-%m-%d %H:%M:%S"
+  record_time_zone: local
 
 # k9s shellPod (busybox:1.35.0 in `default`) -> the node debug pod that
 # `:debug` starts on a node. CPU/memory limits have no equivalent.
