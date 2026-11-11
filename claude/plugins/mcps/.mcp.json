@@ -26,7 +26,7 @@
     "grafana_cloud": {
       "command": "uvx",
       "args": [
-        "mcp-grafana"
+        "mcp-grafana==2.2.0"
       ],
       "env": {
         "GRAFANA_URL": "${GRAFANA_CLOUD_URL}",
@@ -36,7 +36,7 @@
     "grafana_k8s": {
       "command": "uvx",
       "args": [
-        "mcp-grafana"
+        "mcp-grafana==2.2.0"
       ],
       "env": {
         "GRAFANA_URL": "${GRAFANA_K8S_URL}",
@@ -46,7 +46,7 @@
     "argocd": {
       "command": "npx",
       "args": [
-        "argocd-mcp@latest",
+        "argocd-mcp@0.9.0",
         "stdio"
       ],
       "env": {
@@ -58,7 +58,7 @@
       "command": "uvx",
       "args": [
         "--from",
-        "git+https://github.com/basher83/zammad-mcp.git",
+        "git+https://github.com/basher83/zammad-mcp.git@cf51c36f0aeb8d4313fdfa06eb49586a55592852",
         "mcp-zammad"
       ],
       "env": {
