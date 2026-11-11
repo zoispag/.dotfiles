@@ -1,77 +1,92 @@
 ---
 name: pdf-report
-description: Generate beautiful, print-ready PDF reports from structured content (markdown, bullet points, meeting notes, plain text). Produces a styled HTML file and exports it to PDF using Chrome headless via Puppeteer — full CSS, fonts, colors, embedded images all preserved. Use this skill whenever the user wants to create a PDF report, document, summary, or presentation-quality output — proposals, postmortems, meeting reports, changelogs, or any "make this look professional as a PDF" request. Trigger on phrases like "make a PDF", "create a report", "turn this into a document", "export to PDF", "generate a nice PDF", "make a nice report".
+description: Generate beautiful, print-ready PDF reports from structured content (markdown, bullet points, meeting notes, plain text). Produces a styled HTML file and exports it to PDF using Chrome headless via Puppeteer — full CSS, fonts, colors, embedded images all preserved. KYOS documents (audit evidence, client communication, post-mortems/RCAs) use the KYOS report style from the KYOS Design System. Use this skill whenever the user wants to create a PDF report, document, summary, or presentation-quality output — proposals, postmortems, meeting reports, changelogs, or any "make this look professional as a PDF" request. Trigger on phrases like "make a PDF", "create a report", "turn this into a document", "export to PDF", "generate a nice PDF", "make a nice report".
 ---
 
 # PDF Report Skill
 
-Turn structured content into a polished, branded PDF. The workflow is: design a beautiful HTML document → export to PDF via Puppeteer (Chrome headless) for pixel-perfect rendering.
+Turn structured content into a polished, branded PDF. The workflow is: write the HTML with the KYOS report stylesheet → export to PDF via Puppeteer (Chrome headless) for pixel-perfect rendering.
 
 ## Core Principles
 
 Weasyprint and `--print-to-pdf` CLI flags strip fonts and colors. Always use **Puppeteer via Node.js** with Chrome as the PDF engine — it renders identically to what the user sees in the browser.
 
-Design with intent. Each report has a purpose and an audience. Before writing a line of CSS, commit to an aesthetic direction (formal/executive, technical/clean, branded, etc.) and execute it with precision.
+Every KYOS report uses the same look, so readers recognise it: audit evidence, client letters, incident post-mortems and RCAs. Don't invent a new palette or font pairing per report; spend the effort on structure and content.
+
+## The KYOS report style
+
+The style lives in the **KYOS Design System** (https://claude.ai/artifact/YA8cz8zVMnsywSrsCTNyG2), section **Documents and PDF reports**, so colleagues produce the same reports. It's the source of truth:
+
+| What | In the design system | Local copy (fallback) |
+|---|---|---|
+| Rules: anatomy, colour, type, parts, writing | `project/documents.md` | — |
+| Stylesheet | `project/documents/kyos-report.css` | `assets/kyos-report.css` |
+| Logo (the ring) | `assets/Logos/kyos-ring.png` (asset id `edc36025d4fe59a68d3caf1ba8a759e3`) | `assets/kyos-ring.png` |
+| Examples | components `ReportCover`, `ReportPage` | — |
+
+When the Artifact tool is available, read `project/documents.md` and `project/documents/kyos-report.css` from the design system (action `read`, `paths`) before writing, and use them over the local copies. If they differ from `assets/kyos-report.css`, tell the user the local copy is stale. Without the Artifact tool, use the local copies.
+
+Non-KYOS work (personal, other organisations) can use a different look; ask.
 
 ## Step 1 — Gather Context
 
-Before designing, extract or confirm:
+Before writing, extract or confirm:
 - **Content**: the markdown/text to render (may already be in the conversation)
-- **Branding**: any logo files to embed? Company name? Color preferences?
-- **Purpose**: proposal, postmortem, meeting report, summary, changelog? Shapes the tone.
-- **Output path**: where to save the HTML and PDF (default: same directory as input or `~/Downloads/`)
+- **Kind**: audit evidence, client communication, post-mortem/RCA, other. Shapes the cover eyebrow, the parts used and the footer classification.
+- **Audience**: internal ("KYOS — Confidential") or a client copy ("KYOS · Incident report (prepared for <client>)")
+- **Output path**: where to save the HTML and PDF (default: the current directory, else `~/Downloads/`)
 
-Check `~/Downloads/` for logos — embed them as base64 so the PDF is self-contained.
-
-## Step 2 — Design the HTML
+## Step 2 — Write the HTML
 
 ### File naming
 `<slug>-YYYY-MM-DD.html` alongside a matching `.pdf`.
 
-### Aesthetic Direction
-Pick one and commit:
-- **Executive/formal**: dark navy cover, serif display font, stat cards, clean tables
-- **Technical**: monospace accents, syntax-highlighted code blocks, timeline layout
-- **Branded**: derive palette from the logo, match company visual identity
-- **Minimal**: generous whitespace, single accent color, no decoration
+### Stylesheet and logo
+Inline the whole stylesheet in `<style>` and the ring as a base64 data URI so the PDF is self-contained:
 
-### Typography — never use generic fonts
-Good pairs:
-- `DM Serif Display` + `DM Sans` (formal reports)
-- `Playfair Display` + `Source Sans 3` (editorial)
-- `Fraunces` + `Inter` (modern branded)
-
-Load via Google Fonts `@import` in the `<style>` block.
+```bash
+SKILL=~/.claude/skills/pdf-report   # or the design-system copies read via the Artifact tool
+CSS=$(cat "$SKILL/assets/kyos-report.css")
+RING=$(base64 -i "$SKILL/assets/kyos-ring.png" | tr -d '\n')
+```
+Use a shell heredoc to write the HTML file with the variables interpolated — keep it in bash rather than a Python/JS generator. Don't add report-specific CSS beyond small layout tweaks (column widths, one-off spacing); if a report needs a new part, propose adding it to the design system.
 
 ### Structure
-Every report needs:
-1. **Cover page** — title, subtitle, date, metadata grid, branding. Use `page-break-after: always`.
-2. **Content pages** — consistent page header (title + logo), section headings with eyebrow labels, footer with page number.
-3. **Visual hierarchy** — use stat/summary cards for key numbers, color-coded badges for status/categories, tables with a dark `thead`. Match the complexity of the visuals to the content — not every report needs stat cards.
+1. **Cover** — `.cover` with `.cover-logo` (the ring), `.grow`, `.cover-eyebrow`, `h1`, `.cover-sub`, `.cover-accent`, optional `.badges`, `.cover-meta` (or `.cover-meta three`).
+2. **Content pages** — `.page` with `.page-header` (`.page-header-title` + `.page-header-logo` ring, or `.title` + `.ref`), sections as `.section-eyebrow` + `h2`, then `.page-footer` (classification · document · page number). Add `.page.fixed` for a page that must be exactly one sheet.
+3. **Parts**, as the content needs them: `.meta` fact strip, `.stats > .stat` (`.good|.warn|.bad`), tables (`.kv`, `.compact`, `tr.secondary`), `.badge.ok|warn|bad|muted|info`, `.callout` (`.warn|.bad|.info`), `.qa`, `.cia.on|off`, `code`.
 
-### CSS Essentials
-```css
-/* A4 sizing */
-body { max-width: 210mm; margin: 0 auto; }
+Follow `documents.md` for the rules — notably: `kyos-orange` is never text; every badge carries a word; titles in sentence case and outcome-first for post-mortems.
 
-/* Page breaks */
-.cover { page-break-after: always; }
-.page  { page-break-before: always; min-height: 297mm; padding: 40px 52px; }
-h2, .section-label { page-break-after: avoid; }
-table  { page-break-inside: avoid; }
-
-/* Print: remove browser chrome */
-@media print {
-  body { max-width: 100%; }
-}
+### Skeleton
+```html
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"/><title>Report title</title>
+<style>${CSS}</style></head><body>
+<div class="cover">
+  <img class="cover-logo" src="data:image/png;base64,${RING}" alt="KYOS"/>
+  <div class="grow"></div>
+  <div class="cover-eyebrow">Evidence document &middot; ISMS / Vanta &middot; ISO 27001:2022 A.8.18</div>
+  <h1>Privileged utility programs</h1>
+  <div class="cover-sub">One-line description of what the document covers</div>
+  <div class="cover-accent"></div>
+  <div class="cover-meta">
+    <div><span>Evidence request</span>Privileged utility programs</div>
+    <div><span>Prepared</span>9 November 2026</div>
+  </div>
+</div>
+<div class="page">
+  <div class="page-header"><span class="page-header-title">Privileged utility programs &middot; A.8.18</span>
+    <img class="page-header-logo" src="data:image/png;base64,${RING}" alt=""/></div>
+  <div class="section-eyebrow">Overview</div>
+  <h2>How KYOS controls privileged utilities</h2>
+  <p>…</p>
+  <div class="page-footer"><span>KYOS &mdash; Confidential</span><span>Privileged utility programs</span><span>Page 1</span></div>
+</div>
+</body></html>
 ```
 
-### Embed logos as base64
-```bash
-LOGO=$(base64 -i /path/to/logo.png | tr -d '\n')
-# Then in HTML: <img src="data:image/png;base64,${LOGO}" />
-```
-Use a shell heredoc to write the HTML file with the variable interpolated — don't use a Python/JS script for the HTML generation, keep it in bash for simplicity.
+### Fitting pages
+Pages grow with their content and Chrome breaks them, which can leave a footer alone on the next sheet. After exporting, check the page count; if a page spills by a few lines, split a table or move a section to the next `.page` rather than shrinking the type.
 
 ## Step 3 — Export to PDF via Puppeteer
 
@@ -110,9 +125,9 @@ node /tmp/pdf-export.mjs
 ```
 
 Key flags:
-- `printBackground: true` — preserves background colors/images
+- `printBackground: true` — preserves background colors/images (the dark cover and table heads)
 - `displayHeaderFooter: false` — removes Chrome's URL/date footer (this is the ONLY reliable way)
-- `waitUntil: 'networkidle0'` — waits for Google Fonts to load
+- `waitUntil: 'networkidle0'` — waits for Figtree to load from Google Fonts
 - `margin: { top:0, ... }` — let the HTML control all spacing
 
 ### Fallback — Chrome headless over HTTP
@@ -131,46 +146,8 @@ Note: this method may still show the URL in the footer — Puppeteer is strongly
 
 ## Step 4 — Verify and Open
 ```bash
-ls -lh /path/to/report.pdf   # confirm it exists and has reasonable size (>100KB)
-open /path/to/report.pdf      # open for user to review
-```
-
-## Common Patterns
-
-### Stat cards row
-```html
-<div style="display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:28px;">
-  <div style="background:#f8fafc; border:1px solid #cbd5e1; border-top:3px solid #1e3a5f; border-radius:6px; padding:16px; text-align:center;">
-    <div style="font-size:26pt; font-weight:700; color:#1e3a5f; font-family:'DM Serif Display',serif;">42</div>
-    <div style="font-size:8pt; font-weight:600; color:#475569;">Items Completed</div>
-  </div>
-  <!-- repeat... -->
-</div>
-```
-
-### Status badge
-```html
-<span style="display:inline-block; padding:2px 8px; border-radius:12px; font-size:8pt; font-weight:700; background:#dcfce7; color:#15803d;">Done</span>
-<span style="display:inline-block; padding:2px 8px; border-radius:12px; font-size:8pt; font-weight:700; background:#fef9ec; color:#92400e;">In Progress</span>
-<span style="display:inline-block; padding:2px 8px; border-radius:12px; font-size:8pt; font-weight:700; background:#fef2f2; color:#b91c1c;">Blocked</span>
-```
-
-### Dark table header
-```css
-thead tr { background: #0f2644; color: white; }
-thead th { padding: 9px 12px; font-size: 8.5pt; font-weight: 600; }
-tbody td { padding: 8px 12px; border-bottom: 1px solid #e2e8f0; }
-tbody tr:nth-child(even) { background: #f8fafc; }
-```
-
-### Cover page template
-```html
-<div class="cover" style="background:#1e3a5f; color:white; min-height:297mm; display:flex; flex-direction:column; padding:52px 56px 48px; position:relative; overflow:hidden; page-break-after:always;">
-  <img src="data:image/png;base64,${LOGO}" style="width:130px; filter:brightness(0) invert(1); margin-bottom:64px;" />
-  <div style="font-size:9pt; font-weight:600; letter-spacing:.18em; text-transform:uppercase; color:rgba(255,255,255,.55); margin-bottom:16px;">DOCUMENT TYPE · CONTEXT</div>
-  <h1 style="font-family:'DM Serif Display',serif; font-size:38pt; line-height:1.1; color:white; margin-bottom:8px;">Report Title</h1>
-  <div style="font-family:'DM Serif Display',serif; font-size:18pt; color:rgba(255,255,255,.65); margin-bottom:40px;">Subtitle</div>
-  <div style="width:56px; height:3px; background:#1a7f6e; margin-bottom:36px; border-radius:2px;"></div>
-  <!-- metadata grid, badges at bottom -->
-</div>
+ls -lh /path/to/report.pdf                      # exists, reasonable size
+pdfinfo /path/to/report.pdf | grep Pages        # expected page count, no footer-only spill pages
+pdffonts /path/to/report.pdf | grep -i figtree  # Figtree embedded, not a fallback font
+open /path/to/report.pdf                        # open for user to review
 ```
