@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# Block commits that add secrets. This repo is public, so a leaked token is a
+# rotation, not a revert. Enabled by `git config core.hooksPath .githooks`
+# (dotbot does this). Bypass a false positive with a `gitleaks:allow` comment
+# on the line, or a `.gitleaksignore` entry; `--no-verify` skips the check.
+set -euo pipefail
+
+if ! command -v gitleaks >/dev/null 2>&1; then
+	echo "pre-commit: gitleaks is not installed (brew install gitleaks); refusing to commit." >&2
+	echo "pre-commit: use 'git commit --no-verify' to skip the secret scan." >&2
+	exit 1
+fi
+
+exec gitleaks git --pre-commit --staged --redact --no-banner --verbose

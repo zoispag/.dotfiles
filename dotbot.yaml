@@ -200,6 +200,7 @@
       - [composer global require laravel/installer, Add Laravel as a global composer package]
 
 - shell:
+  - [git config core.hooksPath .githooks, Enable the gitleaks pre-commit hook for this repo]
   - [echo 'Mackup restore is commented out by default; uncomment to restore your backed-up app configs', Display mackup restore message]
   # - [mackup restore, Run mackup restore]
 

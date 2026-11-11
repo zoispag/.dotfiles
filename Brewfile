@@ -130,6 +130,8 @@ brew "git"
 brew "git-delta"
 # Git extension for versioning large files
 brew "git-lfs"
+# Detect secrets in git repos (pre-commit hook in this repo)
+brew "gitleaks"
 # Core application library for C
 brew "glib"
 # GNU Pretty Good Privacy (PGP) package
