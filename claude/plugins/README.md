@@ -58,6 +58,7 @@ unset (and has no `:-default`) fails to load.
 | `argocd`        | `ARGOCD_BASE_URL`, `ARGOCD_API_TOKEN`                            |
 | `zammad`        | `ZAMMAD_URL`, `ZAMMAD_HTTP_TOKEN`                                |
 | `tailscale`     | `TAILSCALE_API_KEY`, `TAILSCALE_TAILNET`                         |
+| `no-bs-inbox`   | `NO_BS_INBOX_TOKEN`                                              |
 
 `kubecost` needs no variables, only a valid `tsh login` to `kyos.teleport.sh` and
 the `mcp-user` Teleport role. It is the hub's Kubecost MCP server, registered as the

@@ -78,6 +78,13 @@
         "TAILSCALE_TAILNET": "${TAILSCALE_TAILNET}"
       }
     },
+    "no-bs-inbox": {
+      "type": "http",
+      "url": "http://127.0.0.1:22330/mcp",
+      "headers": {
+        "Authorization": "Bearer ${NO_BS_INBOX_TOKEN}"
+      }
+    },
     "kubecost": {
       "command": "tsh",
       "args": [

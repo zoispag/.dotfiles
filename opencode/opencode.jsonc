@@ -176,6 +176,14 @@
           "TAILSCALE_TAILNET": "{env:TAILSCALE_TAILNET}"
         }
       },
+      "no-bs-inbox": {
+        "type": "remote",
+        "url": "http://127.0.0.1:22330/mcp",
+        "oauth": false,
+        "headers": {
+          "Authorization": "Bearer {env:NO_BS_INBOX_TOKEN}"
+        }
+      },
       "kubecost": {
         "type": "local",
         "command": ["tsh", "mcp", "connect", "kubecost-mcp"]
